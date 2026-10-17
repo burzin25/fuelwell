@@ -1008,6 +1008,9 @@ input:focus,select:focus{outline:2px solid var(--basil);outline-offset:0;border-
 .score.lo{background:var(--soft);color:var(--muted)}
 .score.big{min-width:62px;height:52px;font-size:24px;border-radius:12px}
 .pbars .bar-row{grid-template-columns:128px 1fr auto}
+.pdot{display:block;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.pdot.hi{background:#2a7749}.pdot.mid{background:#b87f05}.pdot.lo{background:#7a837d}
+.tiles-dark{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.6)}
 </style>
 </head><body>
 <header class="top"><div class="top-in"><div class="mark" aria-hidden="true"></div><div class="brand">FuelWell</div><div class="wk" id="weeklabel"></div><button class="gear" data-act="tab" data-tab="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div></header>
@@ -2579,11 +2582,13 @@ function eoMount(){
     if (eoMap){ try { eoMap.remove(); } catch(e){} eoMap = null; }
     const dark = (document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark';
     eoMap = LF.map(el, {zoomControl:true, attributionControl:true}).setView([eoRes.center.lat, eoRes.center.lng], 14);
-    if (!IN_CLAUDE) LF.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/'+(dark ? 'dark_all' : 'voyager')+'/{z}/{x}/{y}{r}.png', {maxZoom:19, subdomains:'abcd', attribution:'© OpenStreetMap contributors © CARTO'}).addTo(eoMap);
+    if (!IN_CLAUDE) LF.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, className:dark ? 'tiles-dark' : '', attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(eoMap);
     LF.marker([eoRes.center.lat, eoRes.center.lng], {icon:LF.divIcon({className:'', html:'<span class="you-dot"></span>', iconSize:[18,18], iconAnchor:[9,9]}), keyboard:false, title:eoRes.center.label}).addTo(eoMap);
     const pts = [[eoRes.center.lat, eoRes.center.lng]];
-    eoRes.list.slice().reverse().forEach(pl => {
-      const m = LF.marker([pl.lat, pl.lng], {icon:LF.divIcon({className:'', html:'<span class="pin '+scoreClass(pl.sc.score)+'">'+pl.sc.score.toFixed(1)+'</span>', iconSize:[40,26], iconAnchor:[20,26]}), title:pl.name+', score '+pl.sc.score.toFixed(1), riseOnHover:true}).addTo(eoMap);
+    eoRes.list.slice().reverse().forEach((pl, ri) => {
+      const rank = eoRes.list.length - 1 - ri, top = rank < 8;
+      const html = top ? '<span class="pin '+scoreClass(pl.sc.score)+'">'+pl.sc.score.toFixed(1)+'</span>' : '<span class="pdot '+scoreClass(pl.sc.score)+'"></span>';
+      const m = LF.marker([pl.lat, pl.lng], {icon:LF.divIcon({className:'', html, iconSize:top ? [40,26] : [14,14], iconAnchor:top ? [20,26] : [7,7]}), zIndexOffset:top ? 1000 - rank*10 : 0, title:pl.name+', score '+pl.sc.score.toFixed(1), riseOnHover:true}).addTo(eoMap);
       m.on('click', () => { openSheet({kind:'place', id:pl.id}); if (!pl.sc.chain && eoState().ai && aiReady() && !(S.eatAI||{})[pl.id]) eoAICheck(pl); });
       pts.push([pl.lat, pl.lng]);
     });
