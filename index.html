@@ -1225,6 +1225,19 @@ body.on-eatout .wrap{padding-top:0}
 .list-sub{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:12px 0 2px;border-top:1px solid var(--soft)}
 pre.code{background:var(--soft);border-radius:10px;padding:10px;font-family:var(--f-mono);font-size:11.5px;overflow-x:auto;white-space:pre;margin:6px 0}
 .acc-b input[type=file]{font-size:13px;max-width:100%}
+/* voice logging */
+.vbox{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+.vbox.on{border-color:var(--tomato);background:var(--tomato-soft)}
+.vmic{flex:none;width:60px;height:60px;border-radius:50%;border:0;background:var(--basil);color:var(--basil-ink,#fff);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow)}
+.vmic:disabled{opacity:.5}
+.vmic.on{background:var(--tomato);color:#fff;animation:vpulse 1.4s ease-out infinite}
+@keyframes vpulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--tomato) 45%,transparent)}100%{box-shadow:0 0 0 16px transparent}}
+.vmeta{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.vmeta b{font-size:15px}
+.vlevel{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.vlevel i{display:block;height:100%;width:0;background:var(--tomato);transition:width .08s linear}
+.warnc{color:var(--tomato);font-weight:700}
+@media (prefers-reduced-motion:reduce){.vmic.on{animation:none}}
 </style>
 </head><body>
 <main class="wrap" id="view"></main>
@@ -1646,6 +1659,37 @@ const COMMON_FOODS = [
  ['Peanut butter (2 tbsp)',190,7,7,16,2],['Almonds (1 oz)',165,6,6,14,3.5],['Pizza slice (cheese)',285,12,36,10,2.5],['Burger with bun',540,30,40,28,2],
  ['French fries (medium)',365,4,48,17,4],['Caesar salad with chicken',470,35,15,30,3],['Coffee with milk (1 cup)',40,2,3,2,0],['Orange juice (1 glass)',110,2,26,0.5,0.5]
 ];
+
+/* More everyday dishes for logging, per serving: [name, kcal, protein, carbs, fat, fiber, extra words people say] */
+COMMON_FOODS.push(
+ ['Phulka (1 small roti, no ghee)',75,2.7,15,0.4,2,'fulka'],['Plain paratha (1)',260,5,36,10,4,'parantha'],['Puri (1)',100,1.5,11,5.5,0.5,'poori'],['Bhatura (1)',300,6,40,13,1.5,'bhature'],
+ ['Butter naan (1 piece)',300,9,45,9,2],['Garlic naan (1 piece)',310,9,46,10,2],['Thepla (1)',120,3,16,5,2],['Makki roti (1)',150,3,24,5,3,'makke'],
+ ['Jeera rice (1 cup)',240,4.5,44,5,1,'cumin'],['Khichdi (1 cup)',240,9,38,6,4],['Curd rice (1 cup)',230,6,36,6,1,'thayir sadam dahi'],['Lemon rice (1 cup)',250,4.5,42,7,1.5],['Veg pulao (1 cup)',250,5,40,7,2.5,'pilaf pulav'],
+ ['Dal makhani (1 cup)',330,14,35,15,10],['Dal tadka (1 cup)',230,13,30,6,8,'tarka yellow'],['Moong dal (1 cup)',200,13,30,3,8,'mung'],['Sambar (1 cup)',140,7,20,3.5,5],['Rasam (1 cup)',60,2,10,1.5,1.5],['Kadhi (1 cup)',180,7,14,10,1,'kadi'],
+ ['Palak paneer (1 cup)',330,16,12,24,4,'saag'],['Paneer butter masala (1 cup)',420,17,14,33,3,'makhani'],['Matar paneer (1 cup)',320,15,16,22,5],['Kadai paneer (1 cup)',350,16,12,26,3,'karahi'],['Paneer bhurji (1 cup)',330,20,8,25,2],['Paneer (100 g, plain)',265,18,6,20,0,'cottage cheese'],
+ ['Chicken curry (1 cup)',330,30,8,20,2,'murgh'],['Chicken tikka (6 pieces)',240,36,4,9,1,'kebab kabab'],['Tandoori chicken (2 pieces)',330,40,5,16,1],['Chicken tikka masala (1 cup)',400,30,13,25,2],['Chicken 65 (1 cup)',380,28,15,23,1],['Mutton curry (1 cup)',420,32,8,29,2,'lamb goat gosht'],['Keema (1 cup)',400,28,10,28,3,'mince'],['Fish curry (1 cup)',280,28,8,15,2,'machli'],['Egg curry (2 eggs)',320,15,10,24,2,'anda'],
+ ['Egg bhurji (2 eggs)',220,13,4,17,1,'scrambled masala'],['Omelette (2 eggs)',190,13,1,15,0,'egg'],['Masala omelette (2 eggs)',220,14,4,16,1,'egg'],['Scrambled eggs (2 eggs)',200,13,2,15,0,'egg'],['Egg whites (3, boiled)',51,11,0.7,0.2,0],
+ ['Aloo gobi (1 cup)',200,4,22,11,5,'potato cauliflower'],['Bhindi masala (1 cup)',180,4,16,12,6,'okra'],['Baingan bharta (1 cup)',180,4,16,12,7,'eggplant brinjal'],['Aloo sabzi (1 cup)',230,4,32,10,4,'potato'],['Mixed veg sabzi (1 cup)',180,5,18,10,6,'vegetable curry'],['Sarson ka saag (1 cup)',200,6,14,14,6,'mustard'],
+ ['Poha (1 plate)',300,6,52,8,3],['Idli (1, plain)',60,2,12,0.4,0.6],['Plain dosa (1)',170,4,28,4.5,1.5],['Uttapam (1)',250,6,40,7,3,'uthappam'],['Medu vada (1)',135,4,14,7,2,'vadai'],['Dhokla (4 pieces)',160,6,24,4,2],['Moong dal chilla (2)',260,15,34,7,7,'cheela pesarattu'],['Besan chilla (2)',300,14,32,13,6,'cheela'],
+ ['Pav bhaji (1 plate)',600,14,80,25,10],['Vada pav (1)',300,6,42,12,3],['Pani puri (6 pieces)',220,4,34,8,3,'golgappa puchka'],['Bhel puri (1 cup)',250,6,38,9,4],['Pakora (4 pieces)',240,6,20,15,3,'pakoda bhajji bhaji'],['Sprouts salad (1 cup)',120,9,20,1,5,'moong'],
+ ['Raita (1 cup)',120,6,10,6,1],['Plain curd / dahi (1 cup)',150,9,11,8,0,'yogurt'],['Buttermilk / chaas (1 glass)',60,3,5,3,0,'chhaas mattha'],['Salted lassi (1 glass)',140,7,10,7,0],['Mango lassi (1 glass)',260,7,45,6,1],['Filter coffee (1 cup)',110,4,14,4,0,'kaapi'],['Tea, no milk (1 cup)',2,0,0.5,0,0,'black green'],
+ ['Ghee (1 tsp)',45,0,0,5,0],['Butter (1 tsp)',34,0,0,3.8,0],['Papad (1, roasted)',35,2.5,6,0.3,1.5,'papadum'],['Pickle (1 tbsp)',30,0.3,1.5,2.7,0.5,'achar'],['Green chutney (2 tbsp)',20,0.6,3,0.6,1],
+ ['Sooji halwa (1/2 cup)',300,4,40,14,1,'sheera'],['Kheer (1 cup)',280,8,42,9,0.5,'payasam'],['Jalebi (2 pieces)',200,1,32,8,0],['Rasgulla (1)',120,3,25,1,0],['Besan ladoo (1)',180,3,20,10,1,'laddu'],['Barfi (1 piece)',150,3,20,7,0.5,'burfi'],
+ ['Mutton biryani (1 plate)',700,32,75,30,3],['Egg biryani (1 plate)',650,22,78,26,3],['Fried rice (1 cup)',240,6,36,8,1.5],['Hakka noodles (1 plate)',450,10,65,16,4,'chow mein'],['Veg manchurian (1 cup)',300,6,30,17,4],['Veg momos (6 steamed)',250,8,40,6,3,'dumplings'],['Chicken momos (6 steamed)',300,18,36,9,2,'dumplings'],['Maggi noodles (1 packet)',350,8,50,13,2,'instant ramen'],['Grilled veg sandwich (1)',300,9,40,11,4],
+ ['Cooked brown rice (1 cup)',218,4.5,46,1.6,3.5],['Cooked quinoa (1 cup)',222,8,39,3.6,5],['Cooked lentils (1 cup)',230,18,40,0.8,15.6],['Cooked pasta (1 cup)',220,8,43,1.3,2.5],['Boiled potato (1 medium)',160,4,37,0.2,4],['Sweet potato (1 medium)',115,2,27,0.1,4],['Black beans (1 cup cooked)',227,15,41,1,15],['Chickpeas (1 cup cooked)',270,14.5,45,4,12.5,'chana'],
+ ['Chole bhature (1 plate)',650,18,80,30,10],['Rajma chawal (1 plate)',500,17,85,9,13,'rice'],['Aloo tikki (2)',300,5,36,15,4],['Kathi roll (1)',450,20,50,18,4,'frankie wrap'],
+ ['Chai (1 cup)',100,3,14,3.5,0,'tea'],['Spinach (1 cup cooked)',41,5,7,0.5,4,'palak'],['Broccoli (1 cup)',55,4,11,0.6,5],['Carrots (1 cup)',50,1,12,0.3,3.6,'gajar'],['Green salad (1 bowl)',20,1.5,4,0.2,2,'cucumber lettuce'],
+ ['Oatmeal (1 cup cooked)',160,6,28,3,4,'oats porridge'],['Overnight oats (1 jar)',380,25,48,10,8],['Toast with butter (1 slice)',130,3,14,7,1],['Whole wheat bread (1 slice)',80,4,14,1,2],['Bagel with cream cheese (1)',360,11,56,10,2],['Pancakes (3 medium)',350,9,50,12,2],['Cereal with milk (1 bowl)',250,9,42,5,3],
+ ['Granola bar (1)',190,4,29,7,2],['Protein bar (1)',220,20,24,8,3],['Protein shake with milk (1 scoop)',280,32,18,9,0,'whey'],['Chicken sandwich (1)',450,30,40,18,3],['Turkey sandwich (1)',350,24,36,11,3],
+ ['Chicken burrito (1)',750,45,80,25,12],['Chicken burrito bowl (1)',650,45,60,22,12,'chipotle'],['Chicken tacos (2)',350,24,30,14,4],['Pasta with tomato sauce (1 plate)',450,14,80,8,6,'spaghetti marinara'],['Mac and cheese (1 cup)',400,15,45,18,2,'macaroni'],['Spaghetti bolognese (1 plate)',600,30,70,20,6,'meat sauce'],
+ ['Grilled chicken salad (1 bowl)',300,35,10,13,4],['Sushi roll (8 pieces)',300,9,52,6,3,'california'],['Poke bowl (1)',650,35,75,22,5],['Steak (8 oz)',540,62,0,31,0],['Rice and beans (1 cup)',300,11,56,3,9],['Chicken nuggets (6)',280,14,16,18,1],['Hot dog (1)',300,11,24,18,1],['Fried chicken (1 piece)',300,20,10,20,0],['Pepperoni pizza slice',310,13,34,13,2],['Chicken noodle soup (1 cup)',90,6,10,3,1],
+ ['Fruit smoothie (1 glass)',300,5,65,2,5],['Milk (1 glass)',120,8,12,5,0],['Black coffee (1 cup)',2,0.3,0,0,0,'americano espresso'],['Latte (16 oz)',190,12,18,7,0,'cappuccino'],['Soda (1 can)',140,0,39,0,0,'coke pepsi soft drink'],['Beer (1 can)',150,1.6,13,0,0],['Wine (1 glass)',125,0,4,0,0],
+ ['Orange (1)',62,1.2,15,0.2,3],['Mango (1 cup)',100,1.4,25,0.6,2.6],['Grapes (1 cup)',105,1.1,27,0.2,1.4],['Watermelon (1 cup)',46,0.9,11.5,0.2,0.6],['Papaya (1 cup)',62,0.7,16,0.4,2.5],['Dates (3)',200,1.8,54,0.3,5,'khajur'],
+ ['Cashews (1 oz)',160,5,9,13,1,'kaju'],['Mixed nuts (1 oz)',170,5,7,15,2],['Walnuts (1 oz)',185,4.3,4,18.5,2,'akhrot'],['Dark chocolate (1 oz)',170,2,13,12,3],['Ice cream (1/2 cup)',140,2.5,16,7,0.5],['Cookie (1 large)',200,2,28,10,1,'biscuit'],['Potato chips (1 oz)',150,2,15,10,1,'crisps'],['Cheese slice (1)',70,4,1,5.5,0],['Avocado toast (1 slice)',250,6,24,15,7]
+);
+
+/* IFCT 2017 (Indian Food Composition Tables, NIN). Per 100 g edible portion, raw: name, aliases, group, kcal, protein, carbs, fat, fiber, zinc mg, iron mg, vit D mcg, magnesium mg, vit A mcg RAE */
+const IFCT = [["Amaranth seed, black","ramdana|chaulali beej","Cereals",356,14.6,60,5.7,7,2.7,9.3,59,325,0],["Amaranth seed, pale brown","ramdana|chaulali beej","Cereals",356,13.3,61,5.6,7.5,2.5,8,54,270,0],["Bajra","pearl millet|bajra","Cereals",348,11,62,5.4,11.5,2.8,6.4,5.7,124,2.4],["Barley","jau|jao","Cereals",316,10.9,61,1.3,15.6,1.5,1.6,0,49,0],["Jowar","sorghum|jowar|javara","Cereals",334,10,68,1.7,10.2,2,4,4,133,0.7],["Maize, dry","corn|makka|chhali|makai","Cereals",334,8.8,65,3.8,12.2,2.3,2.5,34,145,15.5],["Maize, tender, local","corn|makka|chhali|makai","Cereals",120,3.6,23,1.4,3.7,1,0.7,42,48,3],["Maize, tender, sweet","corn|makka|chhali|makai","Cereals",97,4.2,16.4,1.4,3.3,0.8,0.5,16.9,37,3.9],["Quinoa","","Cereals",328,13.1,54,5.5,14.7,3.3,7.5,0,119,0.4],["Ragi","finger millet|ragi|mandal|mandwa","Cereals",321,7.2,67,1.9,11.2,2.5,4.6,41,146,0.1],["Rice flakes","flattened rice|beaten rice|poha|chirwre","Cereals",354,7.4,77,1.1,3.5,1.5,4.5,0,78,0],["Rice puffed","muramure|phulian|murmure","Cereals",362,7.5,78,1.6,2.6,1.4,4.5,0,65,0],["Rice, raw, brown","whole grain rice|chawal|bhura choul","Cereals",354,9.2,75,1.2,4.4,1.7,1,0,94,0],["Rice, parboiled, milled","converted rice|usna chawal|biga hua chawal","Cereals",352,7.8,77,0.6,3.7,1.1,0.7,0,27,0],["Rice, raw, milled","chawal|chaul","Cereals",356,7.9,78,0.5,2.8,1.2,0.7,0,19.3,0],["Samai","little millet|shavan|swank","Cereals",346,10.1,66,3.9,7.7,1.8,1.3,3.8,91,0.2],["Varagu","kodo millet|kangni","Cereals",332,8.9,66,2.5,6.4,1.6,2.3,0,122,0.1],["Wheat flour, refined","maida","Cereals",352,10.4,74,0.8,2.8,0.9,1.8,6.7,31,0.2],["Wheat flour, atta","atta","Cereals",320,10.6,64,1.5,11.4,2.9,4.1,13.4,125,0.2],["Wheat, whole","gehun|kanaka","Cereals",322,10.6,65,1.5,11.2,2.9,4,17.5,125,0.3],["Wheat, bulgur","burghul|groats|durum wheat|pasta wheat|macaroni wheat","Cereals",342,10.8,69,1.4,8.8,2,3.9,6.3,116,0.2],["Wheat, semolina","durum wheat|pasta wheat|macaroni wheat|gehun suji|suji","Cereals",334,11.4,68,0.7,9.7,2.1,3,8.2,38,0.1],["Wheat, vermicelli","very thin pasta|siwain|sevian|semiya","Cereals",333,9.7,70,0.5,9.3,0.8,2,4.1,34,0.1],["Wheat, vermicelli, roasted","very thin pasta|siwain|bhooni sevian|semiya","Cereals",340,10.4,71,0.5,9.6,0.9,2.1,3.2,39,0.1],["Bengal gram, dal","split bengal gram|chickpea|chan-ki-dal|sholedi dal|chane ki dal","Grain Legume",329,22,47,5.3,15.2,3.6,6.1,1.8,118,13.8],["Bengal gram, whole","chickpea|chana|kala chana|shole","Grain Legume",287,18.8,40,5.1,25,3.4,6.8,1.9,160,14.3],["Black gram, dal","urad bean|mungo bean|black matpe bean|urad dal|maa ki daal","Grain Legume",324,23,51,1.7,11.9,3,4.7,8.4,173,0.8],["Black gram, whole","urad bean|mungo bean|black matpe bean|chhilke wali urad dal|sabut maa ki daal","Grain Legume",291,22,44,1.6,20,3.1,6,16.8,190,1.1],["Cowpea, brown","black eyed peas|lobia peas|lobia|baunir","Grain Legume",320,20,55,1.1,11.5,3.4,5.9,0.9,213,0.6],["Cowpea, white","black eyed peas|lobia peas|lobia|baunir","Grain Legume",320,21,54,1.1,11.7,3.6,5,0.9,213,0.7],["Field bean, black","common bean|fieldbean|broad bean|string bean|sem","Grain Legume",276,19.9,43,0.9,23,2.4,4.5,4.3,197,0],["Field bean, brown","common bean|fieldbean|broad bean|string bean|sem","Grain Legume",283,19.9,45,1,22,2.4,5,4.2,173,0],["Field bean, white","common bean|fieldbean|broad bean|string bean|sem","Grain Legume",280,19.8,45,0.9,23,2.8,5.5,4.3,190,0],["Green gram, dal","mung bean|maash|moong|mug dal|mungi-di-dal","Grain Legume",326,24,53,1.4,9.4,2.5,3.9,2,155,10.2],["Green gram, whole","mung bean|maash|moong|mung|sabut moong dal","Grain Legume",294,23,46,1.1,17,2.7,4.9,3.1,198,11.4],["Horse gram, whole","kulthi bean|hurali|madras gram|kulthi","Grain Legume",330,22,57,0.6,7.9,2.7,8.8,1.8,152,4.9],["Lentil dal","masoor dal|dhooli masari dal","Grain Legume",322,24,53,0.8,10.4,3.6,7.1,1.3,75,0.5],["Lentil whole, brown","masur dal|saboot masari dal","Grain Legume",299,22,48,0.6,16.8,3.6,7.6,14.5,101,0.9],["Lentil whole, yellowish","masur dal|saboot masari dal","Grain Legume",298,23,48,0.6,16.7,3.3,7.9,17.7,86,1.1],["Moth bean","mat bean|turkish gram|dew bean|motha|bhiopnitam","Grain Legume",309,19.8,52,1.8,15.1,1.9,7.9,9.8,205,0.3],["Peas, dry","sukhi matar|sukhe hare matar dal","Grain Legume",303,20,49,1.9,17,3.1,5.1,15.2,123,5.5],["Rajmah, black","rajma|razma|rajmah|kale rajmah","Grain Legume",298,19,50,1.6,17.7,3.1,6.2,28,160,0.2],["Rajmah, brown","rajma|razma|rajmah|bhoore rajmah","Grain Legume",298,19.5,49,1.7,16.9,2.6,6.3,26,164,0.2],["Rajmah, red","rajma|razma|rajmah|lal rajmah","Grain Legume",299,19.9,49,1.8,16.6,2.7,6.1,27,173,0.1],["Red gram, dal","pigeon pea|arhar dal|tuvar ki dal","Grain Legume",331,22,55,1.6,9.1,2.6,3.9,2.1,119,10.6],["Red gram, whole","pigeon pea|arhar sabud|arhar sabut dal|tuvar","Grain Legume",274,20,42,1.4,23,3,5.4,2.8,155,12.4],["Ricebean","ricebean|meth","Grain Legume",302,20,51,0.7,13.4,2.3,4.8,8.3,201,0],["Soya bean, brown","soybean|bhatmas|soya bean dal|soya","Grain Legume",381,36,12.8,19.8,22,4,8.3,66,259,0.3],["Soya bean, white","soybean|bhatmas|soya bean dal|soya","Grain Legume",377,38,10.2,19.4,23,3.5,8.2,70,189,0.2],["Agathi leaves","august tree leaves|humming bird tree leaves|spinach|agasthi","Green Leafy ",71,8,5.2,1.4,8.6,0.5,4.4,4,97,1048],["Amaranth leaves, green","chaulai|chaulai sag|cholai","Green Leafy ",31,3.3,2.3,0.7,4.4,0.9,4.6,16,194,713],["Amaranth leaves, red mix","chaulai|lal chaulai sag|cholai","Green Leafy ",33,3.9,2.4,0.6,4.9,1.4,7.2,15.1,177,705],["Amaranth leaves, red and green mix","chaulai|chaulai sag|cholai","Green Leafy ",32,3.1,2.9,0.5,4.6,1,5.3,15.2,146,705],["Amaranth spinosus, leaves, green mix","kantewali-notya|kantewali chaulai","Green Leafy ",26,3.5,1.6,0.4,5.1,1.6,6.4,15.2,202,133],["Amaranth spinosus, leaves, red and green mix","kantewali-notya|kantewali chaulai","Green Leafy ",24,2.8,1.4,0.3,5.6,1.1,4.6,15,187,124],["Basella leaves","malabar spinach|palak|paalak","Green Leafy ",19.6,1.6,2,0.5,2.2,0.4,4.2,9.2,153,206],["Bathua leaves","bathua sagu|bathu sag","Green Leafy ",28,2.5,2.6,0.4,4,1,2.7,1,48,90],["Beet greens","beet greens|chukandhar sag|chukandhar da sag|beet patta","Green Leafy ",35,2.4,3.9,0.8,3.6,0.2,5.8,1.7,120,142],["Betel leaves, big (kolkata)","pan ka patha|pan-da-patta|paan ka patta","Green Leafy ",48,2.5,7.4,0.8,2.1,0.5,3,3.8,107,349],["Betel leaves, small","pan ka patha|pan-da-patta|paan ka patta","Green Leafy ",44,2.6,6.2,0.8,2,0.4,2.9,2.3,90,390],["Brussels sprouts","choote gobi|chooti band gobi|choti bund gobh","Green Leafy ",44,4.3,5.1,0.5,4.3,0.6,1.5,0.3,33,30],["Cabbage, Chinese","","Green Leafy ",17.9,1.6,2.4,0.1,2,0.2,0.4,0.4,11.5,0.5],["Cabbage, collard greens","","Green Leafy ",30,3.6,2.8,0.3,3,0.3,2.7,0.2,46,8.7],["Cabbage, green","bandh gobi|patta gobhi|gobhi","Green Leafy ",22,1.4,3.2,0.1,2.8,0.2,0.3,0.2,18,1.7],["Cabbage, violet","red cabbage|purple cabbage|red kraut|blur kraut|bandh gobi","Green Leafy ",23,1.4,3.5,0.2,2.2,0.1,0.2,0.2,27,2.6],["Cauliflower leaves","phul gobi patta|phool gobi di patte|phul gobi","Green Leafy ",35,3.9,3.4,0.4,3.4,0.3,2.4,4.2,42,12.2],["Colocasia leaves, green","arvi ka sag|arbi-di-patte|arvi ka patta","Green Leafy ",43,3.4,3.7,1.4,5.6,0.8,3.4,1.7,59,480],["Drumstick leaves","horseradish leaves|benzoil leaves|saijan patta|soanjhna da patta|sujineki palli","Green Leafy ",67,6.4,5.6,1.6,8.2,0.7,4.6,14.3,97,1462],["Fenugreek leaves","methi sag|methi di patte|methi","Green Leafy ",34,3.7,2.2,0.8,4.9,0.5,5.7,2.4,64,770],["Garden cress","halim ka patta|halim-da-sag","Green Leafy ",50,5.6,4.5,0.8,2.6,1.5,6.2,0.6,79,7.4],["Gogu leaves, green","roselle leaves|pitwa|pitwa sag|ambada ki bhaji","Green Leafy ",36,1.9,4.1,1.1,4.6,0.7,7.6,4.3,83,440],["Gogu leaves, red","roselle leaves|pitwa|pitwa sag|ambada ki bhaji","Green Leafy ",37,1.9,4.2,1.1,3.9,0.6,9.6,4.3,76,429],["Knol-Khol, leaves","knol knol|kohlrabi|wild cabbage greens|ganth gobi ka sag|ganth gobi sag","Green Leafy ",43,3.1,6.2,0.3,2.8,0.4,2.5,0.6,66,1],["Lettuce","salad ka patta|salada sag|kismisaag","Green Leafy ",22,1.5,3,0.3,1.8,0.5,2.7,0.1,43,107],["Mustard leaves","mustard greens|sarson ka sag|saro da sag|sarson ki patta","Green Leafy ",30,3.5,2.4,0.5,3.9,0.7,2.8,5.4,52,218],["Pak Choi leaves","bok choy|horse`s ear|chinese celery cabbage|white mustard cabbage","Green Leafy ",16,1.4,1.8,0.2,1.9,0.2,3.8,0.1,45,204],["Parsley","garden parsley|ajmod|parsley","Green Leafy ",73,5.5,9.4,1.1,3.9,1.3,5.5,5.5,49,226],["Ponnaganni","saranthi sag|kunte ki bhaji","Green Leafy ",51,5.3,5.2,0.7,6.7,1,3.9,0.7,80,441],["Pumpkin leaves, tender","kumhra sag|petha de pate|kaddu ka patta","Green Leafy ",44,4.2,4.8,0.7,2.2,0.9,5.6,3.2,84,121],["Radish leaves","muli ka sag|muli di patte|muli ka patta","Green Leafy ",26,2.2,2.8,0.5,1.8,0.5,3.8,1.4,58,216],["Rumex leaves","tukhm hummaz","Green Leafy ",19.6,1.6,2.3,0.3,1.3,0.5,3.7,0.1,48,230],["Spinach","palak","Green Leafy ",24,2.1,2,0.6,2.4,0.5,2.9,0.3,87,217],["Tamarind leaves, tender","p. imli patte","Green Leafy ",71,5.8,10,0.5,10.7,0.9,2.8,2.6,42,14],["Ash gourd","wax gourd|white gourd|winter gourd|tallow gourd|ash pumpkin","Other Vegeta",17.4,0.8,2.8,0.1,3.4,0.1,0.5,1.4,19.9,0],["Bamboo shoot, tender","bamboo sprouts|baans|bhet ki lakdi","Other Vegeta",16.3,1.3,1.7,0.3,1.6,0.4,0.3,0.4,8.3,0],["Bean scarlet, tender","runner bean|scarlet runner bean|multiflora bean|sem|sem fali","Other Vegeta",43,2.9,5.2,1,4.5,0.6,0.7,1.4,44,3],["Bitter gourd, jagged, teeth ridges, elongate","bitter melon|bitter squash|balsam pear|karela","Other Vegeta",21,1.4,2.8,0.2,3.8,0.3,1.1,1.9,32,10.2],["Bitter gourd, jagged, teeth ridges, short","bitter melon|bitter squash|balsam pear|karela","Other Vegeta",18.9,1.3,2.5,0.2,3.5,0.4,1.1,1.9,32,10.5],["Bitter gourd, jagged, smooth ridges, elongate","bitter melon|bitter squash|balsam pear|karela","Other Vegeta",19.4,1.6,2.3,0.3,3.7,0.4,1.3,1.8,33,10.8],["Bottle gourd, elongate, pale green","calabash|white flowered gourd|lowki|kadu","Other Vegeta",11,0.5,1.7,0.1,2.1,0.1,0.3,0.7,10.9,3.7],["Bottle gourd, round, pale green","calabash|white flowered gourd|lowki|kdu","Other Vegeta",13.6,0.4,2.5,0.1,2.1,0.1,0.3,0.7,10.9,3.9],["Bottle gourd, elongate, dark green","calabash|white flowered gourd|lowki|kadu","Other Vegeta",12.9,0.5,2.2,0.1,2.1,0.2,0.3,0.6,12.9,3.7],["Brinjal-1","eggplant|aubergine|baingan|baigan","Other Vegeta",27,1.8,3.5,0.4,3.6,0.3,0.5,0.8,27,10.5],["Brinjal-2","eggplant|aubergine|baingan|baigan","Other Vegeta",24,1.8,2.7,0.3,4,0.2,0.4,1,30,10.8],["Brinjal-3","eggplant|aubergine|baingan|baigan","Other Vegeta",24,1.4,3.4,0.3,4.3,0.2,0.3,1.2,18.6,11.5],["Brinjal-4","eggplant|aubergine|baingan|baigan","Other Vegeta",24,1.5,3.2,0.3,4,0.2,0.4,1,21,11.7],["Brinjal-5","eggplant|aubergine|baingan|baigan","Other Vegeta",27,1.4,4,0.3,4.1,0.2,0.4,1.6,25,10.3],["Brinjal-6","eggplant|aubergine|baingan|baigan","Other Vegeta",23,1.5,3.3,0.3,3.7,0.2,0.4,1.1,18.8,10.8],["Brinjal-7","eggplant|aubergine|baingan|baigan","Other Vegeta",23,1.4,3.1,0.4,3.3,0.2,0.3,0.8,15.3,12.9],["Brinjal-8","eggplant|aubergine|baingan|baigan","Other Vegeta",28,1.8,3.8,0.3,4,0.2,0.4,1,27,13.5],["Brinjal-9","eggplant|aubergine|baingan|baigan","Other Vegeta",25,1.5,3.5,0.3,4,0.2,0.4,1,26,13.2],["Brinjal-10","eggplant|aubergine|baingan|baigan","Other Vegeta",28,1.7,4.1,0.2,3.9,0.2,0.4,0.9,22,13.4],["Brinjal-11","eggplant|aubergine|baingan|baigan","Other Vegeta",25,1.4,3.5,0.3,4.1,0.2,0.4,1,21,13.5],["Brinjal-12","eggplant|aubergine|baingan|baigan","Other Vegeta",22,1.6,2.7,0.3,3.9,0.2,0.4,0.9,19.3,12],["Brinjal-13","eggplant|aubergine|baingan|baigan","Other Vegeta",30,1.5,4.5,0.3,3.9,0.2,0.3,1.1,18,11.5],["Brinjal-14","eggplant|aubergine|baingan|baigan","Other Vegeta",25,1.6,3.3,0.3,3.9,0.2,0.3,0.9,19.2,11.2],["Brinjal-15","eggplant|aubergine|baingan|baigan","Other Vegeta",27,1.6,4,0.3,4,0.2,0.4,1.1,22,13.5],["Brinjal-16","eggplant|aubergine|baingan|baigan","Other Vegeta",25,1.3,3.5,0.3,3.7,0.2,0.3,0.8,17.1,12.9],["Brinjal-17","eggplant|aubergine|baingan|baigan","Other Vegeta",22,1.2,2.9,0.4,3.9,0.2,0.5,1.3,23,12.2],["Brinjal-18","eggplant|aubergine|baingan|baigan","Other Vegeta",28,1.5,4.1,0.3,4.4,0.2,0.4,1,15.5,10.8],["Brinjal-19","eggplant|aubergine|baingan|baigan","Other Vegeta",24,1.3,3.4,0.3,4,0.2,0.3,1.1,18.4,9.9],["Brinjal-20","eggplant|aubergine|baingan|baigan","Other Vegeta",24,1.4,3.1,0.3,3.7,0.2,0.3,1,18.5,11.6],["Brinjal-21","eggplant|aubergine|baingan|baigan","Other Vegeta",27,1.4,3.9,0.3,3.9,0.2,0.3,0.8,17.3,12.9],["Brinjal - all varieties","eggplant|aubergine|baingan|baigan","Other Vegeta",25,1.5,3.5,0.3,4,0.2,0.4,1,21,12.2],["Broad beans","fava bean|faba bean|field bean|bell bean|tic bean","Other Vegeta",29,3.9,2.1,0.1,8.6,0.6,0.9,11.6,40,0.5],["Capsicum, green","shimla mirch|shimle-di-mirchi|shimla mirchi","Other Vegeta",16.3,1.1,1.8,0.3,2.1,0.1,0.5,0.7,11.8,27],["Capsicum, red","shimla mirch|shimle-di-mirchi|shimla mirchi","Other Vegeta",19.8,1.5,2.1,0.5,2.2,0.3,0.4,0.5,19.6,21],["Capsicum, yellow","shimla mirch|shimle-di-mirchi|shimla mirchi","Other Vegeta",18.6,1.4,1.9,0.4,2.2,0.3,0.7,0.9,17.2,13.8],["Cauliflower","phul gobi","Other Vegeta",23,2.1,2,0.4,3.7,0.3,1,1.3,23,0.1],["Celery stalk","ajmud","Other Vegeta",16.5,1,2.3,0.2,2.1,0.2,1.4,1.4,17.1,39],["Cho-cho-marrow","cho cho marrow|chayote|cho-cho-marrow","Other Vegeta",18.9,0.7,3.5,0.1,1.6,0.1,0.5,5.5,13.1,0.1],["Cluster beans","guar|gaur-ki-phalli|guarae-di-faliya|gavar ki palli","Other Vegeta",40,3.5,4.9,0.4,4.8,0.6,3.9,13.7,82,20],["Colocasia, stem, black","arwi-ki-dandi|arbi de dande|arwi ke kade","Other Vegeta",24,0.8,3.8,0.3,3,0.5,0.8,0.2,11.1,0.4],["Colocasia, stem, green","arwi-ki-dandi|arbi de dande|arwi ke kade","Other Vegeta",19.4,0.9,2.9,0.2,2.3,0.2,0.6,0.1,19.6,0.2],["Corn, Baby","shoti shalli","Other Vegeta",73,2.7,11.7,1.3,6.1,1.1,1.4,31,25,0.1],["Cucumber, green, elongate","kheera|kachumbar|khira","Other Vegeta",19.6,0.7,3.5,0.2,2.1,0.2,0.5,1.3,20,0.4],["Cucumber, green, short","kheera|kachumbar|khira","Other Vegeta",17.4,0.8,2.8,0.2,2.1,0.2,0.6,1.4,18.5,0.4],["Cucumber, orange, round","kakadi|khira|kheera","Other Vegeta",19.6,1,3,0.2,2.5,0.2,0.5,1.6,20,0.5],["Drumstick","horseradish|benzoil|saijan-ki-phalli|suhanjana di phalliya|sujne ki palli","Other Vegeta",29,2.6,3.8,0.1,6.8,0.3,0.7,1.7,38,1.4],["Field beans, tender, broad","common bean|fieldbean|broad bean|string bean|sem","Other Vegeta",31,3.1,2.8,0.6,5.6,0.6,1.9,7.1,51,46],["Field beans, tender, lean","common bean|fieldbean|broad bean|string bean|sem","Other Vegeta",33,3.7,2.9,0.6,6.2,0.6,1.5,7.2,47,46],["French beans, country","green beans|bakla|fras bean|beans","Other Vegeta",24,2.5,2.7,0.3,4.4,0.5,1.2,1.8,43,34],["French beans, hybrid","green beans|bakla|fras bean|beans","Other Vegeta",22,2.1,2.6,0.2,4.2,0.4,1,1.9,35,32],["Jack fruit, raw","jackfruit|kathal|kathal ki beej|kathahal","Other Vegeta",26,2,3.5,0.3,7.7,0.2,0.3,6.8,27,0],["Jack fruit, seed, mature","jackfruit|kathal|kathahal","Other Vegeta",77,5.8,11.8,0.4,8.6,0.3,0.4,1.4,37,0],["Knol - Khol","wild cabbage|kohl-rabi|ganth gobi","Other Vegeta",16,1.6,1.4,0.3,2.8,0.1,0.2,0.3,19.1,0],["Kovai, big","ivy gourd|scarlet gourd|konduri|kowai|tindli","Other Vegeta",17.4,1.4,2,0.2,3,0.2,0.4,6.2,19.6,11.2],["Kovai, small","ivy gourd|scarlet gourd|konduri|kowai|tindli","Other Vegeta",19.1,1.2,2.4,0.2,3.2,0.1,0.3,6.1,18.9,12.2],["Ladies finger","okra|okro|ochro|bhindi|bhendi","Other Vegeta",27,2.1,3.6,0.2,4.1,0.5,0.8,7.5,66,5.8],["Mango, green, raw","katcha aam|kaccha aam","Other Vegeta",49,0.7,10.6,0.1,3,0.1,0.4,7.7,17.5,6],["Onion, stalk","spring onion|onion greens|pyaz|hare pyaaz|hari pyaaz","Other Vegeta",26,2.1,3,0.3,5.2,1,3.1,6.8,67,58],["Papaya, raw","papaw|pawpaw|katcha pepita|papaya","Other Vegeta",24,0.5,4.4,0.2,2.3,0.1,0.2,7.8,15,13.7],["Parwar","pointed gourd|parwal","Other Vegeta",24,1.4,3.5,0.3,2.6,0.2,0.5,0.7,25,1.1],["Peas, fresh","matar|hare matar","Other Vegeta",81,7.2,11.9,0.1,6.3,1.1,1.6,12.9,40,10.1],["Plantain, flower","banana flower|kele-ka phool|kele-da-phool|kela ka phool","Other Vegeta",21,1.5,2.1,0.6,5.2,0.4,0.4,1.3,40,2.9],["Plantain, green","cooking banana|kele|hara|kela|kaccha kela","Other Vegeta",80,1.2,17.6,0.2,3.6,0.2,0.3,0.3,36,0.3],["Plantain, stem","banana stem|kele-ka-tana|kele da tana","Other Vegeta",39,0.3,8.6,0.2,2.1,0.1,0.3,0.3,33,0.2],["Pumpkin, green, cylindrical","kaddu","Other Vegeta",25,0.9,4.2,0.2,2.5,0.1,0.3,1.1,13.3,30],["Pumpkin, orange, round","kaddu","Other Vegeta",23,0.8,4,0.2,2.6,0.1,0.4,1.4,10.4,12.4],["Red gram, tender, fresh","pigeon pea|arhar ki fali|hara tuvar","Other Vegeta",124,8.1,19.5,0.9,5.9,1.1,1.2,29,57,13.8],["Ridge gourd","luffa|loofah|torai|kali tori|turai","Other Vegeta",13.1,0.9,1.7,0.1,1.8,0.2,0.4,0.4,16.2,29],["Ridge gourd, smooth skin","luffa|loofah|torai|kali tori|turai","Other Vegeta",15.3,1,2.2,0.1,1.9,0.3,0.5,0.3,17.7,29],["Snake gourd, long, pale green","chachinda|galartori|chichinda","Other Vegeta",12.4,1,1.3,0.2,2.3,0.1,0.3,2.7,18.7,5.1],["Snake gourd, long, dark green","chachinda|galartori|chichinda","Other Vegeta",12,0.9,1.2,0.2,2.3,0.2,0.5,3.1,22,5.1],["Snake gourd, short","chachinda|galartori|chichinda","Other Vegeta",14.6,0.5,2.1,0.3,2.3,0.1,0.2,3.1,15.1,5.2],["Tinda, tender","indian squash|round melon|indian round gourd|apple gourd|indian baby pumpkin","Other Vegeta",13.9,1,1.9,0.2,2,0.2,0.4,2.8,19,0.7],["Tomato, green","tamator|kaccha tamator|kaccha tamatar","Other Vegeta",21,1.1,3.2,0.3,1.6,0.2,0.4,1.1,13.6,2.7],["Tomato, ripe, hybrid","tamator|pakke tamator|pakka tamatar","Other Vegeta",18.9,0.8,3.2,0.2,1.6,0.1,0.2,11.8,11.9,126],["Tomato, ripe, local","tamator|pakke tamator|pakka tamatar","Other Vegeta",19.6,0.9,2.7,0.5,1.8,0.1,0.3,12.2,13.7,75],["Zucchini, green","courgette|summer squash|sabed kaddu","Other Vegeta",20,1.1,2.3,0.5,2.3,0.3,0.5,0.4,15.4,7.1],["Zucchini, yellow","courgette|summer squash|sabed kaddu","Other Vegeta",18.9,1.3,2.2,0.4,1.8,0.3,0.3,0.4,10.8,5.8],["Apple, big","sev|seb|saib","Fruits",62,0.3,13.1,0.6,2.6,0.1,0.3,1.5,8.1,0.2],["Apple, green","sev|seb|saib","Fruits",51,0.5,10.7,0.5,2.5,0.1,0.2,2.4,5.4,0.2],["Apple, small","sev|seb|saib","Fruits",64,0.3,13.9,0.5,2.1,0.1,0.2,1.9,5.5,0.2],["Apple, small, Kashmir","sev|seb|saib","Fruits",64,0.3,14,0.6,2.1,0.1,0.2,2,5.2,0.2],["Apricot, dried","khoomani|kharamani|khubaani","Fruits",316,3.2,73,0.7,3.3,0.4,2.5,4,14,150],["Apricot, processed","khoomani|kharamani|khubaani","Fruits",56,1.5,10.9,0.6,0.6,0.3,1.1,4.3,4.3,114],["Avocado fruit","makhanphal|makhan phal","Fruits",144,3,1.8,13.9,6.7,0.8,0.8,2.1,48,1],["Bael fruit","indian bael|bengal quince|golden apple|japanese bitter orange|stone apple","Fruits",136,2.6,28,0.6,6.3,0.1,0.2,1.6,34,0.2],["Banana, ripe, montham","kela|kella","Fruits",111,1.2,25,0.3,2.2,0.1,0.4,0.2,30,4.4],["Banana, ripe, poovam","kela|kella","Fruits",106,1.5,23,0.3,2.3,0.2,0.3,0.2,44,4.8],["Banana, ripe, red","kela|kella","Fruits",112,1.3,25,0.3,2,0.1,0.2,0.2,31,4.3],["Banana, ripe, robusta","kela|kella","Fruits",105,1.2,24,0.3,1.9,0.1,0.3,0.2,35,4.7],["Black berry","blackberry|kala jamun|jamun","Fruits",54,0.9,10.6,0.6,4.3,0.1,0.6,14.7,31,4.4],["Cherries, red","gilas|cherry","Fruits",60,1.5,11.9,0.5,2.1,0.1,0.4,4.3,14.4,3.4],["Currants, black","zante currants|corinth raisins|corinthian raisins|munakka|kala kishmish","Fruits",54,1.5,9.9,0.5,4.1,0.2,1.4,3,16.7,5.2],["Custard apple","sugar apple|sweetsop|sharifa","Fruits",99,1.6,20,0.7,5.1,0.2,0.4,0.2,38,0],["Dates, dry, pale brown","date palm|chuhara|chawara|khajur","Fruits",320,2.5,75,0.3,8.9,0.7,3.2,2.6,74,225],["Dates, dry, dark brown","date palm|khajur|chawara","Fruits",311,2.4,73,0.3,9.1,0.6,4.8,0.7,75,225],["Dates, processed","date palm|khajur","Fruits",286,1.2,68,0.4,6.5,0.4,0.9,0.8,14.3,232],["Fig","common fig|anjeer","Fruits",82,2,16.3,0.4,4.6,0.2,0.7,1.5,26,0.2],["Goosberry","indian gooseberry|amla|olle","Fruits",24,0.3,4.4,0.2,7.8,0.1,1.2,0.3,6.5,0.1],["Grapes, seeded, round, black","angoor","Fruits",61,0.8,13.2,0.3,1.4,0.1,0.2,6.2,7.5,2.4],["Grapes, seeded, round, green","angoor","Fruits",56,0.8,12.2,0.3,1.2,0.1,0.2,3.6,6.9,2.6],["Grapes, seeded, round, red","angoor","Fruits",58,0.9,12.6,0.3,1.3,0.1,0.3,6.9,7.1,1.7],["Grapes, seedless, oval, black","angoor","Fruits",94,1.4,20,0.5,1.6,0.1,0.3,6.4,11.3,1.6],["Grapes, seedless, round, green","angoor","Fruits",54,0.6,11.8,0.3,1.3,0.1,0.2,3.5,8.4,2.1],["Grapes, seedless, round, black","angoor","Fruits",89,1.2,19.9,0.3,1.1,0.1,0.4,6.2,10.8,1.7],["Guava, white flesh","amrud|amrood","Fruits",32,1.4,5.1,0.3,8.6,0.2,0.3,1.7,15.3,25],["Guava, pink flesh","amrud","Fruits",47,1.2,9.1,0.2,7.4,0.2,0.4,0.9,13.3,22],["Jack fruit, ripe","jakfruit|jak|kathal|kathahal","Fruits",72,2.7,14,0.1,3.6,0.2,0.4,7.5,32,2],["Jambu fruit, ripe","java apple|semarang rose apple|wax jambu|jamun","Fruits",56,0.8,12.3,0.2,3.1,0.1,0.3,0.8,28,0.1],["Karonda fruit","balalak|dindimi|karonda","Fruits",34,1.1,2.9,1.7,7.2,0.2,0.9,1.4,24,1.3],["Lemon, juice","nimbhu|nibu|neembu","Fruits",37,0.4,0,0.8,0,0.1,0.1,0.4,8.9,0.2],["Lime, sweet, pulp","mosambi|mosami","Fruits",27,0.8,5.2,0.2,2.1,0.1,0.1,0.3,15.4,0.2],["Litchi","lychee|lichi","Fruits",54,1,11.4,0.3,1.3,0.2,0.8,0.3,14.6,0.1],["Mango, ripe, banganapalli","aam|paka|pakka aam","Fruits",42,0.5,8.2,0.6,1.9,0.1,0.5,3.7,13.4,97],["Mango, ripe, gulabkhas","aam|paka|pakka aam","Fruits",50,0.5,10.3,0.5,1.7,0.1,0.4,3.9,11.5,56],["Mango, ripe, himsagar","aam|paka|pakka aam","Fruits",45,0.5,9,0.5,1.6,0.1,0.3,3.7,12.1,98],["Mango, ripe, kesar","aam|paka|pakka aam","Fruits",55,0.5,11.4,0.6,2,0.1,0.4,3.7,12.5,105],["Mango, ripe, neelam","aam|paka|pakka aam","Fruits",43,0.7,8.2,0.6,1.8,0.1,0.4,3.7,10.1,108],["Mango, ripe, paheri","aam|paka|pakka aam","Fruits",45,0.7,8.7,0.6,2,0.2,0.5,3.6,14.3,88],["Mango, ripe, totapari","aam|paka|pakka aam","Fruits",59,0.4,12.8,0.5,1.7,0.1,0.3,3.8,12.6,50],["Mangosteen","purple mangosteen|mangustan","Fruits",52,0.6,11.4,0.2,1.9,0.2,0.3,0,12,0.1],["Manila tamarind","ganga imli|jangal jalebi|jangjalebi","Fruits",82,3.6,13.5,1.1,4.4,0.6,0.7,0,33,0.2],["Musk melon, orange flesh","muskmelon|kharbooja|kharbuz","Fruits",23,0.4,4.2,0.3,1.5,0.1,0.2,4.4,11.6,64],["Musk melon, yellow flesh","muskmelon|kharbooja|kharbuz","Fruits",28,0.5,5.4,0.3,1.5,0.1,0.2,2.3,9.8,0.6],["Orange, pulp","santra","Fruits",37,0.7,7.9,0.1,1.3,0,0.8,0.3,11.1,2.7],["Palm fruit, tender","doub palm|palmyra palm|tala palm|toddy palm|wine palm","Fruits",24,0.5,4.9,0.1,2.4,0.1,0,0,0,0],["Papaya, ripe","papaw|pawpaw|papita","Fruits",24,0.4,4.6,0.2,2.8,0.1,0.2,11.5,11,58],["Peach","nectarine|aroo","Fruits",40,0.9,7.8,0.4,2.1,0.1,0.3,2.4,8.1,0],["Pear","nashpati","Fruits",38,0.4,8.1,0.3,4.5,0.1,0.3,1.5,7.6,1.1],["Phalsa","falsa","Fruits",71,1.7,15.1,0.1,4.5,0.5,2,1.3,77,0.1],["Pineapple","ananas","Fruits",43,0.5,9.4,0.2,3.5,0.1,0.3,0.2,12.7,2.6],["Plum","alubokhara|aloobhukhara","Fruits",57,0.6,12.1,0.4,2.1,0.1,0.2,3.3,7.8,0.1],["Pomegranate, maroon seeds","anar|anaar","Fruits",55,1.3,11.6,0.1,2.8,0.2,0.3,109,11.1,0.2],["Pummelo","pomelo|chakotra","Fruits",50,0.7,10.6,0.4,0.8,0.1,0.1,1,6.8,0.1],["Raisins, dried, black","dried grape|kishmish|songi","Fruits",306,2.6,71,0.3,3.9,0.2,6.8,1.8,34,0.3],["Raisins, dried, golden","dried grape|kishmish|songi","Fruits",297,2.8,69,0.3,4.6,0.2,4.3,11.9,28,0.2],["Rambutan","rambutan","Fruits",73,0.7,16.8,0.2,1,0.5,0.4,2.4,21,0.2],["Sapota","sapodilla|chiku|sapota","Fruits",73,0.9,13.9,1.3,9.6,0.2,0.5,0.7,16.2,6.7],["Soursop","shul-ram fal","Fruits",62,0.7,11.9,0.9,5,0.1,0.3,3.2,17.7,0.2],["Star fruit","carambola|starfruit|kazmal|kamrakh","Fruits",26,0.8,4.5,0.4,2.8,0.2,0.5,1,11.5,0.1],["Strawberry","lachi","Fruits",25,1,3.4,0.6,2.5,0.1,0.4,4,15.5,0.2],["Tamarind, pulp","imli","Fruits",288,2.9,67,0.1,5.3,0.6,9.2,26,83,0.1],["Water melon, dark green (sugar baby)","watermelon|tarbuj|dawana|tarbuja","Fruits",20,0.6,3.9,0.2,0.7,0.1,0.2,0.6,9.9,50],["Water melon, pale green","watermelon|tarbuj|dawana|tarbuja","Fruits",16.7,0.6,3,0.2,0.8,0.1,0.2,0.6,7.4,48],["Wood Apple","elephant apple|kaith|chaktora|beal","Fruits",78,3.1,7.5,3.6,5.2,0.3,0.5,29,24,0.3],["Zizyphus","jujube|ziziphus|ber|beri","Fruits",49,1.3,9.4,0.3,3.7,0.1,0.4,16.7,16.7,0.1],["Beet root","beetroot|beet|table beet|garden beet|red beet","Roots",36,1.9,6.2,0.1,3.3,0.3,0.8,0.2,33,0.8],["Carrot, orange","gajar","Roots",33,0.9,5.5,0.5,4.2,0.2,0.6,1.4,16.7,452],["Carrot, red","gajar","Roots",38,1,6.7,0.5,4.5,0.3,0.7,1.4,18.8,226],["Colocasia","taro|arwi","Roots",89,3.3,17.9,0.2,3.2,0.4,0.7,0.3,37,0.5],["Lotus root","kamal gatta|kamal kakdi|kamal zahr|kanwal kakri","Roots",79,1.9,14.7,0.9,4.7,0.3,3.3,0.3,27,0],["Potato, brown skin, big","alu","Roots",70,1.5,14.9,0.2,1.7,0.3,0.6,0.2,24,0],["Potato, brown skin, small","alu","Roots",61,1.4,12.9,0.2,1.7,0.4,0.5,0.2,22,0],["Potato, red skin","alu","Roots",73,1.8,15.4,0.2,1.7,0.3,0.7,0.2,26,0],["Radish, elongate, red skin","muli|gonglu|mooli","Roots",32,0.7,6.7,0.1,2.5,0.2,0.4,0,13.3,0.1],["Radish, elongate, white skin","muli|gonglu|mooli","Roots",32,0.8,6.6,0.1,2.6,0.2,0.4,0,16.1,0],["Radish, round, red skin","muli|gonglu|mooli","Roots",31,0.9,6.1,0.2,2.3,0.2,0.4,0,22,0.1],["Radish, round, white skin","muli|gonglu|mooli","Roots",31,0.8,6.1,0.1,2.4,0.2,0.4,0,15.5,0],["Sweet potato, brown skin","shakarkand|sakkargandi|ratalu","Roots",109,1.3,24,0.3,4,0.2,0.3,1.3,17.4,448],["Sweet potato, pink skin","shakarkand|sakkargandi|ratalu","Roots",108,1.3,24,0.3,3.9,0.1,0.5,1.6,21,0.9],["Tapioca","simla alu|kasawa soji","Roots",80,1,17.8,0.2,4.6,0.2,0.8,0.1,23,0],["Water Chestnut","mar. shingara|shingada","Roots",96,0.9,21,0.4,3,0.7,0.8,1.2,57,0],["Yam, elephant","elephant foot yam|whitespot giant arum|zimikandha|zimikand","Roots",84,2.6,17.5,0.1,4.2,0.3,1.2,1.3,34,14.7],["Yam, ordinary","white yam|winged yam|water yam|purple yam|sooran","Roots",83,2.2,17.6,0.2,4.1,0.3,0.8,0.2,30,13.2],["Yam, wild","suaralu","Roots",103,3.1,21,0.3,4.6,0.3,1,1.2,32,19.2],["Chillies, green-1","chili pepper|hara mirchi","Condiments",46,2.6,6.3,0.7,4.9,0.3,1.5,3.1,35,2.6],["Chillies, green-2","chili pepper|hara mirchi","Condiments",40,2.3,5.3,0.8,5.1,0.3,1.2,3.5,28,19.3],["Chillies, green-3","chili pepper|hara mirchi","Condiments",40,2.4,5.2,0.8,5.1,0.3,1.2,3.2,30,13.2],["Chillies, green-4","chili pepper|hara mirchi","Condiments",45,2.3,6.6,0.7,4.2,0.3,1.1,2.9,30,5.7],["Chillies, green-5","chili pepper|hara mirchi","Condiments",43,2,6.6,0.7,4,0.3,0.9,3.3,24,3.8],["Chillies, green-6","chili pepper|hara mirchi","Condiments",42,3,5.3,0.6,5.2,0.3,0.8,2.2,35,42],["Chillies, green-7","chili pepper|hara mirchi","Condiments",39,2.1,5.6,0.6,5,0.2,1.2,2.4,27,3.7],["Chillies, green - all varieties","chili pepper|hara mirchi","Condiments",42,2.4,5.9,0.7,4.8,0.3,1.2,3.1,30,10.4],["Coriander leaves","cilantro|chinese parsley|hara dhania|hara dhaniya patta|hara dhaniya","Condiments",31,3.5,1.9,0.7,4.7,0.7,5.3,3.5,73,317],["Curry leaves","sweet neem leaves|gandhela|kadhi patta|kadi ka patta","Condiments",64,7.4,4.5,1.1,16.8,1.2,8.7,117,182,639],["Garlic, big clove","lehsan|lasan|laisan","Condiments",124,6.9,22,0.2,5.2,0.9,1.1,1.9,27,0],["Garlic, small clove","lehsan|lasan|laisan","Condiments",123,6.8,22,0.1,5.5,0.8,0.9,2,26,0],["Garlic, single clove, Kashmir","lehsan|lasan|laisan","Condiments",125,6.1,23,0.2,4,0.7,1,2.9,41,0],["Ginger, fresh","adrak","Condiments",55,2.2,9,0.8,5.4,0.4,1.9,4.1,55,7.4],["Mango ginger","aam adhrak|aam adrak","Condiments",42,1.4,7,0.7,4.7,0.5,2.3,3.1,37,6.4],["Mint leaves","mentha|pudina","Condiments",37,4.7,2.4,0.7,5.9,0.8,8.6,3.4,110,384],["Onion, big","bulb onion|common onion|pyaz|gandhe|pyaaz","Condiments",48,1.5,9.6,0.2,2.5,0.3,0.4,0.7,18,0.1],["Onion, small","bulb onion|common onion|pyaaz kali|gandhe|pyaaz","Condiments",57,1.8,11.6,0.2,1.2,0.2,0.5,0.1,15.2,0.1],["Asafoetida","food of the gods|jowani badian|hengu|ingu|kayam","Condiments",332,6.3,72,1.3,5.1,1,15.7,12.6,96,0.5],["Cardamom, green","true cardamom|elaychi|shoti elaychi|elaichi","Condiments",255,8.1,48,2.6,23,3.7,8.3,44,330,1.8],["Cardamom, black","hill cardamom|bengal cardamom|greater cardamom|indian cardamom|nepal cardamom","Condiments",271,6.7,53,2.8,23,4.8,7.9,44,286,6.5],["Chillies, red","red chilli pepper|mirchi|lal mircha|lal mirchi","Condiments",237,12.7,29,6.4,31,1.7,6.2,24,231,128],["Cloves","lavang|long","Condiments",187,5.9,18.7,8.4,35,1.1,9.4,45,334,6.1],["Coriander seeds","cilantro seeds|chinese parsley seeds|dhania|dhaniya","Condiments",269,10.7,13,17.5,45,3.9,17.6,1.3,343,10.2],["Cumin seeds","jira","Condiments",304,13.9,23,16.6,30,4.3,21,12.1,442,7.4],["Fenugreek seeds","methi","Condiments",235,25,10.6,5.7,48,3.8,8.5,2,167,11.8],["Mace","nutmeg|avithri|jaipatri|javantri","Condiments",356,6.2,27,24,20,1.2,23,45,207,194],["Nutmeg","fragrant nutmeg|true nutmeg|jaiphal|jaifal","Condiments",464,6.3,28,37,12,1.4,2.3,47,212,1.3],["Omum","ajwain|ajowan|ajowan caraway|ajman|bishop`s weed","Condiments",357,15.9,25,21,21,5.7,13.7,2.6,273,62],["Pippali","long pepper|indian long pepper|pipli|javantri|pipul","Condiments",217,10.5,36,2.3,34,1.5,8,118,189,45],["Pepper, black","peppercorn|kalimirchi|kaali mirch","Condiments",217,10.1,36,2.7,33,1.2,11.9,26,196,64],["Poppy seeds","postdana|khas khas|khash khash","Condiments",423,20,12.4,30,27,6.4,10.1,34,393,0.3],["Turmeric powder","haldi","Condiments",281,7.7,49,5,21,2.6,46,18.7,260,4.6],["Almond","badam","Nuts",609,18.4,3,58,13.1,3.5,4.6,1.6,318,0],["Arecanut, dried, brown","areca nut|betel nut|supari","Nuts",351,5.8,70,4.3,11.4,0.9,2.7,12.8,76,0],["Arecanut, dried, red color","areca nut|betel nut|supari","Nuts",353,6.5,70,4.5,11.1,1,3.3,12.6,91,0],["Arecanut, fresh","areca nut|betel nut|supari","Nuts",245,2.7,45,5.5,7.6,0.6,1,11,48,0],["Cashew nut","kaju","Nuts",583,18.8,25,45,3.9,5.3,6,3.9,307,0],["Coconut, kernal, dry","nariyal|gola|khopra","Nuts",624,7.3,8,63,15.9,1.4,3.1,0,97,0],["Coconut, kernel, fresh","nariyal|nariyel","Nuts",409,3.8,6.3,41,10.4,0.6,1.3,0,35,0.2],["Garden cress, seeds","halim","Nuts",445,23,34,24,8.3,4.8,17.2,1.9,307,0],["Gingelly seeds, black","sesame seeds|til","Nuts",508,19.2,10.3,43,17.2,8.6,13.9,68,390,1.1],["Gingelly seeds, brown","sesame seeds|til","Nuts",516,22,9.8,43,17.2,7.8,14.9,77,328,0.5],["Gingelly seeds, white","sesame seeds|til","Nuts",520,22,10.8,43,17,7.8,15,63,372,1.1],["Ground nut","peanut|groundnut|goober|moog phali","Nuts",520,24,17.3,40,10.4,3.2,3.4,7.1,197,1.9],["Mustard seeds","rai","Nuts",510,19.5,16.8,40,14.1,4,13.5,32,266,3.1],["Linseeds","flax seeds|common flax|alsi","Nuts",444,18.6,11,36,26,4.9,5.4,0.6,349,0.1],["Niger seeds, black","kala til","Nuts",512,18.9,23,39,10.9,5,18.2,2.5,346,0.2],["Niger seeds, gray","kala til","Nuts",509,18.3,21,40,11,3.6,19.6,2.7,379,0.7],["Pine seed","pine nut|chilgoza|rhi","Nuts",594,12.6,27,49,3.8,4.2,4.5,0.6,268,0.2],["Pistachio nuts","pista","Nuts",539,23,15.8,42,10.6,2.4,4.5,1.8,149,9.2],["Safflower seeds","kardi","Nuts",473,17.7,30,31,13.5,3.9,4.1,1.9,321,0.2],["Sunflower seeds","surya mukhi|suraj mukhi","Nuts",586,24,6.8,52,10.8,7.1,5.9,1.5,413,0.7],["Walnut","akhrot|akhrut","Nuts",671,14.9,10.1,64,5.4,2.9,3.2,46,180,0.8],["Jaggery, cane","gud","Sugars",354,1.9,85,0.2,0,0.5,4.6,0.5,115,0],["Sugarcane, juice","ganne-ka-ras|ganne-da-ras|ganne-ke-ras","Sugars",58,0.2,13.1,0.4,0.6,0.1,1.1,0.4,13,0.7],["Button mushroom, fresh","common mushroom|portobello mushroom|khoomba","Mushrooms",27,3.7,2,0.4,3.1,0.2,0.3,21,18.3,0],["Chicken mushroom, fresh","khoomba","Mushrooms",21,1.8,2.8,0.2,2,0.6,0.3,28,10.8,0],["Shiitake mushroom, fresh","khoomba","Mushrooms",58,3.2,9,0.8,3,1.2,1.9,36,24,0],["Oyster mushroom, dried","khoomba","Mushrooms",244,19,33,2.9,39,8.7,3.6,109,136,0],["Toddy","palm wine|tarai|todhi","Miscellaneou",24,0.2,5.7,0,0,0,0.4,0,4,0],["Coconut Water","nariyal ka pani|gola da pani","Miscellaneou",15.3,0.3,3.2,0.2,0,0,0.1,0,18.2,0],["Milk, whole, Buffalo","bhains ka dhood|maz da doodh","Milk",107,3.7,8.4,6.6,0,0.3,0.2,1.6,10.1,0.7],["Milk, whole, Cow","gai ka doodh|gaan da doodh","Milk",73,3.3,4.9,4.5,0,0.3,0.1,1.2,8.3,1.1],["Paneer","cottage cheese|chhena|paneer","Milk",258,18.9,12.4,14.8,0,2.7,0.9,0.1,27,0.4],["Khoa","khoya","Milk",316,16.3,16.5,21,0,2.3,2.3,0.1,59,0.3],["Egg, poultry, whole, raw","","Egg",135,13.3,0,9.2,0,1.2,1.8,0.8,12,199],["Egg, poultry, white, raw","","Egg",45,10.8,0,0.1,0,0,0.1,1,11.4,0],["Egg, poultry, yolk, raw","","Egg",297,15.7,0,26,0,1.6,3.2,3.3,13.2,546],["Egg, poultry, whole, boiled","","Egg",148,13.4,0,10.5,0,1.3,1.9,0.7,13.8,181],["Egg, poultry, white, boiled","","Egg",53,12.4,0,0.3,0,0.1,0.1,0.2,11.6,0],["Egg, poultry, yolk, boiled","","Egg",308,16.1,0,27,0,3.6,4.9,3,15.5,462],["Egg, poultry, omlet","","Egg",170,16.5,0,11.6,0,1.3,2.2,3,14.8,182],["Egg, country hen, whole, raw","","Egg",168,13.1,0,13,0,1.1,1.6,4.5,11,208],["Egg, country hen, whole, boiled","","Egg",183,14.4,0,14.1,0,1.2,1.7,3,11,196],["Egg, country hen, omlet","","Egg",204,14.8,0,16.3,0,1.3,2.1,3.4,13,203],["Egg, duck, whole, boiled","","Egg",176,13.8,0,13.6,0,1.6,2.6,1.9,12,174],["Egg, duck, whole, raw","","Egg",182,14.6,0,13.8,0,1.5,2.5,2.7,12,184],["Egg, duck, whole, omlet","","Egg",192,15.1,0,14.8,0,1.9,3.3,2.1,15,169],["Egg, quial, whole, raw","","Egg",152,12.4,0,11.5,0,1.5,2.6,5.7,11,152],["Egg, quial, whole, boiled","","Egg",155,13,0,11.5,0,1.6,2.6,4.9,12,141],["Chicken, poultry, leg, skinless","","Poultry",384,19.4,0,12.6,0,1.8,1.3,1.1,24,11],["Chicken, poultry, thigh, skinless","","Poultry",200,18.2,0,14.2,0,1.4,1.1,1.2,23,16.5],["Chicken, poultry, breast, skinless","","Poultry",168,22,0,9,0,0.8,0.8,1.4,20,7],["Chicken, poultry, wing, skinless","","Poultry",193,17.4,0,13.8,0,1.5,1.4,1.1,23,31],["Poultry, chicken, liver","","Poultry",124,22,0,4.1,0,2.6,9.9,2.6,16,3486],["Poultry, chicken, gizzard","","Poultry",92,18.2,0,2.1,0,2.6,3.2,1.6,14,47],["Country hen, leg, with skin","","Poultry",173,17,0,11.7,0,2.7,1.7,1.1,25,17.4],["Country hen, thigh, with skin","","Poultry",188,18.3,0,12.8,0,2.2,1.4,1,24,27],["Country hen, breast, with skin","","Poultry",180,22,0,10.2,0,0.8,1.1,0.8,22,8.5],["Country hen, wing, with skin","","Poultry",183,18.6,0,12.1,0,1.6,1.4,0.6,25,28],["Duck, meat, with skin","","Poultry",131,19.1,0,6,0,2.9,4.3,0.9,26,49],["Emu, meat, skinless","","Poultry",133,23,0,4.6,0,2.9,4,0.7,25,2.8],["Guinea fowl, meat, with skin","","Poultry",112,21,0,3.2,0,1.5,2.2,1,21,2.3],["Pigeon, meat, with skin","","Poultry",126,17.9,0,6,0,2.5,3.8,1.2,29,15.2],["Quail, meat, skinless","","Poultry",138,21,0,6,0,1.1,1.9,1.5,31,12.8],["Turkey, leg, with skin","","Poultry",155,20,0,8.2,0,3.4,2,0.5,26,8.2],["Turkey, thigh, with skin","","Poultry",139,20,0,6.3,0,2.9,1.6,0.4,23,13.1],["Turkey, breast, with skin","","Poultry",160,22,0,8,0,1.3,1,0.5,22,9],["Turkey, wing, with skin","","Poultry",184,22,0,10.8,0,1.7,1,0.5,24,18.1],["Goat, shoulder, meat","","Animal Meat",188,20,0,11.9,0,4.2,1.5,0.8,21,7.6],["Goat, chops","","Animal Meat",136,20,0,6,0,4.5,1.9,0.4,21,2.6],["Goat, legs","","Animal Meat",160,22,0,7.9,0,3.5,1.8,0.3,22,8.5],["Goat, brain","","Animal Meat",127,13.8,0,8.1,0,1.1,1.6,0.3,13.9,2],["Goat, tongue","","Animal Meat",189,16.6,0,13.7,0,2.4,2.1,0.3,19.4,9],["Goat, lungs","","Animal Meat",96,16.9,0,3.1,0,1.7,7.1,1.4,11.5,2.8],["Goat, heart","","Animal Meat",118,19.4,0,4.4,0,1.4,3.4,0.6,18,5.9],["Goat, liver","","Animal Meat",126,20,0,4.9,0,3.5,6.6,0.7,18,15655],["Goat, tripe","","Animal Meat",92,15.4,0,3.4,0,1.7,0.8,0,13,2.2],["Goat, spleen","","Animal Meat",96,18.4,0,2.4,0,1.9,51,0.5,15.3,7.8],["Goat, kidneys","","Animal Meat",89,15.6,0,2.9,0,1.7,6.7,0,18.6,69],["Goat, tube (small intestine)","","Animal Meat",125,12.9,0,8.3,0,1.1,2.2,0,7.1,2.6],["Goat, testis","","Animal Meat",71,12.3,0,2.4,0,1.2,1.4,0.6,13.7,2.5],["Sheep, shoulder","","Animal Meat",201,18.2,0,14.3,0,3.7,1.6,0.1,21,8.7],["Sheep, chops","","Animal Meat",119,18,0,5.2,0,3.5,2.2,0.5,21,3.5],["Sheep, leg","","Animal Meat",164,21,0,8.7,0,2.7,1.5,2.8,22,9.9],["Sheep, brain","","Animal Meat",118,13.1,0,7.3,0,1.1,1.9,1.1,14.1,1.6],["Sheep, tongue","","Animal Meat",187,16.6,0,13.5,0,2.5,2.5,0,25,7.3],["Sheep, lungs","","Animal Meat",87,16.1,0,2.4,0,1.6,8.6,0.3,11.7,2.4],["Sheep, heart","","Animal Meat",106,18.2,0,3.7,0,1.3,3.1,0.8,15.2,4.6],["Sheep, liver","","Animal Meat",134,22,0,4.9,0,3.7,6.2,0.7,17.9,14106],["Sheep, tripe","","Animal Meat",104,16.8,0,4,0,1.9,0.9,0,17.8,2.7],["Sheep, spleen","","Animal Meat",92,16,0,3,0,1.7,53,0,17.2,6.6],["Sheep, kidneys","","Animal Meat",92,16.2,0,2.9,0,1.9,6.1,0.4,17.5,69],["Beef, shoulder","","Animal Meat",212,21,0,14.6,0,4.6,2.2,0.6,22,15.5],["Beef, chops","","Animal Meat",140,19.8,0,6.7,0,3.8,1.9,0.5,25,2.4],["Beef, round (leg)","","Animal Meat",157,23,0,7.4,0,3.4,2.3,0.5,27,2.5],["Beef, brain","","Animal Meat",125,10.6,0,9.3,0,1.2,2.1,0.7,15.8,2.2],["Beef, tongue","","Animal Meat",175,15.6,0,12.6,0,3.3,2.2,0.8,23,5.6],["Beef, lungs","","Animal Meat",84,15.7,0,2.3,0,1.5,6.9,0,11.6,1.9],["Beef, heart","","Animal Meat",103,17.7,0,3.6,0,1.5,3.6,6,15.7,10.1],["Beef, liver","","Animal Meat",119,21,0,4,0,4.4,14.8,4,18.6,9119],["Beef, tripe","","Animal Meat",76,13.1,0,2.5,0,2,0.8,4.1,9.3,4.3],["Beef, spleen","","Animal Meat",90,17.4,0,2.2,0,2,32,0.3,15.8,8.7],["Beef, kidneys","","Animal Meat",105,17.1,0,4,0,1.4,4.7,0.6,14.7,98],["Calf, shoulder","","Animal Meat",151,21,0,7.5,0,3.3,1.3,0,23,13.2],["Calf, chops","","Animal Meat",125,22,0,3.9,0,3.3,1.2,0.7,21,2.1],["Calf, round (leg)","","Animal Meat",147,21,0,6.9,0,2.6,2.4,1,22,2.4],["Calf, brain","","Animal Meat",107,9.8,0,7.6,0,1.1,1.4,8.6,14.3,1.4],["Calf, tongue","","Animal Meat",176,17.8,0,11.8,0,2.7,2.6,0,15.4,4.6],["Calf, heart","","Animal Meat",110,18.8,0,3.8,0,1.6,4.7,0,18.2,4.8],["Calf, liver","","Animal Meat",120,21,0,4,0,3.8,16.3,0,19.2,9664],["Calf, spleen","","Animal Meat",91,17.7,0,2.1,0,2,25,0.3,19,6.3],["Calf, kidneys","","Animal Meat",92,15.2,0,3.5,0,1.6,4.9,0,17.4,96],["Mithun, shoulder","","Animal Meat",176,19.1,0,11.1,0,6.1,2.1,0.1,18.9,12.7],["Mithun, chops","","Animal Meat",128,18.2,0,6.1,0,6.1,2.2,0.1,18.2,2.6],["Mithun, round (leg)","","Animal Meat",116,19.6,0,4.1,0,3.5,2.2,0,22,2.5],["Pork, shoulder","","Animal Meat",237,17.4,0,18.8,0,2.1,0.9,9.4,15,5.1],["Pork, chops","","Animal Meat",179,19.4,0,11.3,0,1.3,1,7.1,11.6,1.5],["Pork, ham","","Animal Meat",240,18.8,0,18.6,0,1.8,1.3,5.8,17.1,3],["Pork, lungs","","Animal Meat",86,15.1,0,2.7,0,1.2,6.8,2,9.8,5.1],["Pork, heart","","Animal Meat",109,16.3,0,4.9,0,1.6,4,0,18.2,7.2],["Pork, liver","","Animal Meat",116,19.9,0,3.9,0,4.2,21,3.2,16.6,8759],["Pork, stomach","","Animal Meat",131,15.4,0,7.8,0,2.3,1.9,0.6,23,3.3],["Pork, spleen","","Animal Meat",85,15.1,0,2.7,0,2.1,27,0,16.1,8.4],["Pork, kidneys","","Animal Meat",91,14.3,0,3.6,0,1.9,6.3,3.2,15.6,73],["Pork, tube (small intestine)","","Animal Meat",140,15,0,9,0,1.4,2.8,1,9.8,1.1],["Hare, shoulder","","Animal Meat",144,21,0,6.6,0,2.7,3,0.1,28,8.9],["Hare, chops","","Animal Meat",106,21,0,2.5,0,1.4,2.8,0.1,31,2.8],["Hare, leg","","Animal Meat",120,21,0,4.2,0,1.6,2.5,0.1,32,1.3],["Rabbit, shoulder","","Animal Meat",152,20,0,8,0,2.3,1.7,0.6,32,5.9],["Rabbit, chops","","Animal Meat",135,23,0,4.9,0,1.3,2.4,0.7,33,3.9],["Rabbit, leg","","Animal Meat",140,21,0,6,0,1.2,1.2,0.4,21,8.5],["Allathi","tenpounder|ladyfish|indo pacific tarpon","Marine Fish",97,22,0,1,0,0.3,0.6,1.3,29,9.6],["Aluva","black pomfret|brown pomfret|pomfret","Marine Fish",104,22,0,1.8,0,0.4,0.4,1.1,34,14.3],["Anchovy","indian anchovy|hardenberg`s anchovy","Marine Fish",88,19.9,0,0.8,0,0.7,0.5,2.9,53,12.2],["Ari fish","green jobfish","Marine Fish",99,22,0,1.1,0,0.3,0.5,1,30,1.6],["Betki","barramundi|asian sea bass|cockup|cock up|giant sea perch","Marine Fish",68,15.3,0,0.3,0,0.4,0.3,1.1,24,5.6],["Black snapper","","Marine Fish",90,19.5,0,1.2,0,0.4,0.6,1.5,27,14.5],["Bombay duck","bummalo","Marine Fish",69,13.5,0,1,0,0.4,0.8,1.2,24,3.4],["Bommuralu","daggertooth pike conger|dagger tooth pike conger","Marine Fish",116,22,0,2.9,0,0.7,0.4,3.3,27,3.3],["Cat fish","","Marine Fish",109,22,0,2.1,0,0.6,0.7,1.9,26,14.1],["Chakla","cobia|black kingfish|black king fish|butterfish|black salmon","Marine Fish",97,20,0,1.7,0,0.6,0.4,2.2,25,1.4],["Chappal","unicorn leatherjacket","Marine Fish",76,17.2,0,0.7,0,0.7,1.3,0.2,26,1.4],["Chelu","rainbow runner|rainbow yellowtail|spanish jack|hawaiian salmon","Marine Fish",87,20,0,0.7,0,0.4,0.7,1,32,1.5],["Chembali","five lined snapper|blue striped snapper|fivelines seaperch|gold striped sea-perch.|five line snapper","Marine Fish",97,20,0,1.8,0,0.3,0.3,0.9,31,1.6],["Eri meen","crimson jobfish|crimson snapper|opakapaka|hawaiian pink snapper","Marine Fish",109,22,0,2,0,0.3,0.5,0.3,31,13.2],["Gobro","coral cod|six barred reef cod|thornycheek grouper|spinycheek grouper|grouper","Marine Fish",87,19.4,0,0.9,0,0.4,0.4,0.1,28,1.8],["Guitar fish","","Marine Fish",96,23,0,0.4,0,0.3,0.4,0.4,27,1.3],["Hilsa","ilish|hilsa|river shad|indian shad|hilsa shad","Marine Fish",259,22,0,18.5,0,0.6,1.2,6,31,7.4],["Jallal","arius","Marine Fish",100,22,0,1.5,0,0.8,0.5,1,29,8.5],["Jathi vela meen","pig face bream|silver spotted sea bream|bridled pigface bream","Marine Fish",108,22,0,1.9,0,0.3,0.3,1,31,3.2],["Kadal bral","indian lizardfish","Marine Fish",88,18.7,0,1.3,0,0.4,0.3,1.6,30,10.6],["Kadali","redfilament threadfin bream","Marine Fish",127,22,0,4.2,0,0.3,0.4,1,26,26],["Kalamaara","indian threadfin|monk fish|thread fin|row ball|bastard mullets","Marine Fish",125,21,0,4.5,0,0.4,0.5,1.5,34,9],["Kalava","orange spotted grouper|estuary cod","Marine Fish",89,19.4,0,1.2,0,0.8,0.3,1.9,23,1.3],["Kanamayya","blubberlip snapper|maori snapper|multi coloured snapper","Marine Fish",88,20,0,0.7,0,0.3,0.4,1.2,27,16.4],["Kannadi paarai","diamond trevally|indian threadfish|indian threadfin|mirror fish|plumed trevally","Marine Fish",101,22,0,1.3,0,0.4,0.3,0.3,32,12.4],["Karimeen","green chromide|pearlspot cichlid|banded pearlspot|striped chromide|pearl spot","Marine Fish",92,19.7,0,1.4,0,0.5,0.6,1,28,1.3],["Karnagawala","broad striped anchovy","Marine Fish",87,19.5,0,0.8,0,0.4,0.4,1.3,44,1.8],["Kayrai","yellowfin tuna|yellow fin tuna","Marine Fish",109,20,0,3,0,0.4,1,3.2,32,10.2],["Kiriyan","yellowtail scad|northern yellowtail scad|one finlet scad|deep trevally|omaka","Marine Fish",133,22,0,4.7,0,0.8,1,0.8,32,1.6],["Kite fish","shortfin devil ray","Marine Fish",99,23,0,0.6,0,0.6,1.4,0,28,1.5],["Korka","crescent grunter|target fish|crescent bass|crescent perch|tiger bass","Marine Fish",126,24,0,3.4,0,1.5,0.7,0.4,29,6.5],["Kulam paarai","yellowspotted trevally|yellowspotted kingfish|goldspotted trevally|tarrum","Marine Fish",120,22,0,3.6,0,0.5,0.5,2.8,31,3.6],["Maagaa","striped threadfin","Marine Fish",87,20,0,0.7,0,0.3,0.2,1.3,30,1.8],["Mackerel","indian mackerel|rake gillat mackerel","Marine Fish",101,22,0,1.5,0,0.7,1.5,0.4,37,16.3],["Manda clathi","reticulated unicornfish","Marine Fish",95,21,0,1,0,0.4,0.4,1.9,38,2],["Matha","elongate surgeonfish|blue lined surgeonfish","Marine Fish",93,21,0,0.8,0,0.3,0.3,2.1,40,5],["Milk fish","milkfish|milk fish|white mullet","Marine Fish",106,24,0,1.1,0,2.4,1.4,1.2,35,3.3],["Moon fish","moonfish","Marine Fish",126,21,0,4.7,0,0.9,1.7,0.6,37,8.9],["Mullet","flathead grey mullet|flathead greymullet","Marine Fish",94,20,0,1.3,0,0.5,1.3,0.5,34,18.4],["Mural","houndfish|crocodile needlefish|giant longtom","Marine Fish",82,19,0,0.6,0,0.7,0.2,0.9,27,1.6],["Myil meen","indo pacific sailfish|peacock fish|sail fish|indian sail fish|sailfish","Marine Fish",98,23,0,0.6,0,0.6,1.2,0.4,30,22],["Nalla bontha","giant rock cod|malabar rockcod|brown-spotted grouper|estuary rock cod|malabar grouper","Marine Fish",87,19.8,0,0.7,0,0.3,0.3,0.6,29,2.4],["Narba","bigeye trevally|bigeye jack|great trevally|six banded trevally|dusky jack","Marine Fish",103,22,0,1.6,0,0.5,1.1,0.4,26,2.9],["Paarai","blacktip trevally|blacktip kingfish|yellowtail kingfish","Marine Fish",104,22,0,1.8,0,0.5,0.7,1.8,28,3.2],["Padayappa","rough triggerfish|spotted oceanic triggerfish","Marine Fish",86,19.7,0,0.7,0,1.5,0.3,0.7,29,1.5],["Pali kora","panna croaker","Marine Fish",94,19.2,0,1.8,0,0.4,0.4,0.1,28,1.9],["Pambada","savalai hairtail|small head hairtail|small headed hairtail|small headed ribbon fish|small headed ribbonfish","Marine Fish",128,22,0,4.4,0,0.4,0.4,1.4,30,2.9],["Pandukopa","larimichthys polyactis|redlip croaker|small yellow croaker|little yellow croaker|yellow corvina","Marine Fish",86,19.7,0,0.7,0,0.3,0.5,0.3,29,1.3],["Parava","false trevally|big jawed jumper|big jawed jumber","Marine Fish",112,22,0,2.7,0,0.6,3.6,1.1,33,2.6],["Parcus","indian halibut|indian turbot","Marine Fish",86,19.9,0,0.6,0,0.3,0.3,0.8,29,1.7],["Parrot fish","blue barred parrotfish|blue trim parrotfish|cream parrotfish|globe headed parrotfish|green blotched parrotfish","Marine Fish",90,21,0,0.6,0,0.3,0.4,0.7,29,2.5],["Perinkilichai","pinjalo snapper","Marine Fish",92,21,0,0.9,0,0.4,0.3,0.4,29,1.6],["Phopat","mahi mahi|common dolphinfish|common dolphin fish","Marine Fish",101,22,0,1.3,0,0.4,0.5,0.7,32,3.5],["Piranha","","Marine Fish",131,20,0,5.4,0,0.4,0.5,1.1,23,1],["Pomfret, black","black pomfret|brown pomfret","Marine Fish",123,18.9,0,4.8,0,0.5,0.8,2.9,28,10.6],["Pomfret, snub nose","snubnose pampano","Marine Fish",90,21,0,0.5,0,0.9,0.4,0.6,30,3.9],["Pomfret, white","silver pomfret|white pomfret","Marine Fish",123,19,0,5.1,0,0.5,0.3,0.7,32,30],["Pranel","whipfin silver biddy|deepbody mojarra","Marine Fish",97,19.7,0,1.9,0,0.6,0.4,0.6,26,1.8],["Pulli paarai","golden trevally|golden kingfish|banded trevally|king trevally|golden toothless trevally","Marine Fish",95,20,0,1.6,0,0.5,0.3,1.6,31,1.8],["Queen fish","doubledotted queenfish|talang queenfish","Marine Fish",96,21,0,1.2,0,0.3,0.5,0.2,28,1.5],["Raai fish","atlantic tripletail|brown tripletail|tripple tail","Marine Fish",103,22,0,1.7,0,0.4,0.5,3.1,22,1.1],["Raai vanthu","brown spotted reef cod|souman|brownspotted grouper|brown spotted grouper|brownspotted rockcod.","Marine Fish",98,19.4,0,2.2,0,0.3,0.4,1.2,27,2.9],["Rani","","Marine Fish",90,18.8,0,1.5,0,0.4,0.9,1.9,30,1.8],["Ray fish, bow head, spotted","bowmouth guitarfish|shark ray|mud skate|bowmouthed guitarfish","Marine Fish",83,19,0,0.7,0,0.5,0.2,0.8,19.2,2],["Red snapper","mangrove red snapper|mangrove jack|creek red bream|stuart evader|dog bream","Marine Fish",104,23,0,1.3,0,0.3,0.4,2.4,33,4.8],["Red snapper, small","lunar-tailed bigeye|goggle eye|moontail bullseye|red bullseye|lunar-tailed bullseye","Marine Fish",108,22,0,2.3,0,0.4,0.6,3.2,31,21],["Sadaya","orbicular batfish|circular batfish|orbiculate batfish|round batfish|orbic batfish","Marine Fish",110,21,0,3,0,0.7,0.5,1.6,26,64],["Salmon","atlantic salmon","Marine Fish",172,21,0,9.9,0,0.5,1,0.9,31,15.6],["Sangada","japanese threadfin bream","Marine Fish",106,20,0,2.7,0,0.3,1,1,28,3.1],["Sankata paarai","giant trevally|lowly trevally|barrier trevally|giant kingfish|ulua","Marine Fish",104,22,0,1.7,0,0.4,1,0.7,28,2.6],["Sardine","indian oil sardine|malabar sardine","Marine Fish",152,17.9,0,9,0,0.9,0.8,3.5,24,12.7],["Shark","spot-tail shark|sorrah shark","Marine Fish",95,22,0,0.8,0,0.5,0.4,0.4,33,1.1],["Shark, hammer head","great hammerhead","Marine Fish",103,23,0,0.8,0,0.4,0.9,0.7,25,21],["Shark, spotted","zebra shark","Marine Fish",92,21,0,0.8,0,0.6,0.5,1.4,19.1,12.4],["Shelavu","pickhandle barracuda|banded barracuda|sea pike","Marine Fish",107,22,0,1.7,0,0.4,0.5,1.9,30,25],["Silan","silond catfish|silondia vacha|silong catfish","Marine Fish",151,23,0,6.7,0,0.6,0.6,0.2,23,3.1],["Silk fish","alfonsino|alfonsin|longfinned beryx|red bream|imperador","Marine Fish",98,21,0,1.5,0,0.3,0.3,0.7,27,1.7],["Silver carp","silver carp","Marine Fish",133,22,0,5.2,0,0.6,0.6,0.9,25,6.7],["Sole fish","largescale tongue-sole","Marine Fish",88,19.1,0,1.2,0,0.2,0.3,1.1,28,9.5],["Stingray","common stingray|blue stingray","Marine Fish",98,24,0,0.7,0,0.4,0.7,0.9,25,7.5],["Tarlava","spotted sicklefish|moon-fish|spotted bat-fish|spotted drepane","Marine Fish",99,22,0,1.2,0,0.3,0.5,2.4,30,5.3],["Tholam","minstrel sweetlips|grey sweetlip","Marine Fish",103,21,0,2.1,0,0.4,0.6,3.5,26,250],["Tilapia","nile tilapia","Marine Fish",83,18.5,0,1.1,0,0.9,2.8,0.9,25,17.1],["Tuna","mackerel tuna|kawakawa|little tuna","Marine Fish",112,24,0,1.4,0,0.7,1.6,0.7,36,16.7],["Tuna, striped","skipjack tuna|aku|arctic bonito|mushmouth|oceanic bonito","Marine Fish",96,21,0,1.1,0,0.5,1.4,0.7,26,21],["Valava","whitefin wolf-herring|tenpounder","Marine Fish",98,22,0,1.1,0,0.4,0.2,0.3,39,1.2],["Vanjaram","barred seer fish|king seer","Marine Fish",136,22,0,5.2,0,0.7,0.4,1.6,37,82],["Vela meen","green jobfish","Marine Fish",128,22,0,4.3,0,0.4,0.6,0.9,32,3],["Vora","streaked spinefoot","Marine Fish",101,20,0,2.1,0,0.3,0.3,0.8,32,3.2],["Whale shark","tiger shark","Marine Fish",96,22,0,0.8,0,0.4,0.3,2.2,21,2],["Xiphinis","swordfish|broadbills|sword fish","Marine Fish",88,19.8,0,0.9,0,0.6,0.5,0.1,26,1.1],["Eggs, Cat fish","butter catfish","Marine Fish",143,25,0,5.3,0,3.1,6.6,3.3,60,2.6],["Crab","florida stone crab","Marine Shell",82,10.2,0,1.4,0,0.8,1.1,0.9,38,1.6],["Crab, sea","three-spot swimming crab|blood-spotted swimming crab|red-spotted swimming crab","Marine Shell",68,15.4,0,0.6,0,3.1,1,0.7,80,5],["Lobster, brown","flathead lobster|bay lobster|moreton bay bug","Marine Shell",70,16,0,0.6,0,1.2,0.8,0.8,45,1.8],["Lobster, king size","flathead lobster|bay lobster|moreton bay bug","Marine Shell",90,18.5,0,0.8,0,1.9,0.3,0.3,50,15],["Mud crab","mangrove crab|mud crab","Marine Shell",45,10,0,0.6,0,3.3,0.9,1.1,47,8.3],["Oyster","indian backwater oyster","Marine Shell",60,9.5,0,2.4,0,7.3,0.9,0.9,22,25],["Tiger prawns, brown","","Marine Shell",65,14.8,0,0.6,0,1.1,0.7,1.5,46,1.2],["Tiger Prawns, orange","giant tiger prawn|asian tiger shrimp","Marine Shell",65,14.2,0,0.7,0,1.2,0.4,2.2,30,6.5],["Clam, green shell","asian green mussel|green-lipped mussel","Marine Mollu",58,12.1,0,1,0,1.6,1,0.9,74,29],["Clam, white shell, ribbed","asiatic hard clam","Marine Mollu",60,11.8,0,1.3,0,1.2,0.9,2.2,87,8.5],["Octopus","common octopus","Marine Mollu",80,14.7,0,1.1,0,4.1,1.1,0.7,51,28],["Squid, black","","Marine Mollu",80,16.1,0,1.1,0,1.2,0.5,0.9,42,2.6],["Squid, hard shell","pharaoh cuttlefish","Marine Mollu",76,16.8,0,0.9,0,1.3,0.6,1,35,1.9],["Squid, red","","Marine Mollu",79,16.2,0,1.4,0,0.9,0.3,1.2,36,4.7],["Squid, white, small","indian ocean squid|indian squid","Marine Mollu",84,17.4,0,1.1,0,1.6,0.4,0.7,39,8.5],["Cat fish","eel-tailed catfish|dewfish|freshwater catfish|jewfish|tandan","Fresh Water ",124,15.9,0,6.2,0,0.7,0.8,1.5,18.8,13.6],["Catla","major carp|catla|bhakur|boassa|katla","Fresh Water ",94,17.9,0,2.1,0,0.7,1.1,2.1,26,4.3],["Freshwater Eel","european eel","Fresh Water ",108,20,0,2.6,0,2.2,1.5,4.4,42,866],["Gold fish","goldfish","Fresh Water ",95,16.9,0,2.9,0,1.7,0.8,0.3,22,23],["Pangas","iridescent shark","Fresh Water ",204,17.1,0,16.8,0,0.7,0.7,0.3,25,14.6],["Rohu","rohu|rui|roho labeo|bhobhari|dumra","Fresh Water ",102,19.7,0,2.4,0,0.8,1,1,27,3.9],["Crab","","Fresh Water ",78,13.2,0,0.9,0,2.5,1.1,1.4,67,12.6],["Prawns, big","giant freshwater prawn|giant river prawn","Fresh Water ",91,19.2,0,0.5,0,1.4,0.8,0.4,39,3.6],["Prawns, small","","Fresh Water ",71,13.1,0,0.8,0,0.9,0.9,1.1,27,2.8],["Tiger prawns","","Fresh Water ",68,14.2,0,0.7,0,1,0.8,1.6,23,0.6],["Coconut oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Corn oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Cotton seed oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Gingelly oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Groundnut oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Mustard oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Palm oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Rice bran oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Safflower oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Safflower oil (blended)","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Soyabean oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Sunflower oil","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Ghee","","Edible Oils",0,0,0,100,0,0,0,0,0,0],["Vanaspati","","Edible Oils",0,0,0,100,0,0,0,0,0,0]];
 
 (function(){
 'use strict';
@@ -2182,8 +2226,10 @@ function normalizeAI(obj, F, pid, model){
 }
 const providerModel = pid => (S.ai.models[pid] || PROVIDERS[pid].model || '').trim();
 const providerBase = pid => (S.ai.bases[pid] || PROVIDERS[pid].base || '').trim().replace(/\/+$/,'');
-async function callLLM(pid, prompt, onProgress, signal){
-  const P = PROVIDERS[pid], key = (S.ai.keys[pid]||'').trim(), model = providerModel(pid);
+async function callLLM(pid, prompt, onProgress, signal, opts){
+  opts = opts || {};
+  const P = PROVIDERS[pid], key = (S.ai.keys[pid]||'').trim(), model = opts.model || providerModel(pid);
+  if (opts.audio && pid !== 'gemini') throw new Error(P.name+' can’t listen to audio.');
   if (pid === 'claude'){
     if (!sampleNS) throw new Error('Claude without a key only works while FuelWell is open inside the Claude app. In the iPhone app, use the Claude API option with your own key.');
     try { const res = await sampleNS(prompt, {modelTier:'default', signal, onText:({text}) => onProgress && onProgress(text.length)}); if (res.truncated) throw new Error('Claude’s reply was cut off. Try again.'); return res.text; }
@@ -2194,25 +2240,26 @@ async function callLLM(pid, prompt, onProgress, signal){
   let url, headers = {'content-type':'application/json'}, body, read;
   if (pid === 'anthropic'){
     url = 'https://api.anthropic.com/v1/messages'; Object.assign(headers, {'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true'});
-    body = {model, max_tokens:16000, messages:[{role:'user', content:prompt}]}; read = d => (d.content||[]).map(b => b.text||'').join('');
+    body = {model, max_tokens:opts.maxTokens || 16000, messages:[{role:'user', content:prompt}]}; if (opts.temperature !== undefined) body.temperature = opts.temperature; read = d => (d.content||[]).map(b => b.text||'').join('');
   } else if (pid === 'gemini'){
     url = 'https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent'; headers['x-goog-api-key'] = key;
-    body = {contents:[{role:'user', parts:[{text:prompt}]}], generationConfig:{responseMimeType:'application/json', maxOutputTokens:16000}};
+    body = {contents:[{role:'user', parts:(opts.audio ? [{inline_data:{mime_type:opts.audio.mime, data:opts.audio.b64}}] : []).concat([{text:prompt}])}], generationConfig:{responseMimeType:'application/json', maxOutputTokens:opts.maxTokens || 16000}};
+    if (opts.temperature !== undefined) body.generationConfig.temperature = opts.temperature;
     read = d => ((((d.candidates||[])[0]||{}).content||{}).parts||[]).map(p => p.text||'').join('');
   } else {
     const base = providerBase(pid); if (!base) throw new Error('Enter the service address for '+P.name+'.');
     url = base+'/chat/completions'; if (key) headers.authorization = 'Bearer '+key;
     if (pid === 'openrouter'){ headers['HTTP-Referer'] = (location.origin && location.origin !== 'null') ? location.origin : 'https://burzin25.github.io/fuelwell'; headers['X-Title'] = 'FuelWell'; }
-    body = {model, messages:[{role:'system', content:'You reply with valid JSON only.'},{role:'user', content:prompt}], temperature:0.6, max_tokens:12000};
+    body = {model, messages:[{role:'system', content:'You reply with valid JSON only.'},{role:'user', content:prompt}], temperature:opts.temperature !== undefined ? opts.temperature : 0.6, max_tokens:opts.maxTokens || 12000};
     if (pid === 'groq') body.response_format = {type:'json_object'};
     read = d => (((d.choices||[])[0]||{}).message||{}).content||'';
   }
   let res;
   try { res = await fetch(url, {method:'POST', headers, body:JSON.stringify(body), signal}); }
-  catch(e){ if (e && e.name === 'AbortError') throw new Error('Stopped.'); if (IN_CLAUDE) throw new Error('Inside Claude, this page can’t contact '+P.name+'. Use “Claude, inside the Claude app” here, or open FuelWell from your iPhone home screen.'); throw new Error('Couldn’t reach '+P.name+'. Check your connection and key.'); }
+  catch(e){ if (e && e.name === 'AbortError') throw new Error('Stopped.'); if (IN_CLAUDE) throw new Error('Inside Claude, this page can’t contact '+P.name+'. Use “Claude, inside the Claude app” here, or open FuelWell from your iPhone home screen.'); const ne = new Error('Couldn’t reach '+P.name+'. Check your connection and key.'); ne.retry = true; throw ne; }
   let data = null; try { data = await res.json(); } catch(e){}
-  if (!res.ok){ const msg = data && (data.error && (data.error.message || data.error) || data.message); throw new Error(P.name+' said: '+(typeof msg === 'string' ? msg : 'error '+res.status)+(res.status === 401 || res.status === 403 ? ' Check that your key is correct.' : '')); }
-  const text = read(data||{}); if (!text) throw new Error(P.name+' returned an empty reply. Try again or pick another model.');
+  if (!res.ok){ const msg = data && (data.error && (data.error.message || data.error) || data.message); throw Object.assign(new Error(P.name+' said: '+(typeof msg === 'string' ? msg : 'error '+res.status)+(res.status === 401 || res.status === 403 ? ' Check that your key is correct.' : '')), {status:res.status, retry:res.status === 429 || res.status >= 500}); }
+  const text = read(data||{}); if (!text) throw Object.assign(new Error(P.name+' returned an empty reply. Try again or pick another model.'), {retry:true});
   onProgress && onProgress(text.length); return text;
 }
 async function generate(){
@@ -2585,6 +2632,7 @@ function vSettings(embedded){
     h += '</label>';
   });
   h += '</div><label class="toggle"><input type="checkbox" id="f-remember" data-bind="ai.remember"'+(S.ai.remember ? ' checked' : '')+'><span><b>Remember my keys on this phone</b></span></label></div>';
+  h += logSettingsHTML();
   if (embedded) return h;
   h += '<div class="section">'+planButton()+'</div>';
   h += '<div class="section card pad"><h2 class="h2">Your data</h2><p class="small muted" style="margin:4px 0 10px">Everything is stored only on this phone, in this browser.</p>'+(S.confirmReset ? '<div class="note err">Erase your plan, logs, weights and settings? This can’t be undone.<div class="row" style="margin-top:10px"><button class="btn sm" data-act="reset" data-v="yes">Erase everything</button><button class="btn sm" data-act="reset" data-v="no">Keep my data</button></div></div>' : '<button class="btn sm" data-act="reset">Erase all data</button>')+'</div>';
@@ -2604,7 +2652,7 @@ function targetBox(ti){
 
 /* ---------- sheets ---------- */
 function openSheet(sh){ sheet = sh; gotIng = new Set(); renderSheet(); }
-function closeSheet(){ if (typeof stopScan === 'function') stopScan(); if (recog){ try { recog.stop(); } catch(e){} recog = null; } sheet = null; const el = $('#sheet'); el.hidden = true; el.innerHTML = ''; document.body.style.overflow = ''; releaseWake(); }
+function closeSheet(){ if (typeof stopScan === 'function') stopScan(); if (typeof voiceAbort === 'function') voiceAbort(); if (recog){ try { recog.stop(); } catch(e){} recog = null; } sheet = null; const el = $('#sheet'); el.hidden = true; el.innerHTML = ''; document.body.style.overflow = ''; releaseWake(); }
 function sheetMeal(){
   const plan = S.plan, d = sheet.d, sl = sheet.sl, dm = dayMeals(d), o = dm.meals.find(x => x.slot === sl), r = o.r, m = plan.days[d][sl];
   let cookS = o.sEff, note = '';
@@ -2998,14 +3046,14 @@ async function eoAICheck(pl){
   if (eoAIBusy[pl.id]) return;
   eoAIBusy[pl.id] = true; renderSheet();
   try {
-    const t = await callLLM(S.ai.provider, eoAIPrompt(pl)), j = parseJSON(t);
+    const t = await callLLM(logPid() || S.ai.provider, eoAIPrompt(pl)), j = parseJSON(t);
     S.eatAI = S.eatAI || {}; const ks = Object.keys(S.eatAI); if (ks.length > 60) delete S.eatAI[ks[0]];
     S.eatAI[pl.id] = {fit:clamp(Math.round(+j.fit || 0), 1, 10), order:String(j.order || '').slice(0,300), kcal:clamp(Math.round(+j.kcal || 0), 0, 3000), protein:clamp(Math.round(+j.protein || 0), 0, 250), watch:String(j.watch || '').slice(0,240), conf:String(j.confidence || 'low'), model:S.ai.provider === 'claude' ? 'Claude' : providerModel(S.ai.provider), t:Date.now()};
     save();
   } catch(e){ S.eatAI = S.eatAI || {}; S.eatAI[pl.id] = {err:e.message}; }
   eoAIBusy[pl.id] = false; if (sheet && sheet.kind === 'place' && sheet.id === pl.id) renderSheet();
 }
-function aiReady(){ const pid = S.ai.provider; if (pid === 'builtin') return false; if (pid === 'claude') return !!sampleNS; return !PROVIDERS[pid].key || !!(S.ai.keys[pid] || '').trim(); }
+function aiReady(){ return !!logPid(); }
 function placeSheet(pl){
   const sc = pl.sc, ai = (S.eatAI || {})[pl.id], pct = x => Math.round(x*100);
   let h = '<div class="eyebrow">'+esc((sc.chain ? 'Chain · ' : '')+sc.cz.n)+' · '+fmtDist(sc.dist)+(pl.open === true ? ' · Open now' : pl.open === false ? ' · Closed now' : '')+'</div>';
@@ -3016,7 +3064,7 @@ function placeSheet(pl){
   h += '<div class="section card pad"><div class="eyebrow">'+(sc.chain ? 'What to order · from their published menu' : 'What to order · typical for '+esc(sc.cz.n.toLowerCase())+' places')+'</div><p style="margin:6px 0 0"><b>'+esc(sc.order)+'</b></p><p class="small muted" style="margin:6px 0 0">About '+n0(sc.k)+' kcal and '+sc.p+' g protein. '+esc(sc.watch)+'</p></div>';
   if (!sc.chain){
     if (ai && !ai.err) h += '<div class="section card pad"><div class="sect-h"><div class="eyebrow">AI estimate · '+esc(ai.model)+'</div><span class="pill '+(ai.fit >= 7 ? '' : ai.fit >= 5 ? 'warn' : 'bad')+'">Fit '+ai.fit+'/10</span></div><p style="margin:6px 0 0"><b>'+esc(ai.order)+'</b></p><p class="small muted" style="margin:6px 0 0">About '+n0(ai.kcal)+' kcal and '+ai.protein+' g protein. '+esc(ai.watch)+'</p><p class="xs muted" style="margin:6px 0 0">Confidence: '+esc(ai.conf)+'. The AI hasn’t seen this menu unless it’s well known.</p></div>';
-    else if (eoAIBusy[pl.id]) h += '<div class="section card pad busy"><div class="spin"></div><span class="small">Asking '+esc(PROVIDERS[S.ai.provider].name)+' what to order here…</span></div>';
+    else if (eoAIBusy[pl.id]) h += '<div class="section card pad busy"><div class="spin"></div><span class="small">Asking '+esc(PROVIDERS[logPid()].name)+' what to order here…</span></div>';
     else if (ai && ai.err) h += '<div class="section note err small">AI check didn’t work: '+esc(ai.err)+' <button class="btn sm" data-act="eo-ai" data-id="'+esc(pl.id)+'">Try again</button></div>';
     else if (aiReady()) h += '<div class="section"><button class="btn" data-act="eo-ai" data-id="'+esc(pl.id)+'">Ask '+esc(PROVIDERS[S.ai.provider].name)+' what to order</button></div>';
     else h += '<p class="xs muted section">Pick an AI model in Settings to get a tailored order for local places.</p>';
@@ -3210,7 +3258,7 @@ function focusLines(plan, avg){
 let accState = null;
 function accOpen(id){ if (!accState){ try { accState = new Set(JSON.parse(sessionStorage.getItem('fw.acc') || '[]')); } catch(e){ accState = new Set(); } } return accState.has(id); }
 function setAcc(id, open){ accOpen(id); open ? accState.add(id) : accState.delete(id); try { sessionStorage.setItem('fw.acc', JSON.stringify([...accState])); } catch(e){} }
-const SET_TITLES = {'set-account':'Account and backup','set-move':'Exercise and Apple Health','set-look':'Look','set-body':'Body and goal','set-concerns':'Body concerns','set-food':'Food preferences','set-labs':'Blood tests','set-sched':'Daily schedule','set-eat':'Eating out','set-remind':'Reminders','set-ai':'Meal planner and AI'};
+const SET_TITLES = {'set-account':'Account and backup','set-move':'Exercise and Apple Health','set-look':'Look','set-body':'Body and goal','set-concerns':'Body concerns','set-food':'Food preferences','set-labs':'Blood tests','set-sched':'Daily schedule','set-eat':'Eating out','set-remind':'Reminders','set-ai':'Meal planner and AI','set-log':'Food logging and voice'};
 function setSummary(id){
   const p = S.profile, us = p.units === 'us', sc = S.sched, dn = v => (WD.find(x => x[0] === v) || [0,''])[1];
   switch (id){
@@ -3224,6 +3272,7 @@ function setSummary(id){
     case 'set-remind': { const n = Object.keys(S.remind).filter(k => S.remind[k]).length; return n+' kinds of reminder on'; }
     case 'set-account': return fbUser ? 'Signed in · backing up' : S.fbConfig ? 'Not signed in' : 'Not set up';
     case 'set-move': return S.active && Object.keys(S.active).length ? Object.keys(S.active).length+' days imported' : 'Log extra workouts from Today';
+    case 'set-log': { const p = logPid(); return (p ? PROVIDERS[p].name.replace(', inside the Claude app','') : 'No AI key')+' · voice: '+({gemini:'Gemini',groq:'Whisper',phone:'iPhone',none:'off'})[voiceEngine()]; }
     case 'set-ai': return PROVIDERS[S.ai.provider] ? PROVIDERS[S.ai.provider].name : 'Built-in planner';
   }
   return '';
@@ -3290,7 +3339,6 @@ function finishWizard(){
 
 /* ---------- Logging (merged from BurzinEats): food by text, voice, search, barcode; exercise; Apple Health; lab PDFs; chat; XP; cloud backup ---------- */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-function aiAvailable(){ const pid = S.ai.provider; if (pid === 'builtin') return false; if (pid === 'claude') return !!sampleNS; return !PROVIDERS[pid].key || !!(S.ai.keys[pid] || '').trim(); }
 function nFrom(o){ return [+o.kcal||0, +o.protein||0, +o.carbs||0, +o.fat||0, +o.fiber||0, +o.omega3_mg||0, +o.zinc_mg||0, +o.iron_mg||0, +o.vitd_mcg||0, +o.magnesium_mg||0, +o.vita_mcg||0].map(x => Math.max(0, Math.round(x*10)/10)); }
 const scaleN = (n, m) => n.map(x => x*m);
 function defaultLogSlot(){
@@ -3302,27 +3350,6 @@ function defaultLogSlot(){
 }
 function openLog(mode){ openSheet({kind:'log', mode:mode || 'type', items:[], slot:defaultLogSlot(), text:'', q:'', msg:null}); }
 
-/* local parsing when no AI is set up */
-function localParse(text){
-  const out = [], parts = String(text).toLowerCase().split(/,|\band\b|\+|\n/).map(x => x.trim()).filter(Boolean);
-  parts.forEach(p => {
-    const m = /^(\d+(?:\.\d+)?|a|an|one|two|three|half)\s+(.*)$/.exec(p);
-    const num = m ? ({a:1,an:1,one:1,two:2,three:3,half:0.5}[m[1]] ?? parseFloat(m[1])) : 1, rest = m ? m[2] : p;
-    const words = rest.replace(/[^a-z ]/g,' ').split(' ').filter(w => w.length > 2).map(w => w.replace(/(es|s)$/,''));
-    const hit = COMMON_FOODS.find(f => { const n = f[0].toLowerCase(); return words.some(w => n.includes(w)); });
-    if (hit) out.push({name:hit[0], qty:(num !== 1 ? num+' × ' : '')+'serving', base:[hit[1],hit[2],hit[3],hit[4],hit[5],0,0,0,0,0,0], mult:num, src:'list'});
-  });
-  return out;
-}
-async function aiParse(text){
-  const p = S.profile, cuisine = S.prefs.cuisine || 'mix';
-  const prompt = 'Estimate the nutrition of this food log for one adult'+(cuisine !== 'none' ? ' who often eats Indian food' : '')+'. Diet: '+S.prefs.diet+'.\nLog: """'+String(text).slice(0,600)+'"""\n'+
-    'Split it into separate foods with realistic home or restaurant portions. If a quantity is missing, assume one normal serving.\n'+
-    'Reply with ONLY JSON: {"items":[{"name":"Roti","quantity":"2 medium","kcal":210,"protein":7,"carbs":36,"fat":6,"fiber":5,"omega3_mg":0,"zinc_mg":1,"iron_mg":2,"vitd_mcg":0,"magnesium_mg":50,"vita_mcg":0}]}\n'+
-    'omega3_mg counts only EPA+DHA from fish or seafood.';
-  const j = parseJSON(await callLLM(S.ai.provider, prompt));
-  return (Array.isArray(j.items) ? j.items : []).slice(0, 15).map(it => ({name:String(it.name || 'Food').slice(0,60), qty:String(it.quantity || '').slice(0,40), base:nFrom(it), mult:1, src:'ai'}));
-}
 async function offLookup(code){
   code = String(code).replace(/\D/g,''); if (code.length < 6) throw new Error('That barcode looks too short.');
   const r = await fetch('https://world.openfoodfacts.org/api/v2/product/'+code+'.json?fields=product_name,brands,nutriments,serving_quantity,serving_size');
@@ -3368,9 +3395,11 @@ function logSheetHTML(){
   let h = '<div class="eyebrow">Log food</div><h2 class="h1">What did you eat?</h2>';
   h += '<div class="seg big four" role="tablist">'+[['type','Type or say'],['search','Search'],['scan','Scan'],['recent','Recent']].map(([k,n]) => '<button role="tab" aria-selected="'+(sh.mode === k)+'" aria-pressed="'+(sh.mode === k)+'" data-act="log-mode" data-v="'+k+'">'+n+'</button>').join('')+'</div>';
   if (sh.mode === 'type'){
-    h += '<div class="field"><label for="lg-text" class="lbl">Describe it in your own words</label><textarea id="lg-text" class="ta" rows="3" placeholder="e.g. 2 rotis, a bowl of dal and some raita">'+esc(sh.text||'')+'</textarea></div>';
-    h += '<div class="row" style="flex-wrap:wrap">'+(SR ? '<button class="btn" data-act="log-voice">'+(sh.listening ? 'Listening… tap to stop' : '🎙︎ Say it')+'</button>' : '')+'<button class="btn primary" data-act="log-parse"'+(sh.busy ? ' disabled' : '')+'>'+(sh.busy ? 'Estimating…' : 'Estimate')+'</button></div>';
-    if (!aiAvailable()) h += '<p class="xs muted" style="margin:0">No AI model is set up, so FuelWell matches against its own food list. For better estimates, pick a model in Me → Meal planner and AI.</p>';
+    h += voiceBoxHTML();
+    if (sh.heard) h += '<p class="small" style="margin:0"><span class="muted">I heard:</span> “'+esc(sh.heard)+'”</p>';
+    h += '<div class="field"><label for="lg-text" class="lbl">Or type it</label><textarea id="lg-text" class="ta" rows="2" placeholder="e.g. 2 rotis, a bowl of dal and some raita">'+esc(sh.text||'')+'</textarea></div>';
+    h += '<button class="btn primary" data-act="log-parse"'+(sh.busy ? ' disabled' : '')+'>'+(sh.busy ? 'Working it out…' : 'Estimate')+'</button>';
+    if (!aiAvailable()) h += '<p class="xs muted" style="margin:0">No AI key yet, so FuelWell matches against its own food list. For free-form logging, add a free Gemini key in Me → Food logging and voice.</p>';
   } else if (sh.mode === 'search'){
     h += '<div class="field"><label for="lg-q" class="lbl">Search foods</label><input id="lg-q" type="text" placeholder="e.g. roti, salmon, yogurt" value="'+esc(sh.q||'')+'" autocomplete="off"></div><div class="srch">';
     searchFoods(sh.q || '').forEach((f,i) => { h += '<button class="srow" data-act="log-addsearch" data-i="'+i+'"><span>'+esc(f.name)+'<small> · '+esc(f.qty)+'</small></span><span class="num small muted">'+n0(f.base[0])+' kcal · '+n0(f.base[1])+' g</span></button>'; });
@@ -3386,8 +3415,8 @@ function logSheetHTML(){
   if (sh.items.length){
     const tot = sh.items.reduce((a,it) => a.map((x,i) => x + it.base[i]*it.mult), Z());
     h += '<div class="card pad pend"><div class="sect-h"><b>Check before saving</b><span class="small muted num">'+n0(tot[0])+' kcal · '+n0(tot[1])+' g protein</span></div>';
-    sh.items.forEach((it,i) => { h += '<div class="prow"><div class="pn"><b>'+esc(it.name)+'</b><span class="xs muted">'+esc(it.qty || '')+(it.src === 'ai' ? ' · AI estimate' : it.src === 'barcode' ? ' · from barcode' : '')+'</span></div><div class="pm"><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="-0.5" aria-label="Less">−</button><span class="num">×'+(Math.round(it.mult*10)/10)+'</span><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="0.5" aria-label="More">+</button><button class="iconbtn" data-act="log-del" data-i="'+i+'" aria-label="Remove">'+ICON.close+'</button></div><span class="xs muted num pk">'+n0(it.base[0]*it.mult)+' kcal · '+n0(it.base[1]*it.mult)+' g</span></div>'; });
-    const opts = (plan ? plan.slots : []).filter(sl => !(lg.eaten || {})[sl]);
+    sh.items.forEach((it,i) => { h += '<div class="prow"><div class="pn"><b>'+esc(it.name)+'</b><span class="xs muted">'+esc(it.qty || '')+(it.src === 'ai' ? ' · AI estimate' : it.src === 'barcode' ? ' · from barcode' : it.src === 'ifct' ? ' · IFCT raw' : '')+(it.check ? ' · <b class="warnc">check amount</b>' : '')+'</span></div><div class="pm"><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="-0.5" aria-label="Less">−</button><span class="num">×'+(Math.round(it.mult*100)/100)+'</span><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="0.5" aria-label="More">+</button><button class="iconbtn" data-act="log-del" data-i="'+i+'" aria-label="Remove">'+ICON.close+'</button></div><span class="xs muted num pk">'+n0(it.base[0]*it.mult)+' kcal · '+n0(it.base[1]*it.mult)+' g</span></div>'; });
+    const opts = (plan && planIndexOf(todayKey()) >= 0 ? plan.slots : []).filter(sl => !(lg.eaten || {})[sl]);
     h += '<div class="field"><span class="lbl">This was</span><div class="chips">'+opts.map(sl => '<button class="chip sm" data-act="log-slot" data-v="'+sl+'" aria-pressed="'+(sh.slot === sl)+'">My '+SLOTNAME[sl].toLowerCase()+'</button>').join('')+'<button class="chip sm" data-act="log-slot" data-v="extra" aria-pressed="'+(sh.slot === 'extra')+'">Something extra</button></div><span class="hint">'+(sh.slot !== 'extra' ? 'It replaces your planned '+SLOTNAME[sh.slot].toLowerCase()+', and the rest of the day re-balances.' : 'Added on top of your plan; later meals shrink a little to make room.')+'</span></div>';
     h += '<button class="btn primary big" data-act="log-save">Save to today</button></div>';
   }
@@ -3433,8 +3462,8 @@ async function importHealth(file){
 
 /* blood report PDF */
 async function readLabPDF(file){
-  const pid = S.ai.provider;
-  if (!['anthropic','gemini'].includes(pid)) throw new Error('Reading PDFs needs the Claude API or Google Gemini. Pick one in Meal planner and AI, add its key, then try again.');
+  const hasK = k => !!(S.ai.keys[k] || '').trim(), pid = ['anthropic','gemini'].includes(S.ai.provider) && hasK(S.ai.provider) ? S.ai.provider : hasK('gemini') ? 'gemini' : hasK('anthropic') ? 'anthropic' : S.ai.provider;
+  if (!['anthropic','gemini'].includes(pid)) throw new Error('Reading PDFs needs a Google Gemini or Claude API key. Add one in Me → Food logging and voice, then try again.');
   const key = (S.ai.keys[pid] || '').trim(); if (!key) throw new Error('Add your '+PROVIDERS[pid].name+' key first.');
   const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(file); });
   const ask = 'Read this blood test report. Return ONLY JSON: {"vitd_ng_ml":number|null,"ferritin_ng_ml":number|null,"zinc_mcg_dl":number|null,"b12_pg_ml":number|null,"tsh_miu_l":number|null,"date":"YYYY-MM-DD"|null,"flags":[{"test":string,"value":string,"status":"Low"|"High"}],"summary":string}. Convert units: vitamin D nmol/L ÷ 2.5; zinc µmol/L × 6.54; B12 pmol/L × 1.355; ferritin µg/L = ng/mL. summary: at most 3 plain sentences on what stands out, no diagnosis or treatment advice.';
@@ -3468,7 +3497,7 @@ async function sendChat(text){
     const hist = S.chat.slice(-8).map(m => (m.role === 'user' ? 'User: ' : 'FuelWell: ')+m.text).join('\n');
     const prompt = 'You are FuelWell, a friendly, straight-talking nutrition coach inside a meal-planning app. Use plain language and keep answers under 120 words. No diagnosis or medication advice; suggest a doctor when appropriate.\nUser context: '+chatContext()+'\nConversation:\n'+hist+'\n'+
       'If the user asks you to log food, include an action with estimated nutrition. If they ask to log water, include a water action.\nReply with ONLY JSON: {"reply":"text","action":null} or {"reply":"text","action":{"type":"log_food","items":[{"name":"","quantity":"","kcal":0,"protein":0,"carbs":0,"fat":0,"fiber":0,"omega3_mg":0,"zinc_mg":0,"iron_mg":0,"vitd_mcg":0,"magnesium_mg":0,"vita_mcg":0}]}} or {"reply":"text","action":{"type":"log_water","glasses":1}}';
-    const raw = await callLLM(S.ai.provider, prompt); let j; try { j = parseJSON(raw); } catch(e){ j = {reply:String(raw).slice(0,800)}; }
+    const raw = await callLLM(logPid() || S.ai.provider, prompt); let j; try { j = parseJSON(raw); } catch(e){ j = {reply:String(raw).slice(0,800)}; }
     let reply = String(j.reply || '…').slice(0,1200);
     const ac = j.action, lg = L(todayKey());
     if (ac && ac.type === 'log_food' && Array.isArray(ac.items) && ac.items.length){ const items = ac.items.slice(0,10).map(it => ({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:String(it.name||'Food').slice(0,60), qty:String(it.quantity||'').slice(0,40), n:nFrom(it), t:nowMin(), src:'chat'})); lg.extra = (lg.extra || []).concat(items); reply += '\n✓ Logged: '+items.map(x => x.name).join(', '); }
@@ -3481,7 +3510,7 @@ async function sendChat(text){
 function chatSheetHTML(){
   const msgs = S.chat || [];
   let h = '<div class="eyebrow">Ask FuelWell</div><h2 class="h1">Your food coach</h2>';
-  if (!aiAvailable()) return h+'<p class="lede">Chat needs an AI model. Pick one in Me → Meal planner and AI (Groq and Gemini have free tiers).</p><button class="btn" data-act="gotoset" data-sec="set-ai">Set up AI</button>';
+  if (!aiAvailable()) return h+'<p class="lede">Chat needs an AI model. Add a free Gemini or Groq key in Me → Food logging and voice.</p><button class="btn" data-act="gotoset" data-sec="set-ai">Set up AI</button>';
   h += '<div class="chatlist">'+(msgs.length ? msgs.map(m => '<div class="bubble '+m.role+'">'+esc(m.text).replace(/\n/g,'<br>')+'</div>').join('') : '<div class="small muted" style="padding:14px 4px">Try “How’s my protein today?”, “What should I order at Chipotle?” or “Log a coffee with milk.”</div>')+(sheet.busy ? '<div class="bubble assistant">…</div>' : '')+'</div>';
   h += '<form class="chatin" data-act="chat-form"><input id="chat-in" type="text" placeholder="Ask anything, or tell me what to log" autocomplete="off"><button class="btn primary" data-act="chat-send"'+(sheet.busy ? ' disabled' : '')+'>Send</button></form>';
   if (msgs.length) h += '<button class="linkbtn" data-act="chat-clear">Clear conversation</button>';
@@ -3608,6 +3637,414 @@ function moveSection(){
     '<input id="hk-file" type="file" accept=".zip,.xml"><button class="btn" data-act="hk-import">Import Apple Health export</button><p class="xs muted" style="margin:0">Large exports can take a minute. Imported calories are shown in Progress; they don’t change your targets, because your activity level already covers them.</p>'+(S.hkMsg ? '<div class="note small">'+esc(S.hkMsg)+'</div>' : '')+'</div>';
 }
 
+/* ---------- Stronger food logging: smart offline matcher, AI with food references and retries, voice recordings the AI hears ---------- */
+
+/* which AI reads food logs: the "Food logging and voice" setting, else the meal planner's model, else any model with a saved key */
+function pidReady(pid){
+  const P = PROVIDERS[pid]; if (!P || pid === 'builtin') return false;
+  if (pid === 'claude') return !!sampleNS;
+  if (P.key && !(S.ai.keys[pid] || '').trim()) return false;
+  if (P.needsBase && !providerBase(pid)) return false;
+  return !!providerModel(pid);
+}
+function logPid(){
+  const sel = S.ai.logProvider || 'auto';
+  if (sel !== 'auto') return pidReady(sel) ? sel : null;
+  if (pidReady(S.ai.provider)) return S.ai.provider;
+  return ['gemini','anthropic','groq','openrouter','claude','custom'].find(pidReady) || null;
+}
+function aiAvailable(){ return !!logPid(); }
+
+/* ---- words ---- */
+const NUMW = {a:1,an:1,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fifteen:15,twenty:20,half:0.5,couple:2,few:3,dozen:12,single:1,double:2,quarter:0.25};
+const UNIT_WORDS = {g:'g',gm:'g',gms:'g',gram:'g',grams:'g',gr:'g',kg:'kg',ml:'ml',l:'l',liter:'l',litre:'l',oz:'oz',ounce:'oz',ounces:'oz',lb:'lb',lbs:'lb',pound:'lb',pounds:'lb',cup:'cup',cups:'cup',bowl:'bowl',bowls:'bowl',katori:'katori',katoris:'katori',vati:'katori',wati:'katori',plate:'plate',plates:'plate',glass:'glass',glasses:'glass',mug:'glass',mugs:'glass',piece:'piece',pieces:'piece',pc:'piece',pcs:'piece',slice:'piece',slices:'piece',tbsp:'tbsp',tablespoon:'tbsp',tablespoons:'tbsp',tsp:'tsp',teaspoon:'tsp',teaspoons:'tsp',spoon:'tbsp',spoons:'tbsp',spoonful:'tbsp',scoop:'scoop',scoops:'scoop',serving:'serving',servings:'serving',portion:'serving',portions:'serving',handful:'handful',handfuls:'handful',can:'can',cans:'can',bottle:'bottle',bottles:'bottle',packet:'packet',packets:'packet',pack:'packet',jar:'jar'};
+const SIZE_WORDS = {small:0.75,tiny:0.5,medium:1,regular:1,large:1.3,big:1.3,huge:1.6,full:1,heaped:1.3,heaping:1.3};
+const G_PER = {g:1,kg:1000,oz:28.35,lb:453.6,ml:1,l:1000};
+const CUPS = {cup:1,bowl:1.25,katori:0.75,glass:1.1,plate:1.4,can:1.5,bottle:2,jar:1.2,handful:0.25,tbsp:1/16,tsp:1/48,scoop:0.33,packet:1};
+const LOG_STOP = new Set('i im ive id had have has having ate eaten eat eating just also like really so um uh uhh hmm basically about around approx approximately roughly maybe then after before today tonight yesterday morning afternoon evening night breakfast lunch dinner brunch snack snacks meal for in at on from to my me we our the of with without was were is it its that this there and or plus along got grabbed drank drink drinking took okay ok yeah yes no actually think guess cooked raw fresh plain boiled hard soft homemade home made style some bit little more less extra serving'.split(' '));
+const FOOD_SYN = {chapati:'roti',chapatti:'roti',chappati:'roti',chapathi:'roti',chappathi:'roti',phulka:'roti',rotti:'roti',roty:'roti',rody:'roti',roadie:'roti',rotee:'roti',rote:'roti',
+  daal:'dal',dhal:'dal',dhaal:'dal',dahl:'dal',doll:'dal',dull:'dal',
+  dahi:'yogurt',curd:'yogurt',yoghurt:'yogurt',chawal:'rice',anda:'egg',ande:'egg',murgh:'chicken',murg:'chicken',aloo:'potato',alu:'potato',palak:'spinach',bhindi:'okra',gobi:'cauliflower',gobhi:'cauliflower',
+  idly:'idli',idlee:'idli',dosai:'dosa',dhosa:'dosa',pohe:'poha',panir:'paneer',omelet:'omelette',omlet:'omelette',omlette:'omelette',chhole:'chole',chholey:'chole',cholay:'chole',channa:'chana',chickpea:'chana',
+  subzi:'sabzi',sabji:'sabzi',subji:'sabzi',sabjee:'sabzi',sabzee:'sabzi',biriyani:'biryani',briyani:'biryani',biriani:'biryani',parantha:'paratha',paratha:'paratha',prantha:'paratha',lassie:'lassi',raitha:'raita',
+  sambhar:'sambar',khichri:'khichdi',khichadi:'khichdi',kichdi:'khichdi',rajmah:'rajma',mutter:'matar',mattar:'matar',kheema:'keema',qeema:'keema',burji:'bhurji',bhurjee:'bhurji',bhurgi:'bhurji',
+  protien:'protein',chaa:'chaas',chhaa:'chaas',yogurts:'yogurt',chapatis:'roti',cofee:'coffee',expresso:'espresso',sandwhich:'sandwich',sandwitch:'sandwich',brocoli:'broccoli',tikki:'tikki'};
+const TEXT_FIX = [[/\bpan ?ear\b/g,'paneer'],[/\bpa ?neer\b/g,'paneer'],[/\broti ?s\b/g,'rotis'],[/\bgreek yoghurt\b/g,'greek yogurt'],[/\bmac (?:n|&|and) cheese\b/g,'mac_and_cheese'],[/\brice (?:n|&|and) beans\b/g,'rice_and_beans'],[/\bdal ?chawal\b/g,'dal, rice'],[/\bchai ?tea\b/g,'chai'],[/\bpeanut ?butter\b/g,'peanut_butter'],[/\bice ?cream\b/g,'ice_cream']];
+
+function stemW(w){
+  if (w.length > 4 && /ies$/.test(w)) return w.slice(0,-3)+'y';
+  if (w.length > 4 && /oes$/.test(w)) return w.slice(0,-2);
+  if (w.length > 3 && /[^s]s$/.test(w)) return w.slice(0,-1);
+  return w;
+}
+function ftoks(s){
+  return String(s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]+/g,' ').split(/\s+/).filter(Boolean)
+    .map(w => FOOD_SYN[w] || w).map(stemW).map(w => FOOD_SYN[w] || w)
+    .filter(w => w.length > 1 && !LOG_STOP.has(w) && !UNIT_WORDS[w] && !SIZE_WORDS[w] && NUMW[w] === undefined && !/^\d/.test(w));
+}
+const uniqA = a => Array.from(new Set(a));
+function lev2(a, b){ // edit distance, stops early above 2
+  if (Math.abs(a.length - b.length) > 2) return 3;
+  let prev = Array.from({length:b.length+1}, (_, i) => i);
+  for (let i = 1; i <= a.length; i++){
+    const cur = [i]; let rowMin = i;
+    for (let j = 1; j <= b.length; j++){ cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1)); rowMin = Math.min(rowMin, cur[j]); }
+    if (rowMin > 2) return 3; prev = cur;
+  }
+  return prev[b.length];
+}
+function feq(a, b){
+  if (a === b) return 1;
+  const L = Math.min(a.length, b.length); if (L < 4) return 0;
+  if ((a.startsWith(b) || b.startsWith(a)) && Math.abs(a.length - b.length) <= 2) return 0.9;
+  if (L < 5) return 0;
+  const d = lev2(a, b);
+  return d === 1 ? 0.85 : (d === 2 && L >= 7) ? 0.75 : 0;
+}
+
+/* ---- food index: FuelWell dishes, grocery catalog, IFCT 2017 ---- */
+let FIDX = null;
+function parseServ(s){
+  s = String(s||'').toLowerCase().trim(); let n = 1, u = null;
+  const m = /^(\d+\/\d+|\d+(?:\.\d+)?)?\s*([a-z]+)?/.exec(s);
+  if (m && m[1]) n = m[1].includes('/') ? (+m[1].split('/')[0]) / (+m[1].split('/')[1]) : +m[1];
+  if (m && m[2]) u = UNIT_WORDS[m[2]] || null;
+  return {n: n || 1, u, label: s};
+}
+function foodIndex(){
+  if (FIDX) return FIDX; FIDX = [];
+  COMMON_FOODS.forEach(f => { const serv = (/\(([^)]*)\)/.exec(f[0]) || [])[1] || '1 serving';
+    FIDX.push({src:'list', name:f[0], short:f[0].replace(/\s*\(.*?\)\s*/g,' ').trim(), toks:uniqA(ftoks(f[0].replace(/\(.*?\)/g,' '))), alias:uniqA(ftoks(f[6] || '')), serv:parseServ(serv), base:[f[1],f[2],f[3],f[4],f[5],0,0,0,0,0,0], bonus:0.12}); });
+  Object.values(C).forEach(c => { if (!c.nut || ['rice','quinoa','ricepasta','lentils'].includes(c.k)) return; // dry grains: the cooked dishes above fit what people say
+    FIDX.push({src:'cat', name:c.n, short:c.n.replace(/\s*\(.*?\)\s*/g,' ').trim(), toks:uniqA(ftoks(c.n.replace(/\(.*?\)/g,' '))), alias:uniqA(ftoks(c.k)), u:c.u, per:c.per, base:c.nut.slice(), meat:(c.t||[]).some(t => t === 'meat' || t === 'fish'), bonus:0.06}); });
+  if (typeof IFCT !== 'undefined') IFCT.forEach(r => {
+    FIDX.push({src:'ifct', name:r[0], short:r[0], toks:uniqA(ftoks(r[0].replace(/\(.*?\)/g,' '))), alias:uniqA(ftoks(r[1].replace(/\|/g,' '))), u:'g', per:100, base:[r[3],r[4],r[5],r[6],r[7],0,r[8],r[9],r[10],r[11],r[12]], bonus:-0.25}); });
+  FIDX.forEach((e, i) => e.i = i);
+  return FIDX;
+}
+function scoreEntry(T, e){
+  if (!e.toks.length || !T.length) return null;
+  const used = new Set(); let cov = 0, am = 0;
+  e.toks.forEach(et => { let best = 0, bi = -1; T.forEach((t, i) => { const q = feq(t, et); if (q > best){ best = q; bi = i; } }); if (best > 0){ cov += best; used.add(bi); } });
+  e.alias.forEach(at => T.forEach((t, i) => { if (!used.has(i)){ const q = feq(t, at); if (q >= 0.85){ used.add(i); am += q; } } }));
+  if (!cov && !am) return null;
+  let covE = cov / e.toks.length; if (am) covE = Math.max(covE, 0.8);
+  const covT = used.size / T.length;
+  return {e, s:0.55*covE + 0.45*covT + e.bonus - 0.012*e.toks.length, covE, covT};
+}
+function rankFoods(T, n){
+  const out = []; foodIndex().forEach(e => { const r = scoreEntry(T, e); if (r && r.covE >= 0.3) out.push(r); });
+  out.sort((a, b) => b.s - a.s || a.e.i - b.e.i);
+  return out.slice(0, n || 3);
+}
+
+/* ---- amounts ---- */
+function parseQty(s){
+  const w = String(s).toLowerCase().replace(/(\d)\s*(kg|gms?|grams?|g|ml|oz|lbs?|l)\b/g, '$1 $2').replace(/(\d)\s*\/\s*(\d)/g, '$1/$2').replace(/½/g, ' 0.5').split(/\s+/).filter(Boolean);
+  let num = null, unit = null, size = 1; const rest = [];
+  for (let i = 0; i < w.length; i++){
+    const x = w[i];
+    if (num === null && /^\d+(\.\d+)?$/.test(x)){ const v = parseFloat(x); if (v >= 25 && !UNIT_WORDS[w[i+1]]) { rest.push(x); continue; } num = v; continue; }
+    if (num === null && /^\d+\/\d+$/.test(x)){ num = (+x.split('/')[0]) / (+x.split('/')[1] || 1); continue; }
+    if (x === 'half'){ num = (num === null || (num === 1 && /^an?$/.test(w[i-1] || ''))) ? 0.5 : num + 0.5; continue; }
+    if (x === 'quarter'){ num = 0.25; continue; }
+    if (num === null && NUMW[x] !== undefined){ num = NUMW[x]; continue; }
+    if (!unit && UNIT_WORDS[x]){ unit = UNIT_WORDS[x]; continue; }
+    if (SIZE_WORDS[x]){ size = SIZE_WORDS[x]; continue; }
+    rest.push(x);
+  }
+  return {num:num === null ? 1 : num, implicit:num === null, unit, size, rest:rest.join(' ')};
+}
+const fmtN = x => String(Math.round(x*100)/100);
+function amountFor(q, e){
+  const num = q.num * q.size;
+  if (e.src === 'list'){
+    const sv = e.serv; let mult = num, check = false;
+    if (q.unit && G_PER[q.unit] && sv.u && G_PER[sv.u]) mult = num*G_PER[q.unit] / (sv.n*G_PER[sv.u]);
+    else if (q.unit && CUPS[q.unit] && sv.u && CUPS[sv.u]) mult = num*CUPS[q.unit] / (sv.n*CUPS[sv.u]);
+    else if (q.unit && G_PER[q.unit]){ mult = 1; check = true; }
+    else if (!q.unit || q.unit === 'piece' || q.unit === 'serving'){ mult = q.implicit ? q.size : (sv.n > 1 && (!sv.u || sv.u === 'piece') ? num / sv.n : num); }
+    return {mult, qty:sv.label, check};
+  }
+  if (e.u === 'each'){ const n = q.unit && G_PER[q.unit] ? num*G_PER[q.unit]/50 : num; return {mult:n, qty:'1', check:false}; }
+  if (e.u !== 'g' && e.u !== 'ml'){ return {mult:num, qty:'1 '+e.u, check:false}; }
+  let grams;
+  if (q.unit && G_PER[q.unit]) grams = num * G_PER[q.unit];
+  else if (q.unit && CUPS[q.unit]) grams = num * CUPS[q.unit] * (e.u === 'ml' ? 240 : 150);
+  else grams = num * (e.u === 'ml' ? 240 : e.meat ? 150 : 100);
+  return {mult:grams / e.per, qty:'100 '+e.u, grams, check:!q.unit};
+}
+function itemFrom(e, q){
+  const a = amountFor(q, e);
+  // per-100g entries keep base per 100 and use mult; show the gram amount in the label
+  return {name:e.short.replace(/^./, c => c.toUpperCase()), qty:a.qty, base:e.base.map(x => Math.round(x*10)/10), mult:Math.round(a.mult*100)/100, src:e.src === 'ifct' ? 'ifct' : 'list', check:a.check || e.src === 'ifct'};
+}
+
+/* ---- offline parser ---- */
+function splitHard(text){
+  let t = ' '+String(text||'').toLowerCase().replace(/[’']/g,'')+' ';
+  TEXT_FIX.forEach(([re, to]) => { t = t.replace(re, to); });
+  t = t.replace(/\b(?:i|we)\s+(?:also\s+)?(?:had|ate|have had|just had|drank|got)\b/g, ',').replace(/\b(?:for|at)\s+(?:breakfast|lunch|dinner|brunch|snack)\b/g, ',');
+  return t.split(/[,;\n.!?]|\bthen\b|\balso\b|\bplus\b|\band then\b|\bafter that\b|\bfollowed by\b/).map(x => x.replace(/_/g,' ').trim()).filter(x => ftoks(x).length);
+}
+const SOFT = /\s(?:and|with|along with|n|&|\+)\s/;
+const SOFT_LV = [/\s(?:and|along with|n|&|\+)\s/, /\s(?:with|in)\s/];
+function matchChunk(chunk, out, miss, level){
+  const q = parseQty(chunk), T = ftoks(q.rest);
+  if (!T.length) return;
+  const ranked = rankFoods(T, 6); let best = ranked[0];
+  // grams given: prefer a per-100 g food over a dish with an unknown weight
+  if (best && q.unit && G_PER[q.unit] && best.e.src === 'list' && !G_PER[best.e.serv.u]){ const alt = ranked.find(r => r.e.src !== 'list' && r.s >= 0.6 && r.covT >= best.covT); if (alt) best = alt; }
+  if (best && best.covT >= 0.99 && best.s >= 0.5){ out.push(itemFrom(best.e, q)); return; }
+  for (let lv = level; lv < SOFT_LV.length; lv++){
+    const parts = (' '+chunk+' ').split(SOFT_LV[lv]).map(x => x.trim()).filter(Boolean);
+    if (parts.length > 1){ parts.forEach(p => matchChunk(p, out, miss, lv + 1)); return; }
+  }
+  if (best && best.s >= 0.5){ out.push(itemFrom(best.e, q)); if (best.covT < 0.6) miss.push(chunk); return; }
+  miss.push(chunk);
+}
+function localParse(text){
+  const out = [], miss = [];
+  splitHard(text).forEach(ch => matchChunk(ch, out, miss, 0));
+  localParse.miss = miss;
+  return out;
+}
+
+/* ---- AI parsing ---- */
+function foodRefs(text){
+  const lines = [], seen = new Set();
+  if (text) splitHard(text).forEach(ch => {
+    const parts = (' '+ch+' ').split(SOFT).concat([ch]);
+    parts.forEach(p => { const T = ftoks(parseQty(p).rest); if (!T.length) return;
+      rankFoods(T, 2).filter(r => r.s >= 0.55).forEach(({e}) => { if (seen.has(e.name) || lines.length >= 14) return; seen.add(e.name);
+        const b = e.base, mic = e.src === 'list' ? '' : ', zinc '+b[6]+' mg, iron '+b[7]+' mg, magnesium '+b[9]+' mg, vit A '+b[10]+' mcg, vit D '+b[8]+' mcg';
+        lines.push('- '+e.short+(e.src === 'ifct' ? ' (raw ingredient, IFCT 2017 lab data)' : '')+', per '+(e.src === 'list' ? e.serv.label : e.u === 'each' ? '1' : '100 '+e.u)+': '+b[0]+' kcal, '+b[1]+' g protein, '+b[2]+' g carbs, '+b[3]+' g fat, '+b[4]+' g fiber'+mic); }); });
+  });
+  const T = ftoks(text || ''), mine = recentFoods().filter(f => !text || ftoks(f.name).some(t => T.some(u => feq(t, u) >= 0.85))).slice(0, text ? 4 : 8);
+  mine.forEach(f => { if (lines.length < 18) lines.push('- (this person logged before) '+f.name+(f.qty ? ', '+f.qty : '')+': '+n0(f.n[0])+' kcal, '+n0(f.n[1])+' g protein, '+n0(f.n[2])+' g carbs, '+n0(f.n[3])+' g fat'); });
+  return lines.join('\n');
+}
+function foodPrompt(text, audio){
+  const cuisine = S.prefs.cuisine || 'mix', refs = foodRefs(text);
+  return 'You turn a food log into nutrition numbers for one adult'+(cuisine !== 'none' ? ' who often eats Indian home food' : '')+'. Diet: '+S.prefs.diet+'.\n'+
+  (audio ? 'The log is the attached voice recording. First write down what they said in "heard", then extract the foods.\n' : 'The log may be typed, or spoken and transcribed by speech recognition.\n')+
+  'Expect filler words, run-on sentences, self-corrections ("two rotis, no actually three") and misheard food words (e.g. "doll" or "dull" = dal, "roadie" or "rody" = roti, "pan ear" = paneer, "poor e" = puri, "bindi" = bhindi). Fix them with common sense about what people eat.\n'+
+  'Rules:\n- One item per distinct food or drink. Merge repeats. Use the final amount after any correction.\n- Ignore anything that is not food they ate or drank (times, feelings, plans, foods they skipped).\n'+
+  '- Use stated amounts exactly (grams, oz, cups, pieces). If no amount, assume one typical portion and set confidence "medium".\n'+
+  '- Typical portions: 1 roti 40 g; 1 katori or bowl of dal or sabzi 150-200 g; 1 cup cooked rice 160 g; 1 glass 250 ml; 1 restaurant curry about 1.5 cups. Count the oil, ghee or butter cooked into dishes.\n'+
+  (refs ? '- FuelWell reference values (use them when a food clearly matches, scaled to the amount; otherwise use your own knowledge of USDA and IFCT data):\n'+refs+'\n' : '')+
+  'Reply with ONLY JSON:\n{"heard":"the log rewritten as a short clean list, e.g. 2 rotis, 1 bowl dal, 1 glass sweet lassi","items":[{"name":"Roti","quantity":"2 medium (80 g)","kcal":210,"protein":7,"carbs":36,"fat":6,"fiber":5,"omega3_mg":0,"zinc_mg":1,"iron_mg":2,"vitd_mcg":0,"magnesium_mg":50,"vita_mcg":0,"confidence":"high"}],"unclear":""}\n'+
+  'omega3_mg counts only EPA+DHA from fish or seafood. confidence: "high" = food and amount clear, "medium" = amount assumed, "low" = unsure what the food was. Put anything you could not understand in "unclear".'+
+  (text ? '\nLog: """'+String(text).slice(0, 800)+'"""' : '');
+}
+function parseFoodJSON(raw){
+  let t = String(raw || '').replace(/```(?:json)?/gi, '').trim();
+  const a = t.indexOf('{'), b = t.indexOf('['), st = a < 0 ? b : b < 0 ? a : Math.min(a, b);
+  if (st < 0) throw Object.assign(new Error('The AI didn’t send back food data.'), {retry:true});
+  t = t.slice(st);
+  const tryP = s => { try { return JSON.parse(s); } catch(e){ return undefined; } };
+  let j = tryP(t.slice(0, t.lastIndexOf(t[0] === '[' ? ']' : '}') + 1));
+  for (let i = t.lastIndexOf('}'); j === undefined && i > 0; i = t.lastIndexOf('}', i - 1)){ const h = t.slice(0, i + 1); j = tryP(h+']}'); if (j === undefined) j = tryP(h+']'); if (j === undefined) j = tryP(h+'}]}'); }
+  if (j === undefined) throw Object.assign(new Error('The AI’s reply was cut off.'), {retry:true});
+  return Array.isArray(j) ? {items:j} : j;
+}
+function normItems(j){
+  return (Array.isArray(j.items) ? j.items : []).slice(0, 20).map(it => {
+    const o = Object.assign({}, it); if (o.kcal === undefined && o.calories !== undefined) o.kcal = o.calories;
+    const base = nFrom(o), est = 4*base[1] + 4*base[2] + 9*base[3];
+    if (est > 20 && (!base[0] || Math.abs(base[0] - est) / est > 0.3)) base[0] = Math.round(est); // keep calories consistent with the macros
+    return {name:String(it.name || 'Food').slice(0, 60), qty:String(it.quantity || '').slice(0, 40), base, mult:1, src:'ai', check:/low/i.test(it.confidence || '')};
+  }).filter(it => it.base[0] > 0 || it.base[1] > 0);
+}
+async function llmFood(pid, prompt, opts){
+  const P = PROVIDERS[pid];
+  let models = [providerModel(pid)];
+  if (pid !== 'claude' && pid !== 'custom') models = uniqA(models.concat(P.models || [], pid === 'gemini' ? ['gemini-flash-latest','gemini-flash-lite-latest'] : [])).filter(Boolean).slice(0, 4);
+  let last;
+  for (let round = 0; round < 2; round++){
+    for (const model of models){
+      try { return parseFoodJSON(await callLLM(pid, prompt, null, null, Object.assign({temperature:0.2, maxTokens:8000, model}, opts || {}))); }
+      catch(e){ last = e; if (!e.retry && e.status !== 404 && !/model/i.test(e.message || '')) throw e; }
+    }
+    if (round === 0) await new Promise(r => setTimeout(r, 1200));
+  }
+  throw last;
+}
+
+/* ---- estimate: AI when available, else offline; AI failure falls back to offline ---- */
+function localEstimate(txt, voice){
+  const its = localParse(txt), miss = localParse.miss || [];
+  if (voice) sheet.heard = txt;
+  if (its.length){ sheet.items = sheet.items.concat(its); sheet.text = miss.length ? miss.join(', ') : '';
+    sheet.msg = {t:'Matched '+its.length+' from FuelWell’s food list. Check the amounts.'+(miss.length ? ' Not sure about: “'+miss.join('”, “')+'” (still in the box; try Search).' : '')}; }
+  else sheet.msg = {err:true, t:'Couldn’t match that to FuelWell’s food list. Try Search, or add a free Gemini key in Me → Food logging and voice.'};
+}
+async function logEstimate(opt){
+  opt = opt || {}; if (!sheet || sheet.kind !== 'log') return;
+  const txt = (sheet.text || '').trim(); if (!txt){ sheet.msg = {err:true, t:'Type or say what you ate first.'}; renderSheet(); return; }
+  const pid = logPid();
+  if (!pid){ localEstimate(txt, opt.voice); renderSheet(); return; }
+  sheet.busy = true; sheet.msg = {t:PROVIDERS[pid].name+' is working it out…'}; renderSheet();
+  try { const j = await llmFood(pid, foodPrompt(txt)); if (!sheet || sheet.kind !== 'log') return; if (opt.voice) sheet.heard = txt; applyAI(j); }
+  catch(e){ if (!sheet || sheet.kind !== 'log') return; sheet.busy = false; localEstimate(txt, opt.voice); if (sheet.items.length) sheet.msg = {err:true, t:'The AI didn’t answer ('+e.message+') so I matched from FuelWell’s food list. Check the amounts.'}; else sheet.msg = {err:true, t:e.message}; renderSheet(); }
+}
+function applyAI(j, fromAudio){
+  const its = normItems(j); sheet.busy = false;
+  if (fromAudio && j.heard) sheet.heard = String(j.heard).slice(0, 300);
+  if (its.length){ sheet.items = sheet.items.concat(its); sheet.text = '';
+    sheet.msg = {t:'Here’s my estimate. Fix anything that’s off, then save.'+(j.unclear && String(j.unclear).trim() ? ' Not sure about: '+String(j.unclear).slice(0, 120) : '')}; }
+  else sheet.msg = {err:true, t:'I couldn’t find any foods in that. Try again or type it.'};
+  renderSheet();
+}
+
+/* ---- voice ---- */
+const canRecord = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder && (window.AudioContext || window.webkitAudioContext));
+function voiceEngine(){
+  const sel = S.ai.voice || 'auto', key = k => !!(S.ai.keys[k] || '').trim(), rec = canRecord() && !IN_CLAUDE;
+  if (sel === 'gemini' && rec && key('gemini')) return 'gemini';
+  if (sel === 'groq' && rec && key('groq')) return 'groq';
+  if (sel === 'phone') return SR ? 'phone' : 'none';
+  if (rec && key('gemini')) return 'gemini';
+  if (rec && key('groq')) return 'groq';
+  return SR ? 'phone' : 'none';
+}
+const VOICE_NOTE = {gemini:'Gemini listens to your recording, so food names like roti, dal and paneer come through right.', groq:'Whisper (on Groq) writes down your words, then the AI estimates them.', phone:'Uses iPhone speech recognition. For much better accuracy, add a free Gemini key in Me → Food logging and voice.', none:'Voice isn’t available here. Tap the box and use the 🎤 on your keyboard.'};
+let REC = null, phoneRec = null;
+function voiceBoxHTML(){
+  const eng = voiceEngine(), on = !!(REC || phoneRec), mic = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>', stop = '<svg viewBox="0 0 24 24" width="22" height="22"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor"/></svg>';
+  if (eng === 'none') return '<p class="xs muted" style="margin:0">'+VOICE_NOTE.none+'</p>';
+  let h = '<div class="vbox'+(on ? ' on' : '')+'"><button class="vmic'+(on ? ' on' : '')+'" data-act="log-voice" aria-label="'+(on ? 'Stop recording' : 'Record what you ate')+'"'+(sheet.busy ? ' disabled' : '')+'>'+(on ? stop : mic)+'</button><div class="vmeta">';
+  if (on) h += '<b>Listening… <span class="num" id="vtime">0:00</span></b><div class="vlevel"><i id="vlevel"></i></div><span class="xs muted">Stops by itself when you pause. Tap ■ when you’re done.</span>';
+  else h += '<b>Tap and say what you ate</b><span class="xs muted">“Two rotis, a bowl of dal and a glass of lassi”</span>';
+  h += '</div></div><p class="xs muted" style="margin:0">'+VOICE_NOTE[eng]+'</p>';
+  return h;
+}
+function voiceToggle(){
+  if (REC){ recStop(true); return; }
+  if (phoneRec){ try { phoneRec.stop(); } catch(e){} return; }
+  const eng = voiceEngine();
+  if (eng === 'gemini' || eng === 'groq') recStart(eng); else if (eng === 'phone') phoneStart();
+}
+function voiceAbort(){ if (REC) recStop(false); if (phoneRec){ phoneRec.onend = null; try { phoneRec.abort(); } catch(e){} phoneRec = null; } }
+
+async function recStart(eng){
+  const AC = window.AudioContext || window.webkitAudioContext, ac = new AC(); // made inside the tap so iPhone lets it run
+  sheet.msg = null; sheet.heard = '';
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}}); }
+  catch(e){ try { ac.close(); } catch(x){} sheet.msg = {err:true, t:e && e.name === 'NotAllowedError' ? 'Microphone access is off. Allow it in iPhone Settings → Safari → Microphone (or tap aA → Website Settings), then try again.' : 'Couldn’t start the microphone. Type it instead.'}; renderSheet(); return; }
+  try { if (ac.state === 'suspended') await ac.resume(); } catch(e){}
+  const mime = ['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/aac'].find(m => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || '';
+  let mr; try { mr = new MediaRecorder(stream, mime ? {mimeType:mime} : undefined); } catch(e){ mr = new MediaRecorder(stream); }
+  const an = ac.createAnalyser(); an.fftSize = 1024; ac.createMediaStreamSource(stream).connect(an);
+  const buf = new Float32Array(an.fftSize);
+  REC = {eng, ac, stream, mr, chunks:[], t0:performance.now(), spoke:false, lastLoud:performance.now(), noise:0.008, raf:0};
+  mr.ondataavailable = e => { if (e.data && e.data.size && REC) REC.chunks.push(e.data); };
+  mr.start(250);
+  renderSheet();
+  const tick = () => {
+    if (!REC) return;
+    an.getFloatTimeDomainData(buf); let sq = 0; for (let i = 0; i < buf.length; i++) sq += buf[i]*buf[i];
+    const rms = Math.sqrt(sq / buf.length), now = performance.now(), el = now - REC.t0, thr = Math.max(0.012, REC.noise * 3);
+    if (rms > thr){ REC.spoke = true; REC.lastLoud = now; } else REC.noise = REC.noise*0.97 + rms*0.03;
+    const lv = document.getElementById('vlevel'); if (lv) lv.style.width = Math.min(100, Math.round(rms / 0.12 * 100))+'%';
+    const tm = document.getElementById('vtime'); if (tm){ const s = Math.floor(el / 1000); tm.textContent = Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+    if (REC.spoke && now - REC.lastLoud > 2200) return recStop(true);
+    if (!REC.spoke && el > 9000){ recStop(false); if (sheet){ sheet.msg = {err:true, t:'I didn’t hear anything. Tap the mic and try again, closer to the phone.'}; renderSheet(); } return; }
+    if (el > 60000) return recStop(true);
+    REC.raf = requestAnimationFrame(tick);
+  };
+  REC.raf = requestAnimationFrame(tick);
+}
+function recStop(process){
+  const R = REC; if (!R) return; REC = null; cancelAnimationFrame(R.raf);
+  const done = () => { R.stream.getTracks().forEach(t => t.stop()); try { R.ac.close(); } catch(e){}
+    if (!process || !sheet || sheet.kind !== 'log'){ if (sheet) renderSheet(); return; }
+    const blob = new Blob(R.chunks, {type:(R.mr.mimeType || 'audio/mp4')});
+    if (blob.size < 2000){ sheet.msg = {err:true, t:'That recording was too short. Try again.'}; renderSheet(); return; }
+    handleRecording(blob, R.eng);
+  };
+  if (R.mr.state !== 'inactive'){ R.mr.onstop = done; try { R.mr.requestData(); } catch(e){} try { R.mr.stop(); } catch(e){ done(); } } else done();
+}
+async function blobB64(blob){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); }); }
+async function toWav16k(blob){
+  const AC = window.AudioContext || window.webkitAudioContext, OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  const ab = await blob.arrayBuffer(), ac = new AC();
+  const audio = await new Promise((res, rej) => { const p = ac.decodeAudioData(ab, res, rej); if (p && p.then) p.then(res, rej); });
+  try { ac.close(); } catch(e){}
+  const rate = 16000, len = Math.max(1, Math.ceil(audio.duration * rate)), off = new OAC(1, len, rate), src = off.createBufferSource();
+  src.buffer = audio; src.connect(off.destination); src.start(0);
+  const out = await new Promise((res, rej) => { off.oncomplete = e => res(e.renderedBuffer); const p = off.startRendering(); if (p && p.then) p.then(res, rej); });
+  const pcm = out.getChannelData(0), dv = new DataView(new ArrayBuffer(44 + pcm.length*2)), ws = (o, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(o+i, s.charCodeAt(i)); };
+  ws(0,'RIFF'); dv.setUint32(4, 36 + pcm.length*2, true); ws(8,'WAVE'); ws(12,'fmt '); dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true); dv.setUint32(24,rate,true); dv.setUint32(28,rate*2,true); dv.setUint16(32,2,true); dv.setUint16(34,16,true); ws(36,'data'); dv.setUint32(40, pcm.length*2, true);
+  for (let i = 0; i < pcm.length; i++){ const s = Math.max(-1, Math.min(1, pcm[i])); dv.setInt16(44 + i*2, s < 0 ? s*0x8000 : s*0x7fff, true); }
+  return new Blob([dv], {type:'audio/wav'});
+}
+function whisperHint(){ return ('Food log. I had 2 rotis, dal tadka, paneer bhurji, poha, idli, dosa, sambar, chole, rajma, raita, lassi, chai, Greek yogurt, oats, protein shake, chicken breast, basmati rice, '+recentFoods().slice(0, 8).map(f => f.name.replace(/\s*\(.*?\)/g,'')).join(', ')).slice(0, 600); }
+async function whisper(blob){
+  const fd = new FormData(), ext = /wav/.test(blob.type) ? 'wav' : /webm/.test(blob.type) ? 'webm' : 'm4a';
+  fd.append('file', blob, 'food.'+ext); fd.append('model', 'whisper-large-v3-turbo'); fd.append('language', 'en'); fd.append('temperature', '0'); fd.append('response_format', 'json'); fd.append('prompt', whisperHint());
+  let r; try { r = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {method:'POST', headers:{authorization:'Bearer '+(S.ai.keys.groq || '').trim()}, body:fd}); }
+  catch(e){ throw new Error('Couldn’t reach Groq. Check your connection.'); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('Groq said: '+((j.error && j.error.message) || 'error '+r.status));
+  return String(j.text || '').trim();
+}
+async function handleRecording(blob, eng){
+  sheet.busy = true; sheet.msg = {t:eng === 'gemini' ? 'Gemini is listening to your recording…' : 'Writing down what you said…'}; renderSheet();
+  let wav = null; try { wav = await toWav16k(blob); } catch(e){}
+  try {
+    if (eng === 'gemini'){
+      const audio = wav ? {b64:await blobB64(wav), mime:'audio/wav'} : {b64:await blobB64(blob), mime:(blob.type || 'audio/mp4').split(';')[0]};
+      const j = await llmFood('gemini', foodPrompt(null, true), {audio});
+      if (!sheet || sheet.kind !== 'log') return;
+      applyAI(j, true);
+    } else {
+      const text = await whisper(wav || blob);
+      if (!sheet || sheet.kind !== 'log') return;
+      if (!text){ sheet.busy = false; sheet.msg = {err:true, t:'I didn’t catch any words. Try again.'}; renderSheet(); return; }
+      sheet.busy = false; sheet.text = text; await logEstimate({voice:true});
+    }
+  } catch(e){ if (!sheet || sheet.kind !== 'log') return; sheet.busy = false; sheet.msg = {err:true, t:e.message+' Your words weren’t lost: tap the mic to try again, or type it.'}; renderSheet(); }
+}
+/* iPhone speech recognition (no key needed): keeps listening through short pauses, cleans up repeats, estimates when you stop */
+function phoneStart(){
+  let r; try { r = new SR(); } catch(e){ sheet.msg = {err:true, t:'Voice input isn’t available here. Use the 🎤 on your keyboard.'}; renderSheet(); return; }
+  phoneRec = r; r.lang = S.ai.voiceLang || 'en-IN'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
+  const start = sheet.text ? sheet.text.trim()+' ' : ''; let said = '', timer = null, failed = false;
+  const arm = () => { clearTimeout(timer); timer = setTimeout(() => { try { r.stop(); } catch(e){} }, 2500); };
+  r.onresult = ev => {
+    const segs = []; for (let i = 0; i < ev.results.length; i++){ const s = ev.results[i][0].transcript.trim(); if (!s) continue; const p = segs[segs.length-1];
+      if (p && s.toLowerCase().startsWith(p.toLowerCase())) segs[segs.length-1] = s; else if (!(p && p.toLowerCase().endsWith(s.toLowerCase()))) segs.push(s); }
+    said = segs.join(' '); sheet.text = start + said; const ta = $('#lg-text'); if (ta) ta.value = sheet.text; arm();
+  };
+  r.onerror = ev => { failed = ev.error !== 'no-speech' && ev.error !== 'aborted'; if (sheet) sheet.msg = {err:true, t:ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? 'Microphone or Siri dictation is off. Turn on Settings → General → Keyboard → Enable Dictation, and allow the microphone for Safari.' : ev.error === 'no-speech' ? 'I didn’t hear anything. Try again.' : 'Didn’t catch that. Try again or type it.'}; };
+  r.onend = () => { clearTimeout(timer); phoneRec = null; if (!sheet || sheet.kind !== 'log') return; renderSheet(); if (said.trim() && !failed) logEstimate({voice:true}); };
+  try { r.start(); arm(); sheet.msg = null; sheet.heard = ''; renderSheet(); } catch(e){ phoneRec = null; sheet.msg = {err:true, t:'Couldn’t start voice input. Type it instead.'}; renderSheet(); }
+}
+
+/* ---- settings: Food logging and voice ---- */
+function logSettingsHTML(){
+  const pid = logPid(), eng = voiceEngine(), sel = S.ai.logProvider || 'auto', vs = S.ai.voice || 'auto', lang = S.ai.voiceLang || 'en-IN';
+  const chip = (k, v, label, on) => '<button class="chip sm" data-act="logai" data-k="'+k+'" data-v="'+v+'" aria-pressed="'+on+'">'+label+'</button>';
+  let h = '<div class="section card pad form" id="set-log"><div><h2 class="h2">Food logging and voice</h2><p class="small muted" style="margin:3px 0 0">Which AI reads what you type or say when you log food. It can be different from the one that plans your meals. Keys stay on this phone.</p></div>';
+  h += '<div class="field"><span class="lbl">AI for logging</span><div class="chips">'+chip('logProvider','auto','Automatic',sel === 'auto')+['gemini','anthropic','groq','openrouter'].concat(IN_CLAUDE ? ['claude'] : []).map(k => chip('logProvider', k, PROVIDERS[k].name.replace(' free models','').replace(', inside the Claude app',''), sel === k)).join('')+'</div><span class="hint">'+(pid ? 'Now using '+esc(PROVIDERS[pid].name)+' ('+esc(pid === 'claude' ? 'Claude' : providerModel(pid))+').' : 'No AI key saved yet, so FuelWell matches against its own list of about 170 dishes plus 540 Indian foods (IFCT 2017).')+'</span></div>';
+  [['gemini','Google Gemini key (free, best for voice)'],['groq','Groq key (free, adds Whisper speech-to-text)'],['anthropic','Claude API key (paid, very accurate for text)']].forEach(([k, n]) => {
+    h += '<div class="field"><label for="lk-'+k+'">'+n+'</label><input id="lk-'+k+'" type="password" autocomplete="off" placeholder="Paste your key" value="'+esc(S.ai.keys[k] || '')+'" data-bind="ai.keys.'+k+'"><span class="hint"><a href="'+PROVIDERS[k].keyUrl+'" target="_blank" rel="noopener">Get a key ↗</a></span></div>'; });
+  h += '<div class="field"><span class="lbl">Voice</span><div class="chips">'+chip('voice','auto','Automatic',vs === 'auto')+chip('voice','gemini','Gemini hears it',vs === 'gemini')+chip('voice','groq','Whisper on Groq',vs === 'groq')+chip('voice','phone','iPhone speech',vs === 'phone')+'</div><span class="hint">Now: '+esc(VOICE_NOTE[eng])+'</span></div>';
+  h += '<div class="field"><span class="lbl">Accent for iPhone speech</span><div class="chips">'+chip('voiceLang','en-IN','English (India)',lang === 'en-IN')+chip('voiceLang','en-US','English (US)',lang === 'en-US')+chip('voiceLang','en-GB','English (UK)',lang === 'en-GB')+'</div></div>';
+  h += '<div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="logtest">Try “2 rotis and a bowl of dal”</button><span class="small" id="logtest-msg">'+esc(testMsg.__log || '')+'</span></div></div>';
+  return h;
+}
+async function logTest(){
+  const pid = logPid(), el = () => document.getElementById('logtest-msg');
+  if (!pid){ const its = localParse('2 rotis and a bowl of dal'); testMsg.__log = 'No AI: matched '+its.map(i => i.name+' ×'+i.mult).join(', ')+'.'; if (el()) el().textContent = testMsg.__log; return; }
+  testMsg.__log = 'Asking '+PROVIDERS[pid].name+'…'; if (el()) el().textContent = testMsg.__log;
+  try { const its = normItems(await llmFood(pid, foodPrompt('2 rotis and a bowl of dal'))); testMsg.__log = '✓ '+its.map(i => i.name+' '+n0(i.base[0])+' kcal').join(', '); }
+  catch(e){ testMsg.__log = e.message; }
+  if (el()) el().textContent = testMsg.__log;
+}
+
 /* ---------- render + events ---------- */
 function render(){
   if (['plan','shop'].includes(S.tab)){ S.weekView = S.tab === 'shop' ? 'shop' : 'plan'; S.tab = 'week'; }
@@ -3726,27 +4163,15 @@ document.addEventListener('click', e => {
     case 'add-move': openSheet({kind:'move', move:'walk', mins:30}); break;
     case 'add-water': { const lg = L(todayKey()); lg.water = clamp((lg.water||0) + 1, 0, 20); save(); closeSheet(); render(); toast('Water: '+lg.water+' glasses today'); break; }
     case 'log-mode': if (sheet.mode === 'scan') stopScan(); sheet.mode = a.dataset.v; sheet.msg = null; renderSheet(); if (sheet.mode === 'search'){ const q = $('#lg-q'); if (q) q.focus(); } break;
-    case 'log-voice': {
-      if (recog){ try { recog.stop(); } catch(err){} recog = null; sheet.listening = false; renderSheet(); break; }
-      try { recog = new SR(); recog.lang = 'en-US'; recog.interimResults = true; recog.continuous = false;
-        const startText = sheet.text ? sheet.text.trim()+' ' : '';
-        recog.onresult = ev => { let t = ''; for (const r of ev.results) t += r[0].transcript; sheet.text = startText + t; const ta = $('#lg-text'); if (ta) ta.value = sheet.text; };
-        recog.onend = () => { recog = null; if (sheet){ sheet.listening = false; renderSheet(); } };
-        recog.onerror = ev => { if (sheet){ sheet.msg = {err:true, t:ev.error === 'not-allowed' ? 'Microphone access is off. Allow it in Settings → Safari → Microphone.' : 'Didn’t catch that. Try again or type it.'}; } };
-        recog.start(); sheet.listening = true; renderSheet();
-      } catch(err){ sheet.msg = {err:true, t:'Voice input isn’t available here. Type it instead.'}; renderSheet(); }
-      break; }
-    case 'log-parse': {
-      const txt = (sheet.text || '').trim(); if (!txt){ sheet.msg = {err:true, t:'Type or say what you ate first.'}; renderSheet(); break; }
-      if (!aiAvailable()){ const its = localParse(txt); if (its.length){ sheet.items = sheet.items.concat(its); sheet.msg = {t:'Matched from FuelWell’s food list. Adjust amounts if needed.'}; } else sheet.msg = {err:true, t:'Couldn’t match that. Try Search, or set up an AI model for free-form logging.'}; renderSheet(); break; }
-      sheet.busy = true; sheet.msg = null; renderSheet();
-      aiParse(txt).then(its => { if (!sheet) return; sheet.busy = false; if (its.length){ sheet.items = sheet.items.concat(its); sheet.text = ''; sheet.msg = {t:'Here’s my estimate. Fix anything that’s off, then save.'}; } else sheet.msg = {err:true, t:'Couldn’t find foods in that. Try rephrasing.'}; renderSheet(); }, err => { if (!sheet) return; sheet.busy = false; sheet.msg = {err:true, t:err.message}; renderSheet(); });
-      break; }
+    case 'log-voice': voiceToggle(); break;
+    case 'log-parse': logEstimate(); break;
+    case 'logai': S.ai[a.dataset.k] = a.dataset.v; testMsg.__log = ''; save(); { const y = window.scrollY; render(); window.scrollTo(0, y); } break;
+    case 'logtest': logTest(); break;
     case 'log-addsearch': { const f = searchFoods(sheet.q || '')[+a.dataset.i]; if (f){ sheet.items.push(f); sheet.msg = {t:'Added '+f.name+'.'}; renderSheet(); } break; }
     case 'log-addrecent': { const f = recentFoods()[+a.dataset.i]; if (f){ sheet.items.push({name:f.name, qty:f.qty||'', base:f.n.slice(), mult:1, src:'recent'}); renderSheet(); } break; }
     case 'log-scan': if (sheet.scanning){ stopScan().then(renderSheet); } else startScan(); break;
     case 'log-code': { const v = ($('#lg-code') || {}).value || ''; barcodeFound(v); break; }
-    case 'log-mult': { const it = sheet.items[+a.dataset.i]; if (it){ it.mult = clamp(Math.round((it.mult + (+a.dataset.v))*10)/10, 0.5, 10); renderSheet(); } break; }
+    case 'log-mult': { const it = sheet.items[+a.dataset.i]; if (it){ { const st = it.mult < 1 || (it.mult === 1 && +a.dataset.v < 0) ? 0.25 : 0.5; it.mult = clamp(Math.round((it.mult + Math.sign(+a.dataset.v)*st)*100)/100, 0.25, 20); } renderSheet(); } break; }
     case 'log-del': sheet.items.splice(+a.dataset.i, 1); renderSheet(); break;
     case 'log-slot': sheet.slot = a.dataset.v; renderSheet(); break;
     case 'log-save': saveLog(); break;
