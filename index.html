@@ -1303,6 +1303,7 @@ item('oats','Rolled oats','Pantry','g',1190,'42 oz canister',4.48,[379,13.2,67.7
 item('rice','Brown basmati rice','Pantry','g',907,'2 lb bag',3.48,[370,7.9,77,2.9,3.5,0,2.0,1.5,0,143,0],{q:'brown basmati rice 2 lb'});
 item('quinoa','Quinoa','Pantry','g',340,'12 oz bag',3.97,[368,14,64,6,7,0,3.1,4.6,0,197,1],{q:'quinoa 12 oz'});
 item('potatoes','Yellow potatoes','Produce','g',2268,'5 lb bag',4.47,[77,2,17.5,0.1,2.1,0,0.3,0.8,0,23,0],{q:'yellow potatoes 5 lb'});
+item('sweetpotato','Sweet potatoes','Produce','g',1360,'3 lb bag',3.48,[86,1.6,20.1,0.1,3,0,0.3,0.6,0,25,709],{q:'sweet potatoes 3 lb bag'});
 item('sourdough','Sourdough bread','Bakery','each',16,'1 loaf (about 16 slices)',3.98,[105,4,20,0.7,1,0,0.3,1.3,0,10,0],{t:['gluten'],cn:['slice sourdough bread','slices sourdough bread'],q:'sourdough bread loaf'});
 item('corntort','Corn tortillas','Bakery','each',30,'30-pack',2.48,[57,1.5,12,0.7,1.6,0,0.3,0.3,0,19,0],{cn:['corn tortilla','corn tortillas'],q:'corn tortillas 30 count'});
 item('ricepasta','Brown rice pasta','Pantry','g',454,'1 lb bag',2.98,[360,7.5,76,2.9,3,0,1.6,1.3,0,100,0],{q:'brown rice pasta penne'});
@@ -1652,6 +1653,27 @@ rec('gi2',MAIN,'Chana masala with rice',30,[['chickpeas',0.5],['rice',55],['cant
  'Fry the onion and garlic in the oil for 6 minutes with cumin seeds.',
  'Add the tomatoes and chana masala spice and cook 5 minutes.',
  'Add the chickpeas and ½ cup water, simmer 12 minutes and serve with rice.'],['chana masala','cumin seeds','salt'],IN);
+/* Meal-prep recipes: cook a big batch once, portion it, reheat in the microwave. 'keeps' means it holds 4 days in the fridge and freezes well. */
+rec('mp1',MAIN,'Meal-prep chicken, rice and sweet potato bowl',35,[['chicken',150],['rice',60],['sweetpotato',150],['greenbeans',100],['oil',0.5]],[
+ 'Heat the oven to 425°F. Cut the sweet potatoes into ¾-inch cubes, toss with half the oil and a pinch of salt and spread on a sheet pan. Roast for 25 minutes.',
+ 'Start the rice in a rice cooker or pot while the oven heats. It needs no attention.',
+ 'Season the chicken with smoked paprika, cumin, salt and pepper. Put it on a second pan with the rest of the oil and bake for 20 minutes, adding the green beans for the last 10 minutes. The chicken must reach 165°F inside.',
+ 'Rest the chicken for 5 minutes, then slice. Divide the rice, sweet potato, green beans and chicken into containers. Let them cool uncovered for 20 minutes before putting on the lids.'],['smoked paprika','cumin','salt','black pepper'],{keeps:1});
+rec('mp2',MAIN,'Meal-prep chicken, quinoa and roasted pepper bowl',35,[['chicken',150],['quinoa',55],['pepper',1],['zucchini',0.5],['spinach',30],['oil',0.5],['lemon',0.25]],[
+ 'Heat the oven to 425°F. Cut the peppers and zucchini into strips, toss with half the oil and salt and roast for 20 minutes.',
+ 'Cook the quinoa in twice its volume of water for 15 minutes.',
+ 'Season the chicken with oregano, paprika and salt. Bake it on a second pan with the rest of the oil for 20 minutes, until it reaches 165°F inside.',
+ 'Slice the chicken. Divide the quinoa, vegetables and chicken into containers, adding the spinach and a squeeze of lemon to each. Cool before covering.'],['dried oregano','smoked paprika','salt'],{keeps:1});
+rec('mp3',MAIN,'Meal-prep turkey, sweet potato and spinach hash',25,[['turkey',130],['sweetpotato',150],['spinach',40],['pepper',0.5],['oil',0.5]],[
+ 'Cut the sweet potatoes into small cubes and microwave them for 5 minutes to soften.',
+ 'Brown the turkey in the oil for 6 minutes. Add the peppers and sweet potatoes with smoked paprika, cumin and salt and cook for 8 minutes.',
+ 'Stir in the spinach until just wilted. Divide into containers and cool before covering.'],['smoked paprika','cumin','salt'],{keeps:1});
+rec('mp4',MAIN,'Meal-prep chicken and sweet potato curry with rice',35,[['chicken',140],['sweetpotato',120],['rice',50],['spinach',40],['cantom',0.25],['oil',0.5]],[
+ 'Cut the chicken and sweet potatoes into bite-size pieces. Start the rice in a rice cooker or pot.',
+ 'Heat the oil in a large pot. Stir in turmeric, cumin, ground ginger and coriander for 30 seconds, then add the chicken and cook for 5 minutes.',
+ 'Add the sweet potatoes, tomatoes and ¾ cup water per serving. Cover and simmer for 18 minutes.',
+ 'Stir in the spinach and garam masala. Divide the curry and rice into containers and cool before covering.'],['turmeric','cumin seeds','ground ginger','ground coriander','garam masala (no garlic or onion)','salt'],Object.assign({keeps:1},IN));
+['m1','m3','m4','m5','m7','m9','m10','m11','m16','m17','g1','g2','g3','g4','i1','i6','gi1','gi2'].forEach(id => { const r = RX.find(x => x.id === id); if (r) r.keeps = 1; });
 ['i1','i2','i3','i4','i5','i6','i7','i8','gi1','gi2'].forEach(id => { const r = RX.find(x => x.id === id); if (r) r.cuisine = 'indian'; });
 
 /* More conditions (from BurzinEats) */
@@ -1759,7 +1781,7 @@ function defaults(){
     profile:{units:'us',sex:'male',age:30,ft:5,inch:10,cm:178,lb:170,kg:77,act:1.55,goal:'muscle',custom:'',calAdj:0,example:true},
     concerns:{dryskin:true,dryears:true,hair:true,back:true,acne:true,gas:true,energy:false,joints:false},
     otherConcern:'',
-    prefs:{diet:'any',dairy:'yogurt',avoid:'',quick:false,leftovers:false,variety:'lean',meals:5,cuisine:'mix'},
+    prefs:{diet:'any',dairy:'yogurt',avoid:'',quick:false,leftovers:false,variety:'lean',meals:5,cuisine:'mix',mealprep:false,prepL:1,prepD:2},
     labs:{vitd:'',ferritin:'',zinc:'',b12:'',tsh:'',date:''},
     sched:{workDays:[1,2,3,4,5],wake:'06:30',bed:'22:30',offWake:'08:00',offBed:'23:00',workStart:'09:00',workEnd:'17:30',gymDays:[1,3,5],gymTime:'18:00',gymDur:75,prepDay:0,prepTime:'16:00'},
     remind:{meals:true,prep:true,thaw:true,pack:true,mobility:true,gym:true},
@@ -1865,6 +1887,7 @@ function pools(ctx){
   ['breakfast','lunch','dinner','snack'].forEach(sl => { P[sl] = get(sl, false); if (P[sl].length < 3) P[sl] = get(sl, true); });
   if (ctx.cuisine === 'indian') ['breakfast','lunch','dinner'].forEach(sl => { const ind = P[sl].filter(r => r.cuisine === 'indian'); if (ind.length >= 2) P[sl] = ind; });
   myRecipes().forEach(r => ['breakfast','lunch','dinner','snack'].forEach(sl => { if (r.slots.includes(sl)) P[sl].push(r); }));
+  if (prepOn()) ['lunch','dinner'].forEach(sl => { const k = P[sl].filter(r => r.keeps || r.batch || String(r.id).startsWith('my_')); if (k.length >= 2) P[sl] = k; });
   P.pre = P.snack.filter(r => r.pre);
   P.evening = P.snack.filter(r => r.p >= 15);
   if (P.evening.length < 2) P.evening = P.snack.slice();
@@ -1873,7 +1896,7 @@ function pools(ctx){
 
 /* ---------- dates ---------- */
 const ymd = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-function planStart(){ const n = new Date(); const d = new Date(n.getFullYear(), n.getMonth(), n.getDate()); const w = d.getDay(); if (w === 0) d.setDate(d.getDate()+1); else d.setDate(d.getDate()-(w-1)); return ymd(d); }
+function planStart(){ const n = new Date(); const d = new Date(n.getFullYear(), n.getMonth(), n.getDate()); const w = d.getDay(); if (w === 0) d.setDate(d.getDate()+1); else if (w === 6) d.setDate(d.getDate()+2); else d.setDate(d.getDate()-(w-1)); return ymd(d); }
 function dayDate(plan, i){ const [y,m,dd] = plan.start.split('-').map(Number); return new Date(y, m-1, dd+i); }
 const fmtD = (d,o) => d.toLocaleDateString('en-US', o);
 const todayKey = () => ymd(new Date());
@@ -1884,9 +1907,10 @@ function nowMin(){ const n = new Date(); return n.getHours()*60 + n.getMinutes()
 function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
 /* ---------- planner ---------- */
-function fitDay(day, T, Pt, share, plan){
+function fitDay(day, T, Pt, share, plan, locked){
   const ms = Object.keys(day).map(sl => ({sl, m:day[sl], r:getR(day[sl].rid, plan)})).filter(x => x.r && x.r.cal > 0);
-  ms.forEach(x => { x.m.s = clamp(q25(T*share[x.sl]/x.r.cal), .5, 3); });
+  const lk = x => !!(locked && locked.has(x.sl));
+  ms.forEach(x => { if (!lk(x)) x.m.s = clamp(q25(T*share[x.sl]/x.r.cal), .5, 3); });
   const obj = () => {
     let cal = 0, p = 0, pen = 0;
     for (const x of ms){ const s = x.m.s; cal += x.r.cal*s; p += x.r.p*s; if (s < .75) pen += (.75-s)*8; if (s > 2) pen += (s-2)*6; if ((x.sl === 'snack' || x.sl === 'evening') && s > 1.5) pen += (s-1.5)*12; pen += Math.abs(x.r.cal*s/T - share[x.sl])*12; }
@@ -1896,10 +1920,11 @@ function fitDay(day, T, Pt, share, plan){
   for (let it = 0; it < 60; it++){
     let best = null, bestV = cur;
     for (let i = 0; i < ms.length; i++){
+      if (lk(ms[i])) continue;
       const s0 = ms[i].m.s;
       for (const d of [.25, -.25]){ const s1 = s0 + d; if (s1 < .5 || s1 > 3) continue; ms[i].m.s = s1; const v = obj(); if (v < bestV - 1e-9){ bestV = v; best = [[i,s1]]; } ms[i].m.s = s0; }
       for (let j = 0; j < ms.length; j++){
-        if (i === j) continue; const b0 = ms[j].m.s; if (s0 + .25 > 3 || b0 - .25 < .5) continue;
+        if (i === j || lk(ms[j])) continue; const b0 = ms[j].m.s; if (s0 + .25 > 3 || b0 - .25 < .5) continue;
         ms[i].m.s = s0 + .25; ms[j].m.s = b0 - .25; const v = obj(); if (v < bestV - 1e-9){ bestV = v; best = [[i, s0+.25],[j, b0-.25]]; } ms[i].m.s = s0; ms[j].m.s = b0;
       }
     }
@@ -1939,13 +1964,15 @@ function buildPlan(seed){
   const N = 140;
   for (let it = 0; it < N; it++){
     const Bs = pick(P.breakfast, K.breakfast), Ls = pick(P.lunch, K.lunch), Ds = pick(P.dinner, K.dinner), Ss = pick(P.snack, K.snack), Es = pick(P.evening, K.evening), Ps = pick(P.pre.length ? P.pre : P.snack, K.pre);
-    const B = seq(Bs, r => !!r.ahead), D = seq(Ds, () => false), L = seq(Ls, r => !!r.batch), Sn = seq(Ss, () => false), E = seq(Es, () => false), Pr = seq(Ps, () => false);
+    const prep = prepOn();
+    let B = seq(Bs, r => !!r.ahead), D = seq(Ds, () => false), L = seq(Ls, r => !!r.batch); const Sn = seq(Ss, () => false), E = seq(Es, () => false), Pr = seq(Ps, () => false);
+    if (prep){ const pl = prepSeq(Ls, prepN('prepL'), []); L = pl.seq; D = prepSeq(Ds, prepN('prepD'), pl.chosen).seq; }
     const plan = {slots:F.slots, recipes:{}, days:[]};
     let objSum = 0;
     for (let d = 0; d < 7; d++){
       const day = {};
       day.breakfast = {rid:B[d].id, s:1};
-      if (S.prefs.leftovers && d > 0) day.lunch = {rid:D[d-1].id, s:1, lo:true};
+      if (S.prefs.leftovers && !prep && d > 0) day.lunch = {rid:D[d-1].id, s:1, lo:true};
       else { let lr = L[d]; if (lr.id === D[d].id){ lr = Ls.find(x => x.id !== D[d].id) || lr; } day.lunch = {rid:lr.id, s:1}; }
       day.dinner = {rid:D[d].id, s:1};
       const sn = F.gym[d] ? Pr[d] : Sn[d]; day.snack = {rid:sn.id, s:1};
@@ -1953,6 +1980,7 @@ function buildPlan(seed){
       objSum += fitDay(day, F.dayT[d], F.tg.p, F.share, plan);
       plan.days.push(day);
     }
+    if (prep){ prepNormalize(plan); objSum = 0; plan.days.forEach((day, d) => { objSum += fitDay(day, F.dayT[d], F.tg.p, F.share, plan, PLOCK); }); }
     const avg = weekTotals(plan);
     let pen = 0;
     ['fib','o3','zn','fe','vd','mg','va'].forEach(k => { pen += (1 - Math.min(1, avg[NI(k)]/F.tg[k])) * (W[k]||1) * 30; });
@@ -2026,6 +2054,7 @@ function fmtNeed(k, q){
 /* Thaw tonight (evening of day e): tomorrow's breakfast, snacks and dinner, plus the lunch for the day after
    (that lunch gets cooked and packed tomorrow evening). Only meals from Wednesday on use frozen meat. */
 function thawList(e){
+  if (prepOn()) return [];
   const plan = S.plan, tot = {};
   const add = (d, sl) => { if (d < 2 || d > 6) return; const m = plan.days[d][sl]; if (!m || m.lo) return; const r = getR(m.rid); if (!r) return; let s = m.s;
     if (sl === 'dinner' && d < 6){ const nl = plan.days[d+1].lunch; if (nl && nl.lo && nl.rid === m.rid) s += nl.s; }
@@ -2045,16 +2074,20 @@ function timeline(d){
     const tm = plan.days[d+1], next = dayInfo(d+1);
     const bR = tm.breakfast && getR(tm.breakfast.rid);
     if (bR && bR.ahead) items.push({kind:'prep', id:'oats', t:info.bed - 60, title:'Make tomorrow’s '+bR.name.toLowerCase(), sub:'5 minutes. It sets overnight in the fridge.'});
+    const pth = prepOn() ? prepThawText(plan, d) : '';
+    if (pth) items.push({kind:'thaw', id:'thaw', t:info.bed - 90, title:pth, sub:'It needs about 24 hours to thaw safely'});
     const th = thawList(d);
     if (th.length) items.push({kind:'thaw', id:'thaw', t:info.bed - 90, title:'Move '+th.join(' and ')+' from the freezer to the fridge', sub:'It needs about 24 hours to thaw safely'});
-    if (next.work && tm.lunch){
+    if (next.work && tm.lunch && prepOn() && !tm.lunch.lo){
+      items.push({kind:'pack', id:'pack', t:Math.max(info.bed - 120, 1230), title:'Pack tomorrow’s lunch box', sub:'It is already cooked. Take it from the fridge, nothing to make.'});
+    } else if (next.work && tm.lunch){
       const lr = getR(tm.lunch.rid), today = plan.days[d].lunch, again = today && today.rid === tm.lunch.rid;
       let runS = 0, runN = 0; for (let k = d+1; k < 7 && runN < 3; k++){ const lm = plan.days[k].lunch; if (!lm || lm.lo || lm.rid !== tm.lunch.rid) break; runS += lm.s; runN++; }
       const title = tm.lunch.lo ? 'Pack leftovers of tonight’s dinner for lunch' : again ? 'Pack another portion of '+lr.name.toLowerCase()+' for lunch' : runN > 1 ? 'Make '+frac(runS)+' servings of '+lr.name.toLowerCase()+'. Pack one for tomorrow’s lunch and refrigerate the rest' : 'Make and pack tomorrow’s lunch: '+lr.name;
       items.push({kind:'pack', id:'pack', t:tm.lunch.lo || again ? info.bed - 45 : Math.max(info.bed - 150, (mealTimes(info, plan.slots).t.dinner || 1110) + 45), title, sub:tm.lunch.lo || again ? 'Use a sealed container and keep it in the fridge' : 'About '+lr.min+' minutes. Cook it alongside dinner if you can.'});
     }
   }
-  if (d === 2){ const later = grainUse(plan, 3, 6); if (later.rice > 60 || later.quinoa > 60) items.push({kind:'prep', id:'grain', t:Math.max(info.bed - 180, 1170), title:'Cook '+[later.rice > 60 ? grainText('rice', later.rice) : '', later.quinoa > 60 ? grainText('quinoa', later.quinoa) : ''].filter(Boolean).join(' and '), sub:'For Thursday to Sunday. Cool it fast, then refrigerate.'}); }
+  if (d === 2 && !prepOn()){ const later = grainUse(plan, 3, 6); if (later.rice > 60 || later.quinoa > 60) items.push({kind:'prep', id:'grain', t:Math.max(info.bed - 180, 1170), title:'Cook '+[later.rice > 60 ? grainText('rice', later.rice) : '', later.quinoa > 60 ? grainText('quinoa', later.quinoa) : ''].filter(Boolean).join(' and '), sub:'For Thursday to Sunday. Cool it fast, then refrigerate.'}); }
   if (info.wd === +S.sched.prepDay) items.push({kind:'prepday', id:'prepday', t:toMin(S.sched.prepTime), title:d === 6 ? 'Plan and shop for next week' : 'Mid-week prep session', sub:d === 6 ? 'Make a new plan, then shop and prep.' : 'Tap to open the prep checklist'});
   items.sort((a,b) => a.t - b.t);
   return {items, info, dm};
@@ -2093,6 +2126,7 @@ function groceries(plan){
 function grainUse(plan, a, b){ const t = {rice:0, quinoa:0}; for (let d = a; d <= b; d++) plan.slots.forEach(sl => { const m = plan.days[d][sl]; if (!m) return; const r = getR(m.rid, plan); if (!r) return; r.ing.forEach(([k,q]) => { if (k in t) t[k] += q*m.s; }); }); return t; }
 function grainText(k, g){ const us = S.profile.units === 'us', cupsDry = g/(k === 'rice' ? 185 : 170); return Math.round(g/10)*10+' g'+(us ? ' ('+frac(cupsDry)+' '+plural(cupsDry,'cup','cups')+')' : '')+' of dry '+(k === 'rice' ? 'brown rice' : 'quinoa')+' (about '+frac(cupsDry*3)+' '+plural(cupsDry*3,'cup','cups')+' cooked)'; }
 function freezeList(plan){
+  if (prepOn()) return [];
   const tot = {}; for (let d = 2; d < 7; d++) plan.slots.forEach(sl => { const m = plan.days[d][sl]; if (!m || m.lo) return; const r = getR(m.rid, plan); if (!r) return; r.ing.forEach(([k,q]) => { if (C[k] && C[k].freeze) tot[k] = (tot[k]||0) + q*m.s; }); });
   return Object.entries(tot).map(([k,q]) => fmtNeed(k,q)+' '+C[k].n.toLowerCase().replace(' (fresh or frozen)',''));
 }
@@ -2100,6 +2134,14 @@ function prepTasks(plan){
   const tasks = [], tot = {}, counts = {}, us = S.profile.units === 'us';
   forEachMeal(plan, m => { const r = getR(m.rid, plan); if (!r) return; counts[r.id] = (counts[r.id]||0) + 1; r.ing.forEach(([k,q]) => tot[k] = (tot[k]||0) + q*m.s); });
   const early = grainUse(plan, 0, 2), later = grainUse(plan, 3, 6);
+  if (prepOn()){
+    prepBatchTasks(plan).forEach(t => tasks.push(t));
+    if (counts.b1) tasks.push('Make overnight oats for the first 2 mornings.');
+    if (counts.s3) tasks.push('Hard-boil '+Math.ceil(2*counts.s3)+' eggs for snacks.');
+    if (tot.pepitas || tot.walnuts) tasks.push('Portion nuts and pumpkin seeds into small containers so they’re easy to grab.');
+    tasks.push('Fill a water bottle you like and keep it where you work.');
+    return tasks;
+  }
   if (early.rice > 60) tasks.push('Cook '+grainText('rice', early.rice)+' for Monday to Wednesday. Cool it fast and refrigerate for up to 4 days.'+(later.rice > 60 ? ' FuelWell reminds you to cook the rest on Wednesday evening.' : ''));
   if (early.quinoa > 60) tasks.push('Cook '+grainText('quinoa', early.quinoa)+' in twice its volume of water for 15 minutes.');
   const fl = freezeList(plan); if (fl.length) tasks.push('Freeze '+fl.join(', ')+' for Wednesday onward. FuelWell reminds you to thaw each one the night before.');
@@ -2203,6 +2245,7 @@ Daily targets: about ${F.ti.target} kcal and at least ${F.tg.p} g protein. Gym d
 Health concerns to support with food: ${cons.join(', ') || 'none'}.
 ${ctx.lowGas ? 'Must be LOW-GAS (low-FODMAP style): no beans, lentils, chickpeas, onion, garlic, broccoli, cauliflower, cabbage, apples, pears, honey, regular milk or sugar alcohols. Avocado at most 30 g per meal.' : ''}
 ${promptPrefs()}
+${prepOn() ? 'MEAL PREP: this person cooks in bulk and reheats. Use exactly '+prepN('prepL')+' lunch recipe'+(prepN('prepL') > 1 ? 's' : '')+' and '+prepN('prepD')+' different dinner recipe'+(prepN('prepD') > 1 ? 's' : '')+' for the whole week (one recipe: every day; two recipes: the first uses days 1 to 4, the second days 5 to 7), with the same serving size every day. Pick dishes that reheat well (bowls, curries, traybakes, stir-fries with sturdy vegetables) and avoid fish. This overrides the recipe-count rule below.' : ''}
 Diet: ${S.prefs.diet}. Dairy: ${ctx.dairy === 'none' ? 'none' : ctx.dairy === 'yogurt' ? 'Greek yogurt, cheese and lactose-free milk are fine; no regular milk' : 'any'}. Foods to avoid: ${S.prefs.avoid || 'none'}. ${S.prefs.quick ? 'Keep recipes to 25 minutes or less.' : ''}
 Meals each day: ${F.slots.join(', ')}. ${F.slots.includes('evening') ? '"evening" is a protein-rich snack before bed.' : ''} On gym days the snack is eaten before the workout, so make it carb + protein.
 Favor: fatty fish 2–3 times a week (omega-3), zinc and iron (beef, eggs, pumpkin seeds, spinach), magnesium (pumpkin seeds, oats, quinoa, spinach), vitamin A (carrots, spinach, sweet potato), slow carbs over sugar. Reuse ingredients so the grocery list stays short.
@@ -2317,10 +2360,11 @@ function swapMeal(d, sl){
   plan.swapN = (plan.swapN||0) + 1;
   const cands = uniq.filter(r => r.p/r.cal*oldCal >= oldP*0.85); const list = cands.length ? cands : uniq;
   const nr = list[(plan.swapN + d) % list.length];
-  plan.days[d][sl] = {rid:nr.id, s:clamp(q25(oldCal/nr.cal), .5, 3)};
+  const sw = (prepOn() && (sl === 'lunch' || sl === 'dinner') && !m.lo) ? runDays(plan, sl, d) : [d];
+  sw.forEach(x => { plan.days[x][sl] = {rid:nr.id, s:clamp(q25(oldCal/nr.cal), .5, 3)}; const k2 = ymd(dayDate(plan, x)); if (S.log[k2] && S.log[k2].eaten) delete S.log[k2].eaten[sl]; });
   if (sl === 'dinner' && d < 6 && plan.days[d+1].lunch && plan.days[d+1].lunch.lo){ const ln = plan.days[d+1].lunch, lc = getR(ln.rid).cal*ln.s; plan.days[d+1].lunch = {rid:nr.id, s:clamp(q25(lc/nr.cal), .5, 3), lo:true}; }
   const key = ymd(dayDate(plan, d)); if (S.log[key] && S.log[key].eaten) delete S.log[key].eaten[sl];
-  save(); render(); toast('Swapped in '+nr.name+'.');
+  save(); render(); toast('Swapped in '+nr.name+(sw.length > 1 ? ' for all '+sw.length+' boxes.' : '.'));
 }
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 3400); }
 
@@ -2343,7 +2387,7 @@ function banners(){
 }
 function mealMeta(o){
   const r = o.r, s = o.sEff;
-  return frac(s)+' '+plural(s,'serving','servings')+' · '+n0(r.cal*s)+' kcal · '+n0(r.p*s)+' g protein'+(o.sEff !== o.s && !o.eaten ? ' · adjusted' : '');
+  return frac(s)+' '+plural(s,'serving','servings')+' · '+n0(r.cal*s)+' kcal · '+n0(r.p*s)+' g protein'+(o.sEff !== o.s && !o.eaten ? ' · adjusted' : '')+(prepOn() && !o.lo && (o.slot === 'lunch' || o.slot === 'dinner') ? ' · reheat' : '');
 }
 function bar(label, got, plan, target, unit, dec){
   const pct = x => clamp(x/target*100, 0, 100);
@@ -2618,6 +2662,7 @@ function vSettings(embedded){
   h += '<div class="field"><span class="lbl">Meals a day</span><div class="chips" role="group" aria-label="Meals a day">'+[[4,'4 (3 meals + snack)'],[5,'5 (adds an evening protein snack)']].map(([k,l]) => '<button class="chip" data-act="pref" data-k="meals" data-v="'+k+'" aria-pressed="'+(+pr.meals === k)+'">'+l+'</button>').join('')+'</div><span class="hint">5 makes a high protein goal easier to hit.</span></div>';
   h += '<div class="field"><span class="lbl">Variety</span><div class="chips" role="group" aria-label="Variety">'+[['lean','Shorter grocery list'],['more','More variety']].map(([k,l]) => '<button class="chip" data-act="pref" data-k="variety" data-v="'+k+'" aria-pressed="'+((pr.variety||'lean') === k)+'">'+l+'</button>').join('')+'</div></div>';
   h += '<div class="field"><label for="f-avoid">Foods to avoid</label><input id="f-avoid" type="text" placeholder="e.g. shrimp, tofu, cottage cheese" value="'+esc(pr.avoid)+'" data-bind="prefs.avoid"><span class="hint">Separate with commas. Put allergies here.</span></div>';
+  h += prepSettingsHTML();
   h += '<label class="toggle"><input type="checkbox" id="f-quick" data-bind="prefs.quick"'+(pr.quick ? ' checked' : '')+'><span><b>Quick meals only</b><br><span class="small muted">25 minutes or less</span></span></label>';
   h += '<label class="toggle"><input type="checkbox" id="f-lo" data-bind="prefs.leftovers"'+(pr.leftovers ? ' checked' : '')+'><span><b>Cook once, eat twice</b><br><span class="small muted">Tonight’s dinner becomes tomorrow’s lunch.</span></span></label></div>';
   h += mineSettingsHTML();
@@ -2686,6 +2731,7 @@ function sheetMeal(){
   const plan = S.plan, d = sheet.d, sl = sheet.sl, dm = dayMeals(d), o = dm.meals.find(x => x.slot === sl), r = o.r, m = plan.days[d][sl];
   let cookS = o.sEff, note = '';
   if (sl === 'dinner' && d < 6){ const nl = plan.days[d+1].lunch; if (nl && nl.lo && nl.rid === m.rid){ cookS = o.sEff + nl.s; note = 'Cook '+frac(cookS)+' servings: eat '+frac(o.sEff)+' tonight and pack '+frac(nl.s)+' for tomorrow’s lunch.'; } }
+  const pn = prepNote(plan, d, sl); if (pn){ cookS = pn.cookS; note = pn.note; }
   if (m.lo) note = 'These are leftovers from '+fmtD(dayDate(plan, d-1),{weekday:'long'})+'’s dinner. Reheat until steaming hot all the way through.';
   return {plan, o, r, cookS, note};
 }
@@ -3253,6 +3299,7 @@ function vPlan2(){
   let h = softBanners();
   h += '<div class="section stats"><div class="card stat"><b>'+n0(avg[0])+'</b><span>kcal a day</span></div><div class="card stat"><b>'+n0(avg[1])+' g</b><span>protein a day</span></div><div class="card stat"><b>$'+n0(cost)+'</b><span>groceries</span></div></div>';
   if (plan.note) h += '<div class="section note small">'+esc(plan.note)+'</div>';
+  h += prepCard(plan);
   h += gapCard(plan, avg);
   const tdx = planIndexOf(todayKey());
   h += '<div class="section days-list">';
@@ -3266,7 +3313,7 @@ function vPlan2(){
   h += '</div>';
   // collapsible extras
   const tasks = prepTasks(plan), pd = S.prep[plan.id] || {}, doneN = tasks.filter((t,i) => pd[i]).length;
-  h += '<details class="acc section"'+(accOpen('week-prep') ? ' open' : '')+' data-acc="week-prep"><summary><span class="acc-t">Prep day checklist</span><span class="acc-s">'+doneN+' of '+tasks.length+' done · about an hour</span>'+ICON.chev+'</summary><div class="acc-b list-check"><ul>';
+  h += '<details class="acc section"'+(accOpen('week-prep') ? ' open' : '')+' data-acc="week-prep"><summary><span class="acc-t">Prep day checklist</span><span class="acc-s">'+doneN+' of '+tasks.length+' done · '+(prepOn() ? 'about '+prepCookMin(plan)+' min of cooking' : 'about an hour')+'</span>'+ICON.chev+'</summary><div class="acc-b list-check"><ul>';
   tasks.forEach((t,i) => { h += '<li class="'+(pd[i] ? 'done' : '')+'"><button class="check sm" data-act="prep" data-i="'+i+'" aria-pressed="'+!!pd[i]+'" aria-label="Done">'+ICON.check+'</button><p>'+esc(t)+'</p></li>'; });
   h += '</ul></div></details>';
   h += '<details class="acc"'+(accOpen('week-body') ? ' open' : '')+' data-acc="week-body"><summary><span class="acc-t">How this week helps your body</span><span class="acc-s">Skin, hair, back, gut</span>'+ICON.chev+'</summary><div class="acc-b">'+focusLines(plan, avg)+'</div></details>';
@@ -4121,7 +4168,7 @@ function prefPenalty(plan){
   const want = favTargets(), cnt = {}, lov = protSet('love'); let mains = 0, loved = 0, pen = 0;
   plan.days.forEach(day => plan.slots.forEach(sl => { const m = day[sl]; if (!m) return; const id = baseId(m.rid); cnt[id] = (cnt[id] || 0) + 1;
     if (sl === 'lunch' || sl === 'dinner'){ mains++; const r = getR(m.rid, plan); if (r && lov.has(mainProt(r))) loved++; } }));
-  Object.entries(want).forEach(([id, n]) => { const c = cnt[id] || 0; pen += Math.max(0, n - c) * 12 + Math.max(0, c - (n >= 3 ? 5 : n ? 3 : 2)) * 4; });
+  Object.entries(want).forEach(([id, n]) => { const c = cnt[id] || 0; pen += prepOn() ? (c ? 0 : 24) : Math.max(0, n - c) * 12 + Math.max(0, c - (n >= 3 ? 5 : n ? 3 : 2)) * 4; });
   if (lov.size) pen += Math.max(0, Math.ceil(mains*0.6) - loved) * 7;
   return pen;
 }
@@ -4172,9 +4219,9 @@ function fixGaps(plan){
         const why = gapReason(g.k), v = Object.assign({}, r, {id, ing:r.ing.map(x => x.slice()).concat([[b.k, b.q]]), steps:r.steps.concat([b.how+' for extra '+NUTL[g.k]+(why ? ', since '+why : '')+'.']), boost:{k:b.k, n:b.n, nut:g.k, why}, tags:null});
         ensureItems(v); prepRecipe(v); plan.recipes[id] = v;
       }
-      day[sl] = Object.assign({}, day[sl], {rid:id});
-      fitDay(day, plan.dayT[d], plan.protein, plan.share, plan);
-      added++;
+      const tg2 = (prepOn() && (sl === 'lunch' || sl === 'dinner')) ? runDays(plan, sl, d) : [d];
+      tg2.forEach(x => { plan.days[x][sl] = Object.assign({}, plan.days[x][sl], {rid:id}); fitDay(plan.days[x], plan.dayT[x], plan.protein, plan.share, plan, prepOn() ? PLOCK : null); });
+      added += tg2.length;
     }
     const after = weekTotals(plan)[NI(g.k)]/tg[g.k];
     plan.gapNotes.push({k:g.k, pct:g.pct, after, food:b.n, n:added, why:gapReason(g.k), supp:(g.k === 'o3' || g.k === 'vd') && after < 0.6});
@@ -4182,6 +4229,7 @@ function fixGaps(plan){
 }
 function finalizePlan(plan){
   myRecipes().forEach(r => { let used = false; forEachMeal(plan, m => { if (baseId(m.rid) === r.id) used = true; }); if (used) plan.recipes = Object.assign(plan.recipes || {}, {[r.id]:r}); });
+  if (prepOn() && plan.engine !== 'builtin') { try { prepFix(plan); } catch(e){} }
   try { fixGaps(plan); } catch(e){}
   plan.sig = settingsSig();
   return plan;
@@ -4328,6 +4376,7 @@ function mineAct(act, a){
     case 'prot': { const P = S.prefs.prot = S.prefs.prot || {}, id = a.dataset.v, k = a.dataset.k; P[id] = P[id] === k ? 'ok' : k; save(); keepY(render); return true; }
     case 'fav': { const id = baseId(a.dataset.rid), F = mp().fav; if (F[id]) delete F[id]; else { F[id] = 'some'; delete mp().no[id]; } save(); keepY(render); if (sheet) renderSheet(); if (!sheet || sheet.kind !== 'browse') toast(F[id] ? 'Added to favorites. Update your plan to see it more.' : 'Removed from favorites.'); return true; }
     case 'favfreq': { const F = mp().fav, id = a.dataset.rid; F[id] = F[id] === 'often' ? 'some' : 'often'; save(); keepY(render); return true; }
+    case 'mp-usual': { const F = mp().fav; F.mp1 = 'often'; delete mp().no.mp1; S.prefs.mealprep = true; S.prefs.prepL = 1; save(); keepY(render); toast('Saved. Tap Update plan on the Week tab to build it.'); return true; }
     case 'nope': nopeMeal(a.dataset.rid, +a.dataset.d, a.dataset.sl); return true;
     case 'unno': delete mp().no[a.dataset.rid]; save(); keepY(render); if (sheet) renderSheet(); return true;
     case 'browse': openSheet({kind:'browse', f:'main'}); return true;
@@ -4341,6 +4390,100 @@ function mineAct(act, a){
     case 'mm-del': if (!sheet.confirmDel){ sheet.confirmDel = true; renderSheet(); return true; } S.myMeals = (S.myMeals || []).filter(x => x.id !== sheet.id); myRecipes(); save(); closeSheet(); render(); toast('Deleted.'); return true;
   }
   return false;
+}
+
+/* ---------- meal prep mode: cook big batches once, portion them, reheat all week ---------- */
+const prepOn = () => !!(S.prefs && S.prefs.mealprep);
+const PLOCK = new Set(['lunch','dinner']);
+const prepN = k => { const v = +S.prefs[k]; return v === 2 ? 2 : v === 1 ? 1 : (k === 'prepL' ? 1 : 2); };
+const FRIDGE_DAYS = 4;   // cooked food keeps about 4 days in the fridge; later portions go in the freezer
+const dShort = (plan, d) => fmtD(dayDate(plan, d), {weekday:'short'});
+const dRange = (plan, a, b) => a === b ? dShort(plan, a) : dShort(plan, a)+' to '+dShort(plan, b);
+
+/* consecutive days that share the same recipe in a slot: [{rid, from, to, n, sum}] */
+function prepRuns(plan, sl){
+  const runs = [];
+  for (let d = 0; d < 7; d++){
+    const m = plan.days[d][sl]; if (!m || m.lo) continue;
+    const last = runs[runs.length-1];
+    if (last && last.to === d-1 && last.rid === m.rid){ last.to = d; last.n++; last.sum += m.s; }
+    else runs.push({rid:m.rid, sl, from:d, to:d, n:1, sum:m.s});
+  }
+  return runs;
+}
+function runDays(plan, sl, d){
+  const m = plan.days[d][sl]; if (!m) return [d];
+  const out = [d];
+  for (let x = d-1; x >= 0 && plan.days[x][sl] && plan.days[x][sl].rid === m.rid && !plan.days[x][sl].lo; x--) out.unshift(x);
+  for (let x = d+1; x < 7 && plan.days[x][sl] && plan.days[x][sl].rid === m.rid && !plan.days[x][sl].lo; x++) out.push(x);
+  return out;
+}
+/* every portion in a batch is the same size, so you fill containers the same way every time */
+function prepNormalize(plan){
+  ['lunch','dinner'].forEach(sl => prepRuns(plan, sl).forEach(run => {
+    const s = clamp(q25(run.sum/run.n), .5, 3);
+    for (let d = run.from; d <= run.to; d++) plan.days[d][sl].s = s;
+  }));
+}
+function prepFix(plan){
+  prepNormalize(plan);
+  plan.days.forEach((day, d) => fitDay(day, plan.dayT[d], plan.protein, plan.share, plan, PLOCK));
+}
+/* choose which lunches and dinners get cooked: 1 recipe = all week, 2 recipes = first 4 days then the rest */
+function prepSeq(set, n, avoid){
+  let pickd = set.filter(r => !avoid.includes(r)).slice(0, n);
+  if (pickd.length < n) pickd = pickd.concat(set.filter(r => !pickd.includes(r)).slice(0, n - pickd.length));
+  const out = []; for (let d = 0; d < 7; d++) out.push(n === 1 || pickd.length === 1 ? pickd[0] : pickd[d < FRIDGE_DAYS ? 0 : 1]);
+  return {seq:out, chosen:pickd};
+}
+const prepFrozen = d => d >= FRIDGE_DAYS;
+
+function prepCookMin(plan){
+  let t = 0; const seen = new Set();
+  ['lunch','dinner'].forEach(sl => prepRuns(plan, sl).forEach(run => { if (seen.has(run.rid)) return; seen.add(run.rid); const r = getR(run.rid, plan); if (r) t += Math.round((r.min + 10)/5)*5; }));
+  return t;
+}
+function prepBatchTasks(plan){
+  const tasks = [], runs = prepRuns(plan, 'lunch').concat(prepRuns(plan, 'dinner'));
+  runs.forEach(run => {
+    const r = getR(run.rid, plan); if (!r) return;
+    const per = plan.days[run.from][run.sl].s, label = run.sl === 'lunch' ? 'lunch' : 'dinner';
+    const fr = []; for (let d = run.from; d <= run.to; d++) if (prepFrozen(d)) fr.push(d);
+    const fridge = run.n - fr.length;
+    tasks.push('Cook '+run.n+' '+label+' '+(run.n === 1 ? 'portion' : 'portions')+' of '+r.name.toLowerCase()+' for '+dRange(plan, run.from, run.to)+'. Each box holds '+frac(per)+' '+plural(per,'serving','servings')+' ('+n0(r.cal*per)+' kcal, '+n0(r.p*per)+' g protein). You need: '+recipeIngredients(r, run.sum).join('; ')+'. About '+(r.min + 10)+' minutes, mostly hands-off.');
+    if (fr.length) tasks.push('Let the '+label+' boxes cool, then '+(fridge ? 'fridge '+fridge+' ('+dRange(plan, run.from, run.from + fridge - 1)+') and freeze '+fr.length : 'freeze all '+fr.length)+' ('+dRange(plan, fr[0], fr[fr.length-1])+'). Label the freezer boxes with the day.');
+    else tasks.push('Let the '+label+' boxes cool, then put all '+run.n+' in the fridge. They keep '+FRIDGE_DAYS+' days.');
+  });
+  return tasks;
+}
+function prepThawText(plan, d){
+  if (d !== FRIDGE_DAYS - 1) return '';
+  const names = []; ['lunch','dinner'].forEach(sl => prepRuns(plan, sl).forEach(run => { if (run.to >= FRIDGE_DAYS && !names.includes(getR(run.rid, plan).name)) names.push(getR(run.rid, plan).name.toLowerCase()); }));
+  return names.length ? 'Move the frozen boxes ('+names.join(' and ')+') from the freezer to the fridge' : '';
+}
+function prepSettingsHTML(){
+  const pr = S.prefs, on = !!pr.mealprep;
+  let h = '<div class="field"><span class="lbl">Meal prep mode</span><div class="chips" role="group" aria-label="Meal prep mode">'+[['','Off: cook as I go'],['1','On: cook in batches']].map(([v,l]) => '<button class="chip" data-act="pref" data-k="mealprep" data-v="'+v+'" aria-pressed="'+(on === !!v)+'">'+l+'</button>').join('')+'</div><span class="hint">Cook on your prep day, then just take a box out and heat it. Lunch and dinner repeat for days, in equal portions.</span></div>';
+  if (on){
+    const usual = (mp().fav.mp1 === 'often') && prepN('prepL') === 1;
+    h += '<div class="field"><button class="btn'+(usual ? '' : ' primary')+'" data-act="mp-usual">'+(usual ? '✓ ' : '')+'Use my usual lunch</button><span class="hint">Chicken breast, brown rice, sweet potato and green beans, cooked once for the whole week.</span></div>';
+    h += '<div class="field"><span class="lbl">Different lunches in a week</span><div class="chips" role="group" aria-label="Different lunches">'+[[1,'1 (same all week)'],[2,'2 (4 days, then 3)']].map(([v,l]) => '<button class="chip" data-act="pref" data-k="prepL" data-v="'+v+'" aria-pressed="'+(prepN('prepL') === v)+'">'+l+'</button>').join('')+'</div></div>';
+    h += '<div class="field"><span class="lbl">Different dinners in a week</span><div class="chips" role="group" aria-label="Different dinners">'+[[1,'1 (same all week)'],[2,'2 (4 days, then 3)']].map(([v,l]) => '<button class="chip" data-act="pref" data-k="prepD" data-v="'+v+'" aria-pressed="'+(prepN('prepD') === v)+'">'+l+'</button>').join('')+'</div><span class="hint">Portions after day '+FRIDGE_DAYS+' go in the freezer. FuelWell reminds you to move them to the fridge the night before.</span></div>';
+  }
+  return h;
+}
+/* Week tab: what you cook and how long it takes */
+function prepCard(plan){
+  if (!prepOn()) return '';
+  const rows = ['lunch','dinner'].map(sl => prepRuns(plan, sl).map(run => { const r = getR(run.rid, plan); return r ? '<div class="fi"><b>'+SLOTNAME[sl]+': '+esc(r.name)+'</b><p>'+run.n+' '+(run.n === 1 ? 'box' : 'boxes')+' · '+dRange(plan, run.from, run.to)+' · '+frac(plan.days[run.from][sl].s)+' '+plural(plan.days[run.from][sl].s,'serving','servings')+' each</p></div>' : ''; }).join('')).join('');
+  const min = prepCookMin(plan);
+  return '<div class="section card pad focus"><div class="eyebrow">Meal prep</div><h2 class="h2" style="margin-top:2px">About '+(min >= 60 ? Math.floor(min/60)+' h '+(min%60 ? (min%60)+' min' : '') : min+' min')+' of cooking, then just reheat</h2>'+rows+'<p class="small muted" style="margin:8px 0 0">Open the Prep day checklist below for amounts and storage. Reheat each box 2 to 3 minutes in the microwave, stirring halfway, until steaming hot.</p></div>';
+}
+function prepNote(plan, d, sl){
+  if (!prepOn() || (sl !== 'lunch' && sl !== 'dinner')) return null;
+  const m = plan.days[d][sl]; if (!m || m.lo) return null;
+  const days = runDays(plan, sl, d), sum = days.reduce((a, x) => a + plan.days[x][sl].s, 0);
+  return {cookS:sum, note:'Meal prep: you cook all '+days.length+' boxes at once on your prep day (ingredients below are for the whole batch). '+(prepFrozen(d) ? 'This box comes from the freezer; it moves to the fridge the night before. ' : 'This box comes from the fridge. ')+'Reheat 2 to 3 minutes in the microwave, stirring halfway, until steaming hot (165°F).'};
 }
 
 /* ---------- render + events ---------- */
@@ -4432,7 +4575,7 @@ document.addEventListener('click', e => {
     case 'caladj': if (a.dataset.v === 'reset') S.profile.calAdj = 0; else S.profile.calAdj = (+S.profile.calAdj||0) + (+a.dataset.v); save(); if (a.dataset.v === 'reset'){ render(); } else generate(); break;
     case 'gotoset': { e.preventDefault(); const id = a.dataset.sec; setAcc(id, true); S.tab = 'me'; save(); render(); setTimeout(() => { const el = document.getElementById(id); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 40); break; }
     case 'units': { const p = S.profile; if (p.units !== a.dataset.v){ if (a.dataset.v === 'metric'){ const b = bodyMetric(p); p.kg = Math.round(b.kg); p.cm = Math.round(b.cm); } else { p.lb = Math.round(p.kg/0.45359); const inch = Math.round(p.cm/2.54); p.ft = Math.floor(inch/12); p.inch = inch % 12; } p.units = a.dataset.v; save(); render(); } break; }
-    case 'pref': { const k = a.dataset.k; S.prefs[k] = k === 'meals' ? +a.dataset.v : a.dataset.v; save(); const y = window.scrollY; render(); window.scrollTo(0, y); break; }
+    case 'pref': { const k = a.dataset.k; S.prefs[k] = (k === 'meals' || k === 'prepL' || k === 'prepD') ? +a.dataset.v : k === 'mealprep' ? !!a.dataset.v : a.dataset.v; save(); const y = window.scrollY; render(); window.scrollTo(0, y); break; }
     case 'wday': { const list = S.sched[a.dataset.list], v = +a.dataset.v, i = list.indexOf(v); if (i >= 0) list.splice(i,1); else list.push(v); save(); const y = window.scrollY; render(); window.scrollTo(0, y); break; }
     case 'generate': generate(); break;
     case 'stop': if (busy) busy.ctrl.abort(); break;
@@ -4515,7 +4658,7 @@ if (window.claude && typeof window.claude.use === 'function'){ window.claude.use
 else sampleNS = null;
 if (S.fbConfig && !IN_CLAUDE){ setTimeout(() => fbInit().catch(() => {}), 300); }
 if ('serviceWorker' in navigator && location.protocol === 'https:' && !IN_CLAUDE){ navigator.serviceWorker.register('sw.js').catch(() => {}); }
-window.__fuelwell = {eoScore, eoExamples, S:() => S, normalizeAI, planFrame, buildPrompt, buildPlan, dayMeals, timeline, targetInfo, nutTargets, weekTotals, buildICS, dayTotalsPlan, RX, C, getR};
+window.__fuelwell = {eoScore, eoExamples, S:() => S, normalizeAI, planFrame, buildPrompt, buildPlan, dayMeals, timeline, targetInfo, nutTargets, weekTotals, buildICS, dayTotalsPlan, RX, C, getR, prepRuns, prepBatchTasks, prepCookMin, swapMeal, groceries, prepTasks};
 })();
 </script>
 </body></html>
