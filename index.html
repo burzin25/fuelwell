@@ -1238,6 +1238,22 @@ pre.code{background:var(--soft);border-radius:10px;padding:10px;font-family:var(
 .vlevel i{display:block;height:100%;width:0;background:var(--tomato);transition:width .08s linear}
 .warnc{color:var(--tomato);font-weight:700}
 @media (prefers-reduced-motion:reduce){.vmic.on{animation:none}}
+/* my meals, proteins, nutrient check */
+.chip.nope[aria-pressed="true"]{background:var(--tomato-soft);border-color:var(--tomato);color:var(--tomato)}
+.mylist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden}
+.myrow{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.myrow:first-child{border-top:0}
+.myrow>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.myrow>div b{font-size:15px;line-height:1.25}
+.myrow.off>div{opacity:.5;text-decoration:line-through}
+.iconbtn.heart{font-size:20px;color:var(--tomato)}
+.npills{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;margin-bottom:10px}
+.npill{display:flex;flex-direction:column;padding:7px 9px;border-radius:10px;font-size:12px;line-height:1.2;border:1px solid var(--line);background:var(--card)}
+.npill b{font-family:var(--f-mono);font-size:15px}
+.npill.ok b{color:var(--basil)}
+.npill.mid{background:var(--citrus-soft)}
+.npill.low{background:var(--tomato-soft)}.npill.low b{color:var(--tomato)}
+.favm{color:var(--tomato);font-size:.9em}
 </style>
 </head><body>
 <main class="wrap" id="view"></main>
@@ -1667,7 +1683,7 @@ COMMON_FOODS.push(
  ['Jeera rice (1 cup)',240,4.5,44,5,1,'cumin'],['Khichdi (1 cup)',240,9,38,6,4],['Curd rice (1 cup)',230,6,36,6,1,'thayir sadam dahi'],['Lemon rice (1 cup)',250,4.5,42,7,1.5],['Veg pulao (1 cup)',250,5,40,7,2.5,'pilaf pulav'],
  ['Dal makhani (1 cup)',330,14,35,15,10],['Dal tadka (1 cup)',230,13,30,6,8,'tarka yellow'],['Moong dal (1 cup)',200,13,30,3,8,'mung'],['Sambar (1 cup)',140,7,20,3.5,5],['Rasam (1 cup)',60,2,10,1.5,1.5],['Kadhi (1 cup)',180,7,14,10,1,'kadi'],
  ['Palak paneer (1 cup)',330,16,12,24,4,'saag'],['Paneer butter masala (1 cup)',420,17,14,33,3,'makhani'],['Matar paneer (1 cup)',320,15,16,22,5],['Kadai paneer (1 cup)',350,16,12,26,3,'karahi'],['Paneer bhurji (1 cup)',330,20,8,25,2],['Paneer (100 g, plain)',265,18,6,20,0,'cottage cheese'],
- ['Chicken curry (1 cup)',330,30,8,20,2,'murgh'],['Chicken tikka (6 pieces)',240,36,4,9,1,'kebab kabab'],['Tandoori chicken (2 pieces)',330,40,5,16,1],['Chicken tikka masala (1 cup)',400,30,13,25,2],['Chicken 65 (1 cup)',380,28,15,23,1],['Mutton curry (1 cup)',420,32,8,29,2,'lamb goat gosht'],['Keema (1 cup)',400,28,10,28,3,'mince'],['Fish curry (1 cup)',280,28,8,15,2,'machli'],['Egg curry (2 eggs)',320,15,10,24,2,'anda'],
+ ['Chicken curry (1 cup)',330,30,8,20,2,'murgh'],['Chicken tikka (6 pieces)',240,36,4,9,1,'kebab kabab'],['Tandoori chicken (2 pieces)',330,40,5,16,1],['Chicken tikka masala (1 cup)',400,30,13,25,2],['Chicken 65 fry (1 cup)',380,28,15,23,1],['Mutton curry (1 cup)',420,32,8,29,2,'lamb goat gosht'],['Keema (1 cup)',400,28,10,28,3,'mince'],['Fish curry (1 cup)',280,28,8,15,2,'machli'],['Egg curry (2 eggs)',320,15,10,24,2,'anda'],
  ['Egg bhurji (2 eggs)',220,13,4,17,1,'scrambled masala'],['Omelette (2 eggs)',190,13,1,15,0,'egg'],['Masala omelette (2 eggs)',220,14,4,16,1,'egg'],['Scrambled eggs (2 eggs)',200,13,2,15,0,'egg'],['Egg whites (3, boiled)',51,11,0.7,0.2,0],
  ['Aloo gobi (1 cup)',200,4,22,11,5,'potato cauliflower'],['Bhindi masala (1 cup)',180,4,16,12,6,'okra'],['Baingan bharta (1 cup)',180,4,16,12,7,'eggplant brinjal'],['Aloo sabzi (1 cup)',230,4,32,10,4,'potato'],['Mixed veg sabzi (1 cup)',180,5,18,10,6,'vegetable curry'],['Sarson ka saag (1 cup)',200,6,14,14,6,'mustard'],
  ['Poha (1 plate)',300,6,52,8,3],['Idli (1, plain)',60,2,12,0.4,0.6],['Plain dosa (1)',170,4,28,4.5,1.5],['Uttapam (1)',250,6,40,7,3,'uthappam'],['Medu vada (1)',135,4,14,7,2,'vadai'],['Dhokla (4 pieces)',160,6,24,4,2],['Moong dal chilla (2)',260,15,34,7,7,'cheela pesarattu'],['Besan chilla (2)',300,14,32,13,6,'cheela'],
@@ -1677,7 +1693,7 @@ COMMON_FOODS.push(
  ['Sooji halwa (1/2 cup)',300,4,40,14,1,'sheera'],['Kheer (1 cup)',280,8,42,9,0.5,'payasam'],['Jalebi (2 pieces)',200,1,32,8,0],['Rasgulla (1)',120,3,25,1,0],['Besan ladoo (1)',180,3,20,10,1,'laddu'],['Barfi (1 piece)',150,3,20,7,0.5,'burfi'],
  ['Mutton biryani (1 plate)',700,32,75,30,3],['Egg biryani (1 plate)',650,22,78,26,3],['Fried rice (1 cup)',240,6,36,8,1.5],['Hakka noodles (1 plate)',450,10,65,16,4,'chow mein'],['Veg manchurian (1 cup)',300,6,30,17,4],['Veg momos (6 steamed)',250,8,40,6,3,'dumplings'],['Chicken momos (6 steamed)',300,18,36,9,2,'dumplings'],['Maggi noodles (1 packet)',350,8,50,13,2,'instant ramen'],['Grilled veg sandwich (1)',300,9,40,11,4],
  ['Cooked brown rice (1 cup)',218,4.5,46,1.6,3.5],['Cooked quinoa (1 cup)',222,8,39,3.6,5],['Cooked lentils (1 cup)',230,18,40,0.8,15.6],['Cooked pasta (1 cup)',220,8,43,1.3,2.5],['Boiled potato (1 medium)',160,4,37,0.2,4],['Sweet potato (1 medium)',115,2,27,0.1,4],['Black beans (1 cup cooked)',227,15,41,1,15],['Chickpeas (1 cup cooked)',270,14.5,45,4,12.5,'chana'],
- ['Chole bhature (1 plate)',650,18,80,30,10],['Rajma chawal (1 plate)',500,17,85,9,13,'rice'],['Aloo tikki (2)',300,5,36,15,4],['Kathi roll (1)',450,20,50,18,4,'frankie wrap'],
+ ['Chole bhature (1 plate)',650,18,80,30,10],['Rajma chawal (1 plate)',500,17,85,9,13],['Aloo tikki (2)',300,5,36,15,4],['Kathi roll (1)',450,20,50,18,4,'frankie wrap'],
  ['Chai (1 cup)',100,3,14,3.5,0,'tea'],['Spinach (1 cup cooked)',41,5,7,0.5,4,'palak'],['Broccoli (1 cup)',55,4,11,0.6,5],['Carrots (1 cup)',50,1,12,0.3,3.6,'gajar'],['Green salad (1 bowl)',20,1.5,4,0.2,2,'cucumber lettuce'],
  ['Oatmeal (1 cup cooked)',160,6,28,3,4,'oats porridge'],['Overnight oats (1 jar)',380,25,48,10,8],['Toast with butter (1 slice)',130,3,14,7,1],['Whole wheat bread (1 slice)',80,4,14,1,2],['Bagel with cream cheese (1)',360,11,56,10,2],['Pancakes (3 medium)',350,9,50,12,2],['Cereal with milk (1 bowl)',250,9,42,5,3],
  ['Granola bar (1)',190,4,29,7,2],['Protein bar (1)',220,20,24,8,3],['Protein shake with milk (1 scoop)',280,32,18,9,0,'whey'],['Chicken sandwich (1)',450,30,40,18,3],['Turkey sandwich (1)',350,24,36,11,3],
@@ -1728,7 +1744,7 @@ function prepRecipe(r){
   return r;
 }
 RX.forEach(r => { prepRecipe(r); RXM[r.id] = r; });
-const getR = (rid, plan) => { plan = plan || S.plan; return (plan && plan.recipes && plan.recipes[rid]) || RXM[rid]; };
+const getR = (rid, plan) => { plan = plan || S.plan; if (String(rid).startsWith('my_') && !RXM[rid] && typeof myRecipes === 'function') myRecipes(); const r = (plan && plan.recipes && plan.recipes[rid]) || RXM[rid]; if (r && !(r.tags instanceof Set)){ if (r.items) Object.entries(r.items).forEach(([k,v]) => { if (!C[k]) C[k] = v; }); prepRecipe(r); } return r; };
 
 /* ---------- slots ---------- */
 const SLOTNAME = {breakfast:'Breakfast', lunch:'Lunch', snack:'Snack', dinner:'Dinner', evening:'Evening protein'};
@@ -1753,7 +1769,7 @@ function defaults(){
 function load(){
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
-    if (s && s.profile){ const d = defaults(); ['profile','concerns','prefs','labs','sched','remind','ai'].forEach(k => d[k] = Object.assign(d[k], s[k]||{})); ['tab','day','store','plan','log','weights','prep','got','otherConcern','eat','eatCache','eatAI','theme','onboarded','wiz','weekView','chat','active','fbConfig','syncKeys','labSummary','updatedAt','lastSync','hkMsg'].forEach(k => { if (s[k] !== undefined) d[k] = s[k]; }); return d; }
+    if (s && s.profile){ const d = defaults(); ['profile','concerns','prefs','labs','sched','remind','ai'].forEach(k => d[k] = Object.assign(d[k], s[k]||{})); ['tab','day','store','plan','log','weights','prep','got','otherConcern','eat','eatCache','eatAI','theme','onboarded','wiz','weekView','chat','active','fbConfig','syncKeys','labSummary','updatedAt','lastSync','hkMsg','myMeals','mealPrefs'].forEach(k => { if (s[k] !== undefined) d[k] = s[k]; }); return d; }
   } catch(e){}
   return null;
 }
@@ -1822,10 +1838,11 @@ function nutWeights(){
 function planCtx(){
   const p = S.prefs; let dairy = p.dairy;
   if (p.diet === 'vegan' || p.diet === 'dairyfree') dairy = 'none';
-  return {lowGas:!!S.concerns.gas, dairy, diet:p.diet, quick:!!p.quick, cuisine:p.cuisine || 'mix', avoid:String(p.avoid||'').split(',').map(s => s.trim().toLowerCase()).filter(Boolean)};
+  return {noKeys:bannedKeys(), lowGas:!!S.concerns.gas, dairy, diet:p.diet, quick:!!p.quick, cuisine:p.cuisine || 'mix', avoid:String(p.avoid||'').split(',').map(s => s.trim().toLowerCase()).filter(Boolean)};
 }
 function ingOK(k, ctx){
   const c = C[k]; if (!c) return true; const t = c.t || [];
+  if (ctx.noKeys && ctx.noKeys.has(k)) return false;
   if (ctx.lowGas && t.includes('gas')) return false;
   if (t.includes('milk') && ctx.dairy !== 'all') return false;
   if (t.includes('dairy') && ctx.dairy === 'none') return false;
@@ -1842,10 +1859,12 @@ function recipeOK(r, ctx, relaxQuick){
   return r.ing.every(([k]) => ingOK(k, ctx));
 }
 function pools(ctx){
-  const get = (slot, relax) => RX.filter(r => r.slots.includes(slot) && recipeOK(r, ctx, relax));
+  const no = (S.mealPrefs || {}).no || {};
+  const get = (slot, relax) => RX.filter(r => r.slots.includes(slot) && !no[r.id] && recipeOK(r, ctx, relax));
   const P = {};
   ['breakfast','lunch','dinner','snack'].forEach(sl => { P[sl] = get(sl, false); if (P[sl].length < 3) P[sl] = get(sl, true); });
   if (ctx.cuisine === 'indian') ['breakfast','lunch','dinner'].forEach(sl => { const ind = P[sl].filter(r => r.cuisine === 'indian'); if (ind.length >= 2) P[sl] = ind; });
+  myRecipes().forEach(r => ['breakfast','lunch','dinner','snack'].forEach(sl => { if (r.slots.includes(sl)) P[sl].push(r); }));
   P.pre = P.snack.filter(r => r.pre);
   P.evening = P.snack.filter(r => r.p >= 15);
   if (P.evening.length < 2) P.evening = P.snack.slice();
@@ -1893,7 +1912,7 @@ function weekTotals(plan){
   return tot.map(x => x/7);
 }
 function dayTotalsPlan(day, plan){ const t = Z(); plan.slots.forEach(sl => { const m = day[sl]; if (!m) return; const r = getR(m.rid, plan); if (!r) return; for (let i=0;i<11;i++) t[i] += r.n[i]*m.s; }); return t; }
-function settingsSig(){ return JSON.stringify([targetInfo().target, targetInfo().protein, S.concerns, S.prefs, S.sched.gymDays]); }
+function settingsSig(){ return JSON.stringify([targetInfo().target, targetInfo().protein, S.concerns, S.prefs, S.sched.gymDays, (S.myMeals || []).map(m => [m.id, m.updated, m.freq]), (S.mealPrefs || {}).fav || {}]); }
 function planFrame(){
   const ti = targetInfo(); if (!ti.ok) throw new Error(ti.msg);
   const tg = nutTargets(ti), slots = slotsFor(+S.prefs.meals || 4), share = SHARES[slots.length];
@@ -1909,7 +1928,12 @@ function buildPlan(seed){
   const rng = mulberry32(seed), W = nutWeights(), lean = S.prefs.variety !== 'more';
   const K = lean ? {breakfast:3,lunch:3,dinner:4,snack:3,evening:2,pre:2} : {breakfast:5,lunch:5,dinner:7,snack:5,evening:4,pre:3};
   const sh = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j = Math.floor(rng()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; };
-  const pick = (pool, k) => sh(pool).slice(0, Math.min(k, pool.length));
+  const want = favTargets(), lov = protSet('love'), wOf = r => (want[r.id] ? 6 : 1) * (lov.size && lov.has(mainProt(r)) ? 5 : 1);
+  const pick = (pool, k) => {
+    const forced = pool.filter(r => want[r.id] && rng() < (want[r.id] >= 3 ? 0.8 : 0.5)).slice(0, k);
+    const rest = pool.filter(r => !forced.includes(r)).map(r => [Math.pow(rng(), 1/wOf(r)), r]).sort((a,b) => b[0] - a[0]).map(x => x[1]);
+    return forced.concat(rest).slice(0, Math.min(k, pool.length));
+  };
   const seq = (set, twice) => { const out = []; let guard = 0; while (out.length < 7 && guard++ < 50){ for (const r of sh(set)){ if (out.length >= 7) break; if (out.length && out[out.length-1].id === r.id && set.length > 1) continue; out.push(r); if (twice(r) && out.length < 7) out.push(r); } } return out; };
   let best = null;
   const N = 140;
@@ -1938,11 +1962,12 @@ function buildPlan(seed){
     if (ctx.cuisine === 'indian'){ let nonIn = 0; plan.days.forEach(day => ['breakfast','lunch','dinner'].forEach(sl => { if (day[sl] && getR(day[sl].rid).cuisine !== 'indian') nonIn++; })); pen += nonIn * 3; }
     else if (ctx.cuisine === 'mix'){ let inN = 0; plan.days.forEach(day => ['lunch','dinner'].forEach(sl => { if (day[sl] && getR(day[sl].rid).cuisine === 'indian') inN++; })); pen += Math.max(0, 4 - inN) * 2; }
     if (fishMeals > 4) pen += (fishMeals - 4) * 6;
+    pen += prefPenalty(plan);
     pen += keys.size * (lean ? 1.2 : .3);
     const score = objSum + pen + rng()*0.5;
     if (!best || score < best.score) best = {score, plan};
   }
-  return Object.assign(best.plan, {id:Date.now().toString(36), engine:'builtin', engineName:'Built-in planner', start:F.start, target:F.ti.target, protein:F.tg.p, dayT:F.dayT, gym:F.gym, gymBonus:F.gymBonus, share:F.share, seed, sig:settingsSig(), created:Date.now()});
+  return finalizePlan(Object.assign(best.plan, {id:Date.now().toString(36), engine:'builtin', engineName:'Built-in planner', start:F.start, target:F.ti.target, protein:F.tg.p, dayT:F.dayT, gym:F.gym, gymBonus:F.gymBonus, share:F.share, seed, sig:settingsSig(), created:Date.now()}));
 }
 
 /* ---------- a day: schedule, effective meals, timeline ---------- */
@@ -2061,7 +2086,7 @@ function groceries(plan){
   const map = new Map(), spices = new Set();
   forEachMeal(plan, m => { const r = getR(m.rid, plan); if (!r) return; (r.spices||[]).forEach(x => spices.add(x)); r.ing.forEach(([k,q]) => { if (!C[k]) return; map.set(k, (map.get(k)||0) + q*m.s); }); });
   const rows = [];
-  map.forEach((qty, k) => { const c = C[k], packs = Math.max(1, Math.ceil(qty/c.pk - 0.08)); rows.push({id:k, name:c.n, aisle:c.a, need:fmtNeed(k, qty), buy:packs+' × '+c.pl, price:packs*c.pr, q:c.q, pantry:!!c.pantry}); });
+  map.forEach((qty, k) => { const c = C[k], packs = Math.max(1, Math.ceil(qty/c.pk - 0.08)); rows.push({id:k, name:c.n, aisle:c.a, need:fmtNeed(k, qty), buy:c.custom ? 'as needed' : packs+' × '+c.pl, price:packs*c.pr, q:c.q, pantry:!!c.pantry}); });
   rows.sort((a,b) => AISLES.indexOf(a.aisle) - AISLES.indexOf(b.aisle) || a.name.localeCompare(b.name));
   return {rows, spices:[...spices].sort()};
 }
@@ -2177,6 +2202,7 @@ Person: ${p.sex}, ${p.age} years, ${us ? p.ft+' ft '+p.inch+' in, '+p.lb+' lb' :
 Daily targets: about ${F.ti.target} kcal and at least ${F.tg.p} g protein. Gym days: ${gymDays}.
 Health concerns to support with food: ${cons.join(', ') || 'none'}.
 ${ctx.lowGas ? 'Must be LOW-GAS (low-FODMAP style): no beans, lentils, chickpeas, onion, garlic, broccoli, cauliflower, cabbage, apples, pears, honey, regular milk or sugar alcohols. Avocado at most 30 g per meal.' : ''}
+${promptPrefs()}
 Diet: ${S.prefs.diet}. Dairy: ${ctx.dairy === 'none' ? 'none' : ctx.dairy === 'yogurt' ? 'Greek yogurt, cheese and lactose-free milk are fine; no regular milk' : 'any'}. Foods to avoid: ${S.prefs.avoid || 'none'}. ${S.prefs.quick ? 'Keep recipes to 25 minutes or less.' : ''}
 Meals each day: ${F.slots.join(', ')}. ${F.slots.includes('evening') ? '"evening" is a protein-rich snack before bed.' : ''} On gym days the snack is eaten before the workout, so make it carb + protein.
 Favor: fatty fish 2–3 times a week (omega-3), zinc and iron (beef, eggs, pumpkin seeds, spinach), magnesium (pumpkin seeds, oats, quinoa, spinach), vitamin A (carrots, spinach, sweet potato), slow carbs over sugar. Reuse ingredients so the grocery list stays short.
@@ -2275,7 +2301,7 @@ async function generate(){
     const F = planFrame();
     const text = await callLLM(pid, buildPrompt(F), n => { if (busy){ busy.chars = n; updateBusy(); } }, ctrl.signal);
     const plan = normalizeAI(parseJSON(text), F, pid, pid === 'claude' ? 'Claude' : providerModel(pid));
-    busy = null; S.plan = plan; finishPlan();
+    busy = null; S.plan = finalizePlan(plan); finishPlan();
   } catch(e){ busy = null; lastError = e.message || String(e); render(); }
 }
 function finishPlan(){ S.day = null; S.tab = 'week'; S.weekView = 'plan'; save(); render(); window.scrollTo(0,0); toast('Your week is planned. Next: shop the list.'); }
@@ -2283,7 +2309,8 @@ function updateBusy(){ document.querySelectorAll('.busytxt').forEach(el => { if 
 function swapMeal(d, sl){
   const plan = S.plan, m = plan.days[d][sl], cur = getR(m.rid); if (!cur) return;
   const ctx = planCtx(), P = pools(ctx), pool = (sl === 'evening' ? P.evening : P[poolSlot(sl)]).concat(Object.values(plan.recipes||{}).filter(r => r.slots.includes(poolSlot(sl))));
-  const uniq = pool.filter((r,i) => r.id !== cur.id && pool.findIndex(x => x.id === r.id) === i && r.cal > 0);
+  const nope = (S.mealPrefs || {}).no || {};
+  const uniq = pool.filter((r,i) => r.id !== cur.id && baseId(r.id) !== baseId(cur.id) && !String(r.id).includes('~') && !nope[baseId(r.id)] && pool.findIndex(x => x.id === r.id) === i && r.cal > 0);
   if (!uniq.length){ toast('No other recipes fit your settings for this meal.'); return; }
   const oldCal = cur.cal*m.s, oldP = cur.p*m.s;
   uniq.sort((a,b) => (b.p/b.cal) - (a.p/a.cal));
@@ -2586,12 +2613,14 @@ function vSettings(embedded){
   h += '<div class="section card pad form" id="set-food"><h2 class="h2">Food preferences</h2>';
   h += '<div class="field"><span class="lbl">Diet</span><div class="chips" role="group" aria-label="Diet">'+[['any','Anything'],['vegetarian','Vegetarian'],['pescatarian','Pescatarian'],['dairyfree','Dairy-free'],['vegan','Vegan']].map(([k,l]) => '<button class="chip" data-act="pref" data-k="diet" data-v="'+k+'" aria-pressed="'+(pr.diet === k)+'">'+l+'</button>').join('')+'</div></div>';
   h += '<div class="field"><span class="lbl">Cuisine</span><div class="chips" role="group" aria-label="Cuisine">'+[['mix','Mix of Indian and others'],['indian','Mostly Indian'],['none','No Indian dishes']].map(([k,l]) => '<button class="chip" data-act="pref" data-k="cuisine" data-v="'+k+'" aria-pressed="'+((pr.cuisine||'mix') === k)+'">'+l+'</button>').join('')+'</div></div>';
+  h += protPrefsHTML();
   h += '<div class="field"><span class="lbl">Dairy</span><div class="chips" role="group" aria-label="Dairy">'+[['yogurt','Yogurt and cheese, no regular milk'],['none','No dairy'],['all','All dairy']].map(([k,l]) => '<button class="chip" data-act="pref" data-k="dairy" data-v="'+k+'" aria-pressed="'+(pr.dairy === k)+'">'+l+'</button>').join('')+'</div><span class="hint">Lactose-free milk counts as yogurt-level. Regular and skim milk are linked to acne and gas.</span></div>';
   h += '<div class="field"><span class="lbl">Meals a day</span><div class="chips" role="group" aria-label="Meals a day">'+[[4,'4 (3 meals + snack)'],[5,'5 (adds an evening protein snack)']].map(([k,l]) => '<button class="chip" data-act="pref" data-k="meals" data-v="'+k+'" aria-pressed="'+(+pr.meals === k)+'">'+l+'</button>').join('')+'</div><span class="hint">5 makes a high protein goal easier to hit.</span></div>';
   h += '<div class="field"><span class="lbl">Variety</span><div class="chips" role="group" aria-label="Variety">'+[['lean','Shorter grocery list'],['more','More variety']].map(([k,l]) => '<button class="chip" data-act="pref" data-k="variety" data-v="'+k+'" aria-pressed="'+((pr.variety||'lean') === k)+'">'+l+'</button>').join('')+'</div></div>';
   h += '<div class="field"><label for="f-avoid">Foods to avoid</label><input id="f-avoid" type="text" placeholder="e.g. shrimp, tofu, cottage cheese" value="'+esc(pr.avoid)+'" data-bind="prefs.avoid"><span class="hint">Separate with commas. Put allergies here.</span></div>';
   h += '<label class="toggle"><input type="checkbox" id="f-quick" data-bind="prefs.quick"'+(pr.quick ? ' checked' : '')+'><span><b>Quick meals only</b><br><span class="small muted">25 minutes or less</span></span></label>';
   h += '<label class="toggle"><input type="checkbox" id="f-lo" data-bind="prefs.leftovers"'+(pr.leftovers ? ' checked' : '')+'><span><b>Cook once, eat twice</b><br><span class="small muted">Tonight’s dinner becomes tomorrow’s lunch.</span></span></label></div>';
+  h += mineSettingsHTML();
   // labs
   h += '<div class="section card pad form" id="set-labs"><div><h2 class="h2">Blood tests (optional)</h2><p class="small muted" style="margin:3px 0 0">Add results from your last blood test. Low values make the planner push those nutrients harder. Ranges are typical lab ranges, not a diagnosis.</p></div>';
   Object.entries(LABS).forEach(([k,l]) => { const st = labStatus(k); h += '<div class="lab"><div class="n">'+l.n+'<small>'+l.u+'</small></div><input type="number" inputmode="decimal" step="any" id="lab-'+k+'" aria-label="'+l.n+'" value="'+esc(S.labs[k])+'" data-bind="labs.'+k+'">'+(st ? '<span class="pill '+(st.s === 'ok' ? '' : st.s)+'">'+st.t+'</span>' : '<span class="pill plain">Not added</span>')+'</div>'; });
@@ -2674,11 +2703,13 @@ function renderSheet(){
       const why = whyChips(r, s); if (why.length) h += '<div class="why">'+why.map(w => '<span class="pill">'+esc(w)+'</span>').join('')+'</div>';
       h += '<p class="small muted" style="margin:8px 0 0">For your portion of '+frac(s)+' '+plural(s,'serving','servings')+'.</p>';
       if (note) h += '<div class="note" style="margin-top:12px">'+esc(note)+'</div>';
+      if (r.boost) h += '<div class="note small" style="margin-top:12px">FuelWell added '+esc(r.boost.n || C[r.boost.k].n.toLowerCase())+' for '+esc(NUTL[r.boost.nut])+(r.boost.why ? ', since '+esc(r.boost.why) : '')+'.</div>';
       h += '<div class="section"><h3 style="font-size:18px">Ingredients'+(cookS !== 1 ? ' <span class="muted small" style="font-family:var(--f-body);font-weight:500">for '+frac(cookS)+' servings</span>' : '')+'</h3><ul class="ing" style="margin-top:6px">';
       recipeIngredients(r, cookS).forEach((t,i) => { const on = gotIng.has(i); h += '<li class="'+(on ? 'got' : '')+'" data-act="ing" data-i="'+i+'"><button class="check sm" aria-pressed="'+on+'" aria-label="Got it" tabindex="-1">'+ICON.check+'</button><span>'+esc(t)+'</span></li>'; });
       h += '</ul>'+(r.spices && r.spices.length ? '<p class="small muted" style="margin:8px 0 0">Spices: '+esc(r.spices.join(', '))+'</p>' : '')+'</div>';
       h += '<div class="section"><h3 style="font-size:18px">Steps</h3><ol class="stepl" style="margin-top:6px">'+r.steps.map(x => '<li><span>'+esc(x)+'</span></li>').join('')+'</ol></div>';
       h += '<div class="section row" style="flex-wrap:wrap"><button class="btn primary" data-act="cook">Start cooking</button><button class="btn" data-act="eat" data-d="'+sheet.d+'" data-sl="'+sheet.sl+'" data-from="sheet">'+(done ? 'Eaten ✓' : 'Mark as eaten')+'</button><button class="btn" data-act="swap" data-d="'+sheet.d+'" data-sl="'+sheet.sl+'" data-from="sheet">Swap meal</button></div>';
+      h += '<div class="row" style="flex-wrap:wrap;margin-top:-4px">'+(r.mine ? '<button class="btn sm" data-act="mm-edit" data-id="'+esc(baseId(r.id).slice(3))+'">Edit my meal</button>' : '<button class="btn sm" data-act="fav" data-rid="'+esc(baseId(r.id))+'">'+(isFav(r.id) ? '♥ Favorite' : '♡ Add to favorites')+'</button><button class="btn sm" data-act="nope" data-rid="'+esc(r.id)+'" data-d="'+sheet.d+'" data-sl="'+sheet.sl+'">Not for me</button>')+'</div>';
     } else {
       const steps = r.steps.length ? r.steps : ['Assemble and enjoy.'], i = clamp(sheet.step, 0, steps.length - 1), secs = parseTimer(steps[i]);
       h += '<div class="cook"><div class="row" style="justify-content:space-between"><div class="eyebrow">'+esc(r.name)+' · Step '+(i+1)+' of '+steps.length+'</div><button class="btn sm" data-act="recipe">Ingredients</button></div><div class="prog" style="margin-top:10px"><i style="width:'+((i+1)/steps.length*100)+'%"></i></div>';
@@ -2707,6 +2738,8 @@ function renderSheet(){
     h += '<div class="two"><div class="field"><label for="eo-k">Calories</label><input id="eo-k" type="number" inputmode="numeric" value="'+esc(cur.kcal || suggestK)+'"></div><div class="field"><label for="eo-p">Protein (g)</label><input id="eo-p" type="number" inputmode="numeric" value="'+esc(cur.p || suggestP)+'"></div></div>';
     h += '<div class="card pad"><b>How to order for your goals</b><ul class="small" style="margin:6px 0 0;padding-left:18px;line-height:1.6">'+eatOutTips().map(t => '<li>'+esc(t)+'</li>').join('')+'</ul></div>';
     h += '<div class="row" style="flex-wrap:wrap"><button class="btn primary" data-act="eo-save">Save</button>'+(eo[sl] ? '<button class="btn" data-act="eo-remove">Remove eating out</button>' : '')+'</div></div>';
+  } else if (sheet.kind === 'mymeal'){ h += myMealSheetHTML();
+  } else if (sheet.kind === 'browse'){ h += browseSheetHTML();
   } else if (sheet.kind === 'log'){ h += logSheetHTML();
   } else if (sheet.kind === 'move'){ h += moveSheetHTML();
   } else if (sheet.kind === 'chat'){ h += chatSheetHTML();
@@ -3220,13 +3253,14 @@ function vPlan2(){
   let h = softBanners();
   h += '<div class="section stats"><div class="card stat"><b>'+n0(avg[0])+'</b><span>kcal a day</span></div><div class="card stat"><b>'+n0(avg[1])+' g</b><span>protein a day</span></div><div class="card stat"><b>$'+n0(cost)+'</b><span>groceries</span></div></div>';
   if (plan.note) h += '<div class="section note small">'+esc(plan.note)+'</div>';
+  h += gapCard(plan, avg);
   const tdx = planIndexOf(todayKey());
   h += '<div class="section days-list">';
   plan.days.forEach((day, d) => {
     const dt = dayDate(plan, d), t = dayTotalsPlan(day, plan);
     h += '<section class="card dayc'+(d === tdx ? ' today' : '')+'"><button class="dayc-h" data-act="openday" data-d="'+d+'"><span><b>'+fmtD(dt,{weekday:'long'})+'</b><span class="small muted"> · '+fmtD(dt,{month:'short',day:'numeric'})+(plan.gym[d] ? ' · gym' : '')+(d === tdx ? ' · today' : '')+'</span></span><span class="small muted num">'+n0(t[0])+' kcal · '+n0(t[1])+' g</span></button>';
     plan.slots.forEach(sl => { const m = day[sl]; if (!m) return; const r = getR(m.rid); if (!r) return;
-      h += '<div class="drow"><span class="dslot">'+(sl === 'snack' && plan.gym[d] ? 'Pre-gym' : sl === 'evening' ? 'Evening' : SLOTNAME[sl])+'</span><button class="dn" data-act="open" data-d="'+d+'" data-sl="'+sl+'">'+esc(r.name)+(m.lo ? ' <span class="muted small">· leftovers</span>' : '')+'</button><button class="iconbtn" data-act="swap" data-d="'+d+'" data-sl="'+sl+'" aria-label="Swap '+esc(r.name)+'">'+ICON.swap+'</button></div>'; });
+      h += '<div class="drow"><span class="dslot">'+(sl === 'snack' && plan.gym[d] ? 'Pre-gym' : sl === 'evening' ? 'Evening' : SLOTNAME[sl])+'</span><button class="dn" data-act="open" data-d="'+d+'" data-sl="'+sl+'">'+(isFav(m.rid) ? '<span class="favm" aria-label="Favorite">♥</span> ' : '')+esc(r.name)+(m.lo ? ' <span class="muted small">· leftovers</span>' : '')+'</button><button class="iconbtn" data-act="swap" data-d="'+d+'" data-sl="'+sl+'" aria-label="Swap '+esc(r.name)+'">'+ICON.swap+'</button></div>'; });
     h += '</section>';
   });
   h += '</div>';
@@ -3258,7 +3292,7 @@ function focusLines(plan, avg){
 let accState = null;
 function accOpen(id){ if (!accState){ try { accState = new Set(JSON.parse(sessionStorage.getItem('fw.acc') || '[]')); } catch(e){ accState = new Set(); } } return accState.has(id); }
 function setAcc(id, open){ accOpen(id); open ? accState.add(id) : accState.delete(id); try { sessionStorage.setItem('fw.acc', JSON.stringify([...accState])); } catch(e){} }
-const SET_TITLES = {'set-account':'Account and backup','set-move':'Exercise and Apple Health','set-look':'Look','set-body':'Body and goal','set-concerns':'Body concerns','set-food':'Food preferences','set-labs':'Blood tests','set-sched':'Daily schedule','set-eat':'Eating out','set-remind':'Reminders','set-ai':'Meal planner and AI','set-log':'Food logging and voice'};
+const SET_TITLES = {'set-account':'Account and backup','set-move':'Exercise and Apple Health','set-look':'Look','set-body':'Body and goal','set-concerns':'Body concerns','set-food':'Food preferences','set-labs':'Blood tests','set-sched':'Daily schedule','set-eat':'Eating out','set-remind':'Reminders','set-ai':'Meal planner and AI','set-log':'Food logging and voice','set-mine':'My meals'};
 function setSummary(id){
   const p = S.profile, us = p.units === 'us', sc = S.sched, dn = v => (WD.find(x => x[0] === v) || [0,''])[1];
   switch (id){
@@ -3272,6 +3306,7 @@ function setSummary(id){
     case 'set-remind': { const n = Object.keys(S.remind).filter(k => S.remind[k]).length; return n+' kinds of reminder on'; }
     case 'set-account': return fbUser ? 'Signed in · backing up' : S.fbConfig ? 'Not signed in' : 'Not set up';
     case 'set-move': return S.active && Object.keys(S.active).length ? Object.keys(S.active).length+' days imported' : 'Log extra workouts from Today';
+    case 'set-mine': { const n = (S.myMeals || []).length, f = Object.keys(mp().fav).length, x = Object.keys(mp().no).length; return (n ? n+' of your own' : 'None of your own')+' · '+f+' '+(f === 1 ? 'favorite' : 'favorites')+(x ? ' · '+x+' hidden' : ''); }
     case 'set-log': { const p = logPid(); return (p ? PROVIDERS[p].name.replace(', inside the Claude app','') : 'No AI key')+' · voice: '+({gemini:'Gemini',groq:'Whisper',phone:'iPhone',none:'off'})[voiceEngine()]; }
     case 'set-ai': return PROVIDERS[S.ai.provider] ? PROVIDERS[S.ai.provider].name : 'Built-in planner';
   }
@@ -3322,7 +3357,7 @@ function vWizard(){
     '<div class="field"><label for="w-act">How active are you, including the gym?</label><select id="w-act" data-bind="profile.act">'+ACT.map(([v,l]) => '<option value="'+v+'"'+(+p.act === v ? ' selected' : '')+'>'+l+'</option>').join('')+'</select></div><div id="targetbox">'+targetBox(targetInfo())+'</div></div>';
   if (k === 'concerns') h += '<h1 class="wiz-h">What should your food help with?</h1><p class="wiz-p">Pick any. FuelWell chooses foods for each one.</p><div class="tiles">'+Object.entries(CONCERNS).map(([c,o]) => '<button class="tile'+(S.concerns[c] ? ' on' : '')+'" aria-pressed="'+!!S.concerns[c]+'" data-act="wiztoggle" data-k="'+c+'"><b>'+esc(o.n)+'</b><span>'+esc(({dryskin:'Omega-3, water',dryears:'Omega-3, vitamin A',hair:'Protein, zinc, iron',back:'Magnesium, stretches',acne:'Less sugar and milk',gas:'Low-gas meals',energy:'Iron, steady meals',joints:'Fish, omega-3',anemia:'Iron with vitamin C',thyroid:'Iodine, selenium foods',cholesterol:'Fiber, omega-3',bp:'Potassium, magnesium',dandruff:'Zinc, omega-3'})[c] || '')+'</span></button>').join('')+'</div>';
   if (k === 'food') h += '<h1 class="wiz-h">How do you eat?</h1><p class="wiz-p">You can fine-tune this later in Me.</p><div class="form"><div class="field"><span class="lbl">Diet</span><div class="chips">'+[['any','Anything'],['vegetarian','Vegetarian'],['pescatarian','Pescatarian'],['dairyfree','Dairy-free'],['vegan','Vegan']].map(([v,l]) => '<button class="chip" data-act="pref" data-k="diet" data-v="'+v+'" aria-pressed="'+(pr.diet === v)+'">'+l+'</button>').join('')+'</div></div>'+
-    '<div class="field"><span class="lbl">Dairy</span><div class="chips">'+[['yogurt','Yogurt and cheese only'],['none','No dairy'],['all','All dairy']].map(([v,l]) => '<button class="chip" data-act="pref" data-k="dairy" data-v="'+v+'" aria-pressed="'+(pr.dairy === v)+'">'+l+'</button>').join('')+'</div></div>'+
+    protPrefsHTML()+'<div class="field"><span class="lbl">Dairy</span><div class="chips">'+[['yogurt','Yogurt and cheese only'],['none','No dairy'],['all','All dairy']].map(([v,l]) => '<button class="chip" data-act="pref" data-k="dairy" data-v="'+v+'" aria-pressed="'+(pr.dairy === v)+'">'+l+'</button>').join('')+'</div></div>'+
     '<div class="field"><span class="lbl">Meals a day</span><div class="chips">'+[[4,'4'],[5,'5, with an evening protein snack']].map(([v,l]) => '<button class="chip" data-act="pref" data-k="meals" data-v="'+v+'" aria-pressed="'+(+pr.meals === v)+'">'+l+'</button>').join('')+'</div></div>'+
     '<div class="field"><label for="w-avoid">Foods to avoid or allergies</label><input id="w-avoid" type="text" placeholder="e.g. shrimp, tofu" value="'+esc(pr.avoid)+'" data-bind="prefs.avoid"></div></div>';
   if (k === 'schedule'){ const wchips = list => '<div class="chips">'+WD.map(([v,n]) => '<button class="chip sm" data-act="wday" data-list="'+list+'" data-v="'+v+'" aria-pressed="'+sc[list].includes(v)+'">'+n+'</button>').join('')+'</div>';
@@ -3716,7 +3751,7 @@ function foodIndex(){
   COMMON_FOODS.forEach(f => { const serv = (/\(([^)]*)\)/.exec(f[0]) || [])[1] || '1 serving';
     FIDX.push({src:'list', name:f[0], short:f[0].replace(/\s*\(.*?\)\s*/g,' ').trim(), toks:uniqA(ftoks(f[0].replace(/\(.*?\)/g,' '))), alias:uniqA(ftoks(f[6] || '')), serv:parseServ(serv), base:[f[1],f[2],f[3],f[4],f[5],0,0,0,0,0,0], bonus:0.12}); });
   Object.values(C).forEach(c => { if (!c.nut || ['rice','quinoa','ricepasta','lentils'].includes(c.k)) return; // dry grains: the cooked dishes above fit what people say
-    FIDX.push({src:'cat', name:c.n, short:c.n.replace(/\s*\(.*?\)\s*/g,' ').trim(), toks:uniqA(ftoks(c.n.replace(/\(.*?\)/g,' '))), alias:uniqA(ftoks(c.k)), u:c.u, per:c.per, base:c.nut.slice(), meat:(c.t||[]).some(t => t === 'meat' || t === 'fish'), bonus:0.06}); });
+    FIDX.push({src:'cat', k:c.k, name:c.n, short:c.n.replace(/\s*\(.*?\)\s*/g,' ').trim(), toks:uniqA(ftoks(c.n.replace(/\(.*?\)/g,' '))), alias:uniqA(ftoks(c.k)), u:c.u, per:c.per, base:c.nut.slice(), meat:(c.t||[]).some(t => t === 'meat' || t === 'fish'), bonus:0.06}); });
   if (typeof IFCT !== 'undefined') IFCT.forEach(r => {
     FIDX.push({src:'ifct', name:r[0], short:r[0], toks:uniqA(ftoks(r[0].replace(/\(.*?\)/g,' '))), alias:uniqA(ftoks(r[1].replace(/\|/g,' '))), u:'g', per:100, base:[r[3],r[4],r[5],r[6],r[7],0,r[8],r[9],r[10],r[11],r[12]], bonus:-0.25}); });
   FIDX.forEach((e, i) => e.i = i);
@@ -3730,7 +3765,8 @@ function scoreEntry(T, e){
   if (!cov && !am) return null;
   let covE = cov / e.toks.length; if (am) covE = Math.max(covE, 0.8);
   const covT = used.size / T.length;
-  return {e, s:0.55*covE + 0.45*covT + e.bonus - 0.012*e.toks.length, covE, covT};
+  const exact = e.alias.some(a => T.includes(a)) ? 0.08 : 0;
+  return {e, s:0.55*covE + 0.45*covT + e.bonus + exact - 0.012*e.toks.length, covE, covT};
 }
 function rankFoods(T, n){
   const out = []; foodIndex().forEach(e => { const r = scoreEntry(T, e); if (r && r.covE >= 0.3) out.push(r); });
@@ -4045,6 +4081,268 @@ async function logTest(){
   if (el()) el().textContent = testMsg.__log;
 }
 
+/* ---------- My meals (own recipes, favorites, "not for me"), protein preferences, nutrient gap fixes ---------- */
+const PROTS = [
+  ['chicken','Chicken',['chicken']], ['turkey','Turkey',['turkey']], ['red','Beef and steak',['beef','steak']],
+  ['fish','Fish',['salmon','tilapia','sardines','cansalmon','tuna']], ['shrimp','Shrimp',['shrimp']], ['eggs','Eggs',['eggs','eggwhite']],
+  ['paneer','Paneer',['paneer']], ['tofu','Tofu',['tofu']], ['yogurt','Greek yogurt and cottage cheese',['yogurt','cottage']], ['legumes','Lentils and beans',['lentils','chickpeas','blackbeans']]];
+const PROT_OF = {}; PROTS.forEach(([id,,ks]) => ks.forEach(k => PROT_OF[k] = id));
+const protSet = kind => new Set(PROTS.filter(([id]) => ((S.prefs.prot || {})[id]) === kind).map(([id]) => id));
+function bannedKeys(){ const no = protSet('no'), s = new Set(); PROTS.forEach(([id,,ks]) => { if (no.has(id)) ks.forEach(k => s.add(k)); }); return s; }
+function mainProt(r){
+  let best = null, bp = 0;
+  r.ing.forEach(([k,q]) => { const c = C[k]; if (!c || !PROT_OF[k]) return; const p = c.nut[1]*q/c.per; if (p > bp){ bp = p; best = PROT_OF[k]; } });
+  return bp >= 8 ? best : null;
+}
+const mp = () => { S.mealPrefs = S.mealPrefs || {}; S.mealPrefs.fav = S.mealPrefs.fav || {}; S.mealPrefs.no = S.mealPrefs.no || {}; return S.mealPrefs; };
+const baseId = rid => String(rid).split('~')[0];
+const isFav = rid => !!mp().fav[baseId(rid)] || String(rid).startsWith('my_');
+const FREQ = {often:['3–4 times a week',3], some:['1–2 times a week',1], any:['When it fits',0]};
+
+/* ---- own meals → recipes the planner can use ---- */
+let mineSig = '';
+function ensureItems(r){ if (r && r.items) Object.entries(r.items).forEach(([k, v]) => { if (!C[k]) C[k] = v; }); }
+function mineSlots(m){ const s = []; (m.slots || []).forEach(x => { if (x === 'main') s.push('lunch','dinner'); else s.push(x); }); return s.length ? s : ['lunch','dinner']; }
+function myRecipes(){
+  const list = S.myMeals || [], sig = JSON.stringify(list.map(m => [m.id, m.updated || 0, m.slots]));
+  if (sig !== mineSig){
+    Object.keys(RXM).forEach(k => { if (k.startsWith('my_')) delete RXM[k]; });
+    list.forEach(m => { if (!m.recipe) return; const r = Object.assign({}, m.recipe, {id:'my_'+m.id, slots:mineSlots(m), name:m.name, src:'mine', mine:true, steps:(m.recipe.steps || []).slice(), ing:m.recipe.ing.map(x => x.slice())}); ensureItems(r); prepRecipe(r); RXM[r.id] = r; });
+    mineSig = sig;
+  }
+  return list.filter(m => m.recipe).map(m => RXM['my_'+m.id]).filter(Boolean);
+}
+function favTargets(){
+  const out = {}; Object.entries(mp().fav).forEach(([rid, f]) => { out[rid] = (FREQ[f] || FREQ.some)[1]; });
+  (S.myMeals || []).forEach(m => { out['my_'+m.id] = (FREQ[m.freq] || FREQ.some)[1]; });
+  return out;
+}
+function prefPenalty(plan){
+  const want = favTargets(), cnt = {}, lov = protSet('love'); let mains = 0, loved = 0, pen = 0;
+  plan.days.forEach(day => plan.slots.forEach(sl => { const m = day[sl]; if (!m) return; const id = baseId(m.rid); cnt[id] = (cnt[id] || 0) + 1;
+    if (sl === 'lunch' || sl === 'dinner'){ mains++; const r = getR(m.rid, plan); if (r && lov.has(mainProt(r))) loved++; } }));
+  Object.entries(want).forEach(([id, n]) => { const c = cnt[id] || 0; pen += Math.max(0, n - c) * 12 + Math.max(0, c - (n >= 3 ? 5 : n ? 3 : 2)) * 4; });
+  if (lov.size) pen += Math.max(0, Math.ceil(mains*0.6) - loved) * 7;
+  return pen;
+}
+function promptPrefs(){
+  const lov = [...protSet('love')].map(id => PROTS.find(p => p[0] === id)[1].toLowerCase()), no = [...protSet('no')].map(id => PROTS.find(p => p[0] === id)[1].toLowerCase());
+  const favs = Object.keys(mp().fav).map(id => RXM[id] && RXM[id].name).filter(Boolean).concat((S.myMeals || []).map(m => m.name));
+  const nope = Object.keys(mp().no).map(id => RXM[id] && RXM[id].name).filter(Boolean);
+  return (lov.length ? 'Proteins they eat most and want in most lunches and dinners: '+lov.join(', ')+'. ' : '')+(no.length ? 'Never use: '+no.join(', ')+'; cover the nutrients those would give (zinc, iron, omega-3, vitamin D) with other foods. ' : '')+
+    (favs.length ? 'Dishes they love (include these or close versions): '+favs.join('; ')+'. ' : '')+(nope.length ? 'Dishes they dislike (do not use): '+nope.join('; ')+'.' : '');
+}
+
+/* ---- nutrient gap fixes: when a skipped protein leaves a nutrient short, add a small food to some meals ---- */
+const BOOST = [
+  {k:'pepitas', n:'pumpkin seeds', q:15, nut:['zn','mg','fe'], slots:['breakfast','snack','evening','lunch','dinner'], how:'Sprinkle 15 g pumpkin seeds on top'},
+  {k:'spinach', n:'spinach', q:40, nut:['fe','va','mg'], slots:['lunch','dinner'], how:'Stir in a big handful of spinach (40 g) at the end'},
+  {k:'chia', n:'chia seeds', q:10, nut:['fib','mg'], slots:['breakfast','snack','evening'], how:'Stir in 1 tbsp chia seeds'},
+  {k:'carrots', n:'carrots', q:80, nut:['va','fib'], slots:['lunch','snack'], how:'Add a side of baby carrots (80 g)'},
+  {k:'eggs', n:'a boiled egg', q:1, nut:['vd','zn'], slots:['breakfast'], how:'Add a boiled egg'},
+  {k:'lfmilk', n:'a glass of lactose-free milk', q:240, nut:['vd'], slots:['breakfast','evening'], how:'Have a glass of lactose-free milk with it'}];
+const NUTL = {fib:'fiber', o3:'omega-3', zn:'zinc', fe:'iron', vd:'vitamin D', mg:'magnesium', va:'vitamin A'};
+const NUTN = {fib:'Fiber', o3:'Omega-3 (EPA+DHA)', zn:'Zinc', fe:'Iron', vd:'Vitamin D', mg:'Magnesium', va:'Vitamin A'};
+function gapReason(k){
+  const no = protSet('no'), d = S.prefs.diet, veg = d === 'vegetarian' || d === 'vegan';
+  if (k === 'o3' && (no.has('fish') || veg)) return 'you skip fish';
+  if ((k === 'zn' || k === 'fe') && (no.has('red') || veg)) return 'you skip red meat';
+  if (k === 'vd' && (no.has('fish') || no.has('eggs'))) return 'you skip '+(no.has('fish') && no.has('eggs') ? 'fish and eggs' : no.has('fish') ? 'fish' : 'eggs');
+  return '';
+}
+function fixGaps(plan){
+  const ti = targetInfo(); if (!ti.ok) return; const tg = nutTargets(ti), W = nutWeights(), ctx = planCtx();
+  plan.recipes = plan.recipes || {}; plan.gapNotes = [];
+  const used = new Set();
+  for (let round = 0; round < 4; round++){
+    const avg = weekTotals(plan);
+    const gaps = ['fib','o3','zn','fe','vd','mg','va'].map(k => ({k, pct:avg[NI(k)]/tg[k]})).filter(g => g.pct < 0.8 && !used.has(g.k)).sort((a, b) => (1-b.pct)*(W[b.k]||1) - (1-a.pct)*(W[a.k]||1));
+    if (!gaps.length) break;
+    const g = gaps[0]; used.add(g.k);
+    const opts = BOOST.filter(b => b.nut.includes(g.k) && C[b.k] && ingOK(b.k, ctx)).map(b => ({b, amt:C[b.k].nut[NI(g.k)]*b.q/C[b.k].per})).filter(o => o.amt > tg[g.k]*0.04).sort((a, b) => b.amt - a.amt);
+    if (!opts.length){ plan.gapNotes.push({k:g.k, pct:g.pct, supp:g.k !== 'o3' || !!gapReason('o3') || !ingOK('salmon', ctx), fishTip:g.k === 'o3' && !gapReason('o3') && ingOK('salmon', ctx), why:gapReason(g.k)}); continue; }
+    const {b, amt} = opts[0], need = (tg[g.k]*0.9 - avg[NI(g.k)])*7, times = clamp(Math.ceil(need/amt), 1, 7);
+    let added = 0;
+    for (let d = 0; d < 7 && added < times; d++){
+      const day = plan.days[d];
+      const sl = b.slots.find(s => day[s] && !String(day[s].rid).includes('~') && !day[s].lo && getR(day[s].rid, plan) && !getR(day[s].rid, plan).ing.some(([k]) => k === b.k));
+      if (!sl) continue;
+      const r = getR(day[sl].rid, plan), id = r.id+'~'+b.k;
+      if (!plan.recipes[id]){
+        const why = gapReason(g.k), v = Object.assign({}, r, {id, ing:r.ing.map(x => x.slice()).concat([[b.k, b.q]]), steps:r.steps.concat([b.how+' for extra '+NUTL[g.k]+(why ? ', since '+why : '')+'.']), boost:{k:b.k, n:b.n, nut:g.k, why}, tags:null});
+        ensureItems(v); prepRecipe(v); plan.recipes[id] = v;
+      }
+      day[sl] = Object.assign({}, day[sl], {rid:id});
+      fitDay(day, plan.dayT[d], plan.protein, plan.share, plan);
+      added++;
+    }
+    const after = weekTotals(plan)[NI(g.k)]/tg[g.k];
+    plan.gapNotes.push({k:g.k, pct:g.pct, after, food:b.n, n:added, why:gapReason(g.k), supp:(g.k === 'o3' || g.k === 'vd') && after < 0.6});
+  }
+}
+function finalizePlan(plan){
+  myRecipes().forEach(r => { let used = false; forEachMeal(plan, m => { if (baseId(m.rid) === r.id) used = true; }); if (used) plan.recipes = Object.assign(plan.recipes || {}, {[r.id]:r}); });
+  try { fixGaps(plan); } catch(e){}
+  plan.sig = settingsSig();
+  return plan;
+}
+function gapCard(plan, avg){
+  const ti = targetInfo(); if (!ti.ok) return ''; const tg = nutTargets(ti), notes = plan.gapNotes || [];
+  const pills = ['fib','o3','zn','fe','vd','mg','va'].map(k => { const p = Math.round(avg[NI(k)]/tg[k]*100); return '<span class="npill '+(p >= 90 ? 'ok' : p >= 70 ? 'mid' : 'low')+'"><b>'+p+'%</b>'+NUTN[k].replace(' (EPA+DHA)','')+'</span>'; }).join('');
+  const fixes = notes.filter(n => n.food && n.n), supp = notes.filter(n => n.supp && !n.fishTip);
+  const sum = fixes.length || supp.length || notes.some(n => n.fishTip) ? (notes.some(n => n.fishTip) && !fixes.length && !supp.length ? 'Omega-3 could be higher' : '') + [fixes.length ? fixes.length+' food '+(fixes.length > 1 ? 'swaps' : 'swap')+' added' : '', supp.length ? supp.map(n => NUTN[n.k].replace(' (EPA+DHA)','')).join(' and ')+' needs a look' : ''].filter(Boolean).join(' · ') : 'Everything is covered';
+  let h = '<details class="acc section"'+(accOpen('week-nut') ? ' open' : '')+' data-acc="week-nut"><summary><span class="acc-t">Nutrient check</span><span class="acc-s">'+esc(sum)+'</span>'+ICON.chev+'</summary><div class="acc-b"><div class="npills">'+pills+'</div>';
+  fixes.forEach(n => { h += '<div class="fi"><b>'+esc(NUTN[n.k])+': '+Math.round(n.pct*100)+'% → '+Math.round(n.after*100)+'%</b><p>'+(n.why ? 'Because '+esc(n.why)+', ' : '')+'FuelWell added '+esc(n.food)+' to '+n.n+' '+(n.n > 1 ? 'meals' : 'meal')+' this week. They’re in the recipes and on your shopping list.</p></div>'; });
+  notes.filter(n => n.fishTip).forEach(n => { h += '<div class="fi"><b>Omega-3 at '+Math.round(n.pct*100)+'%</b><p>Swap one more lunch or dinner for a salmon or sardine meal this week (Swap meal on any recipe), or update the plan.</p></div>'; });
+  supp.forEach(n => { h += '<div class="fi"><b>'+esc(NUTN[n.k])+' is still low</b><p>'+(n.k === 'o3' ? (n.why ? 'Because '+esc(n.why)+', food alone can’t cover it. ' : '')+'EPA and DHA come almost only from fish. An algae-oil supplement (250–500 mg EPA+DHA a day) is the usual swap. Check with your doctor first.' : n.k === 'vd' ? 'Few foods have much vitamin D'+(n.why ? ', especially when '+esc(n.why) : '')+'. Midday sun or a D3 supplement are common fixes. Ask your doctor to check your level.' : 'FuelWell couldn’t find a food swap that fits your settings. Try allowing more foods in Food preferences.')+'</p></div>'; });
+  if (!fixes.length && !supp.length && !notes.some(n => n.fishTip)) h += '<p class="small muted" style="margin:0">Your meals cover all 7 nutrients FuelWell tracks. If you skip a protein in Food preferences, FuelWell fills the gap with another food and shows it here.</p>';
+  return h+'</div></details>';
+}
+
+/* ---- settings ---- */
+function protPrefsHTML(){
+  const lov = protSet('love'), no = protSet('no');
+  let h = '<div class="field"><span class="lbl">Proteins you eat most</span><div class="chips">'+PROTS.map(([id, n]) => '<button class="chip sm" data-act="prot" data-k="love" data-v="'+id+'" aria-pressed="'+lov.has(id)+'">'+(lov.has(id) ? '♥ ' : '')+n+'</button>').join('')+'</div><span class="hint">Most lunches and dinners will use these.</span></div>';
+  h += '<div class="field"><span class="lbl">Proteins you never eat</span><div class="chips">'+PROTS.map(([id, n]) => '<button class="chip sm'+(no.has(id) ? ' nope' : '')+'" data-act="prot" data-k="no" data-v="'+id+'" aria-pressed="'+no.has(id)+'">'+(no.has(id) ? '✕ ' : '')+n+'</button>').join('')+'</div><span class="hint">If skipping one leaves you short on a nutrient (fish → omega-3, beef → zinc and iron), FuelWell adds another food to cover it and tells you on the Week tab.</span></div>';
+  return h;
+}
+function mineSettingsHTML(){
+  const my = S.myMeals || [], fav = Object.entries(mp().fav).filter(([id]) => RXM[id]), no = Object.keys(mp().no).filter(id => RXM[id]);
+  let h = '<div class="section card pad form" id="set-mine"><div><h2 class="h2">My meals</h2><p class="small muted" style="margin:3px 0 0">Add dishes you already make, pick favorites, and hide meals you don’t like. The planner builds your week around them.</p></div>';
+  h += '<div class="field"><span class="lbl">Your own meals</span>';
+  if (my.length) h += '<div class="mylist">'+my.map(m => { const r = RXM['my_'+m.id]; return '<div class="myrow"><div><b>'+esc(m.name)+'</b><span class="xs muted">'+esc(mineSlots(m).map(s => SLOTNAME[s]).filter((v, i, a) => a.indexOf(v) === i).join(' or '))+' · '+(FREQ[m.freq] || FREQ.some)[0]+(r ? ' · '+n0(r.cal)+' kcal · '+n0(r.p)+' g protein' : '')+'</span></div><button class="btn sm" data-act="mm-edit" data-id="'+m.id+'">Edit</button></div>'; }).join('')+'</div>';
+  else h += '<p class="small muted" style="margin:0">None yet. Add a dish like “Mom’s chicken curry with 2 rotis”.</p>';
+  h += '<button class="btn" data-act="mm-add">+ Add my own meal</button></div>';
+  h += '<div class="field"><span class="lbl">Favorites from FuelWell</span>'+(fav.length ? '<div class="mylist">'+fav.map(([id, f]) => '<div class="myrow"><div><b>'+esc(RXM[id].name)+'</b><span class="xs muted">'+(FREQ[f] || FREQ.some)[0]+'</span></div><button class="btn sm" data-act="favfreq" data-rid="'+id+'">'+(f === 'often' ? 'Less often' : 'More often')+'</button><button class="iconbtn" data-act="fav" data-rid="'+id+'" aria-label="Remove favorite">'+ICON.close+'</button></div>').join('')+'</div>' : '<p class="small muted" style="margin:0">Tap ♥ on any recipe, or browse them all.</p>')+'<button class="btn" data-act="browse">Browse FuelWell recipes</button></div>';
+  if (no.length) h += '<div class="field"><span class="lbl">Not for me</span><div class="chips">'+no.map(id => '<button class="chip sm" data-act="unno" data-rid="'+id+'">'+esc(RXM[id].name)+' · bring back</button>').join('')+'</div></div>';
+  return h+'</div>';
+}
+function browseSheetHTML(){
+  const f = sheet.f || 'main', ctx = planCtx(), fv = mp().fav, no = mp().no;
+  const list = RX.filter(r => (f === 'main' ? r.slots.includes('lunch') || r.slots.includes('dinner') : f === 'indian' ? r.cuisine === 'indian' : r.slots.includes(f))).filter(r => r.ing.every(([k]) => ingOK(k, ctx)) || fv[r.id]);
+  let h = '<div class="eyebrow">Recipes</div><h2 class="h1">Pick your favorites</h2><p class="lede">♥ means more often. ✕ means never.</p>';
+  h += '<div class="chips section">'+[['main','Lunch and dinner'],['breakfast','Breakfast'],['snack','Snacks'],['indian','Indian']].map(([k, n]) => '<button class="chip sm" data-act="br-f" data-v="'+k+'" aria-pressed="'+(f === k)+'">'+n+'</button>').join('')+'</div><div class="mylist">';
+  list.forEach(r => { h += '<div class="myrow'+(no[r.id] ? ' off' : '')+'"><div><b>'+esc(r.name)+'</b><span class="xs muted">'+n0(r.cal)+' kcal · '+n0(r.p)+' g protein · '+r.min+' min'+(r.cuisine === 'indian' ? ' · Indian' : '')+'</span></div><button class="iconbtn heart" data-act="fav" data-rid="'+r.id+'" aria-pressed="'+!!fv[r.id]+'" aria-label="Favorite">'+(fv[r.id] ? '♥' : '♡')+'</button><button class="iconbtn" data-act="'+(no[r.id] ? 'unno' : 'nope')+'" data-rid="'+r.id+'" aria-pressed="'+!!no[r.id]+'" aria-label="Not for me">'+(no[r.id] ? '↺' : '✕')+'</button></div>'; });
+  return h+'</div>';
+}
+
+/* ---- add / edit own meal ---- */
+function openMyMeal(id){
+  const m = (S.myMeals || []).find(x => x.id === id);
+  openSheet(m ? {kind:'mymeal', id:m.id, name:m.name, slots:(m.slots || ['main']).slice(), freq:m.freq || 'some', ing:m.text || '', how:m.how || '', draft:m.recipe ? JSON.parse(JSON.stringify(m.recipe)) : null, msg:null}
+               : {kind:'mymeal', id:null, name:'', slots:['main'], freq:'some', ing:'', how:'', draft:null, msg:null});
+}
+function myMealSheetHTML(){
+  const sh = sheet, chip = (k, v, n, on) => '<button class="chip sm" data-act="mm-'+k+'" data-v="'+v+'" aria-pressed="'+on+'">'+n+'</button>';
+  let h = '<div class="eyebrow">My meals</div><h2 class="h1">'+(sh.id ? 'Edit meal' : 'Add your own meal')+'</h2><div class="form section">';
+  h += '<div class="field"><label for="mm-name">Name</label><input id="mm-name" type="text" placeholder="e.g. Mom’s chicken curry with 2 rotis" value="'+esc(sh.name)+'"></div>';
+  h += '<div class="field"><span class="lbl">I eat it for</span><div class="chips">'+chip('slot','breakfast','Breakfast',sh.slots.includes('breakfast'))+chip('slot','main','Lunch or dinner',sh.slots.includes('main'))+chip('slot','snack','Snack',sh.slots.includes('snack'))+'</div></div>';
+  h += '<div class="field"><span class="lbl">How often</span><div class="chips">'+Object.entries(FREQ).map(([k, [n]]) => chip('freq', k, n, sh.freq === k)).join('')+'</div></div>';
+  h += '<div class="field"><label for="mm-ing">Ingredients for one serving <span class="muted">(optional)</span></label><textarea id="mm-ing" class="ta" rows="4" placeholder="150 g chicken thighs&#10;1 onion, 1 tomato&#10;1 tbsp ghee&#10;2 rotis">'+esc(sh.ing)+'</textarea><span class="hint">One per line. Leave it empty and FuelWell uses a typical home recipe for the dish.</span></div>';
+  h += '<div class="field"><label for="mm-how">How you make it <span class="muted">(optional)</span></label><textarea id="mm-how" class="ta" rows="3" placeholder="Brown the onions, add masala and chicken, simmer 20 minutes…">'+esc(sh.how)+'</textarea></div>';
+  h += '<button class="btn primary" data-act="mm-work"'+(sh.busy ? ' disabled' : '')+'>'+(sh.busy ? 'Working it out…' : sh.draft ? 'Work it out again' : 'Work out nutrition')+'</button>';
+  if (sh.msg) h += '<div class="note small'+(sh.msg.err ? ' err' : '')+'">'+esc(sh.msg.t)+'</div>';
+  if (sh.draft){
+    ensureItems(sh.draft); const r = prepRecipe(Object.assign({}, sh.draft, {ing:sh.draft.ing.map(x => x.slice())}));
+    h += '<div class="card pad pend"><div class="sect-h"><b>One serving</b><span class="small muted num">'+n0(r.cal)+' kcal · '+n0(r.p)+' g protein · '+n0(r.n[2])+' g carbs · '+n0(r.n[3])+' g fat</span></div>';
+    h += '<ul class="ing" style="margin:6px 0 0">'+recipeIngredients(r, 1).map(t => '<li><span>'+esc(t)+'</span></li>').join('')+'</ul>';
+    if (r.spices && r.spices.length) h += '<p class="xs muted" style="margin:6px 0 0">Spices: '+esc(r.spices.join(', '))+'</p>';
+    if (sh.draft.miss && sh.draft.miss.length) h += '<p class="xs" style="margin:6px 0 0"><b class="warnc">Couldn’t match:</b> '+esc(sh.draft.miss.join(', '))+'. Add amounts or a Gemini key for better results.</p>';
+    if (S.concerns.gas && r.gas) h += '<p class="xs muted" style="margin:6px 0 0">Heads up: this has higher-gas ingredients. It’s your meal, so FuelWell still includes it.</p>';
+    h += '<p class="xs muted" style="margin:6px 0 0">The planner may scale the portion a little to hit your calories.</p></div>';
+    h += '<button class="btn primary big" data-act="mm-save">Save meal</button>';
+  }
+  if (sh.id) h += '<button class="btn" data-act="mm-del" style="margin-top:6px">'+(sh.confirmDel ? 'Tap again to delete' : 'Delete this meal')+'</button>';
+  return h+'</div>';
+}
+function slugK(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0, 24) || 'item'; }
+function customItem(key, name, unit, per, nut, aisle){
+  const u = unit === 'piece' ? 'each' : unit === 'ml' ? 'ml' : unit === 'tbsp' ? 'tbsp' : 'g';
+  return {k:key, n:name, a:AISLES.includes(aisle) ? aisle : 'Other', u, pk:1e9, pl:'', pr:0, nut, per, q:name.toLowerCase(), t:[], custom:true, cn:[name.toLowerCase(), name.toLowerCase()]};
+}
+function mealFromLocal(name, text, how){
+  const mid = Date.now().toString(36), ing = [], items = {}, miss = [];
+  const lines = String(text || '').split(/\n|,|;/).map(x => x.trim()).filter(Boolean);
+  const addEntry = (e, q, label) => {
+    if (e.src === 'cat'){ const a = amountFor(q, e); ing.push([e.k, e.u === 'g' || e.u === 'ml' ? Math.round(a.mult*e.per) : Math.round(a.mult*4)/4]); return; }
+    const key = 'u_'+mid+'_'+ing.length, a = amountFor(q, e);
+    if (e.src === 'list'){ items[key] = customItem(key, e.name, 'piece', 1, e.base.slice(), 'Other'); ing.push([key, Math.round(a.mult*100)/100]); }
+    else { const grams = a.grams || 100; items[key] = customItem(key, e.short, 'g', 100, e.base.slice(), 'Other'); ing.push([key, Math.round(grams)]); }
+  };
+  lines.forEach(line => { const q = parseQty(line), T = ftoks(q.rest); if (!T.length) return;
+    const cands = rankFoods(T, 80), top = cands[0], cat = cands.find(r => r.e.src === 'cat' && r.s >= 0.5); // ingredients first, dishes second
+    const best = cat && top && cat.covT >= 0.99 && cat.s >= top.s - 0.4 ? cat : top;
+    if (best && best.s >= 0.5) addEntry(best.e, q, line); else miss.push(line); });
+  if (!ing.length){ const T = ftoks(name), best = T.length ? rankFoods(T, 3).find(r => r.e.src === 'list' && r.s >= 0.55) : null; if (best) addEntry(best.e, {num:1, implicit:true, unit:null, size:1}, name); }
+  const steps = String(how || '').split(/\n|\.\s+/).map(x => x.trim()).filter(x => x.length > 3).slice(0, 8);
+  return {ing, items, steps:steps.length ? steps : ['Make it your usual way.'], spices:[], min:30, cuisine:(S.prefs.cuisine || 'mix') !== 'none' ? 'indian' : 'other', miss, src:'list'};
+}
+async function mealFromAI(pid, name, text, how){
+  const ctx = planCtx(), cat = Object.values(C).filter(c => !c.custom).map(c => c.k+' = '+c.n+' ('+(c.u === 'each' ? 'count' : c.u)+')').join('\n');
+  const prompt = 'Turn this home recipe into structured data for a meal-planning app. One serving is what one adult eats in one sitting.\nMeal: "'+String(name).slice(0, 120)+'"\n'+
+    (text ? 'Ingredients the cook listed (for one serving unless they say otherwise): """'+String(text).slice(0, 1200)+'"""\n' : 'No ingredients given: use a typical '+((S.prefs.cuisine || 'mix') !== 'none' ? 'Indian ' : '')+'home recipe for this dish.\n')+
+    (how ? 'How they make it: """'+String(how).slice(0, 1200)+'"""\n' : '')+
+    'Use these catalog keys when an ingredient matches (amount per ONE serving, in the unit shown):\n'+cat+'\n'+
+    'For anything else give "name", "amount", "unit" (g, ml, piece or tbsp), "aisle" (Produce, Meat & Seafood, Dairy & Eggs, Bakery, Frozen, Pantry or Other) and the nutrition for that whole amount. Include oil, ghee and butter. Herbs, spices and salt go in "spices".\n'+
+    'Reply with ONLY JSON: {"name":"...","minutes":30,"cuisine":"indian","ingredients":[{"key":"chicken","amount":150},{"name":"Whole wheat roti","amount":2,"unit":"piece","aisle":"Bakery","kcal":210,"protein":7,"carbs":36,"fat":6,"fiber":5,"omega3_mg":0,"zinc_mg":1,"iron_mg":2,"vitd_mcg":0,"magnesium_mg":50,"vita_mcg":0}],"spices":["turmeric"],"steps":["Short step with time and heat."]}\n'+
+    'Keep the cook’s own method if given, in 3 to 7 short steps. cuisine is "indian" or "other".';
+  const j = await llmFood(pid, prompt, {maxTokens:6000});
+  const mid = Date.now().toString(36), ing = [], items = {};
+  (Array.isArray(j.ingredients) ? j.ingredients : []).slice(0, 20).forEach((it, i) => {
+    const amt = +it.amount || 0; if (amt <= 0) return;
+    if (it.key && C[it.key] && !C[it.key].custom){ ing.push([it.key, amt]); return; }
+    const key = 'u_'+mid+'_'+i, unit = ['g','ml','piece','tbsp'].includes(it.unit) ? it.unit : it.unit === 'tsp' ? 'tbsp' : 'g', a = it.unit === 'tsp' ? amt/3 : amt;
+    items[key] = customItem(key, String(it.name || 'Ingredient').slice(0, 40), unit, a, nFrom(it), it.aisle); ing.push([key, a]);
+  });
+  if (!ing.length) throw new Error('The AI didn’t return ingredients. Try again, or add a few ingredients yourself.');
+  return {ing, items, steps:(Array.isArray(j.steps) ? j.steps : []).slice(0, 8).map(s => String(s).slice(0, 300)), spices:(Array.isArray(j.spices) ? j.spices : []).slice(0, 12).map(s => String(s).slice(0, 40)), min:clamp(Math.round(+j.minutes || 30), 5, 240), cuisine:j.cuisine === 'other' ? 'other' : 'indian', miss:[], src:'ai'};
+}
+async function workOutMeal(){
+  const sh = sheet; if (!sh.name.trim()){ sh.msg = {err:true, t:'Give the meal a name first.'}; renderSheet(); return; }
+  const pid = logPid();
+  if (!pid){ const d = mealFromLocal(sh.name, sh.ing, sh.how); if (!d.ing.length){ sh.msg = {err:true, t:'Couldn’t work this out from FuelWell’s food list. Add ingredients with amounts (one per line), or add a free Gemini key in Me → Food logging and voice.'}; sh.draft = null; } else { sh.draft = d; sh.msg = {t:'Matched from FuelWell’s food list. Check it, then save.'}; } renderSheet(); return; }
+  sh.busy = true; sh.msg = {t:PROVIDERS[pid].name+' is reading your recipe…'}; renderSheet();
+  try { const d = await mealFromAI(pid, sh.name, sh.ing, sh.how); if (!sheet || sheet.kind !== 'mymeal') return; sh.busy = false; sh.draft = d; sh.msg = {t:'Here’s one serving. Check it, then save.'}; }
+  catch(e){ if (!sheet || sheet.kind !== 'mymeal') return; sh.busy = false; const d = mealFromLocal(sh.name, sh.ing, sh.how); if (d.ing.length){ sh.draft = d; sh.msg = {err:true, t:'The AI didn’t answer ('+e.message+'), so I matched from FuelWell’s food list.'}; } else sh.msg = {err:true, t:e.message}; }
+  renderSheet();
+}
+function saveMyMeal(){
+  const sh = sheet; if (!sh.draft) return;
+  const list = S.myMeals = S.myMeals || [], id = sh.id || Date.now().toString(36);
+  const m = {id, name:sh.name.trim().slice(0, 80), slots:sh.slots.length ? sh.slots : ['main'], freq:sh.freq, text:sh.ing, how:sh.how, recipe:sh.draft, updated:Date.now()};
+  const i = list.findIndex(x => x.id === id); if (i >= 0) list[i] = m; else list.push(m);
+  myRecipes(); save(); closeSheet(); render(); toast('Saved. Tap “Update plan” to fit it into your week.');
+}
+
+/* ---- actions ---- */
+function nopeMeal(rid, d, sl){
+  const id = baseId(rid); mp().no[id] = 1; delete mp().fav[id];
+  let swapped = 0;
+  if (S.plan){ for (let dd = 0; dd < 7; dd++) S.plan.slots.forEach(s => { const m = S.plan.days[dd][s]; if (m && baseId(m.rid) === id && !m.lo){ swapMeal(dd, s); swapped++; } }); }
+  save(); render(); if (sheet && sheet.kind === 'browse') renderSheet(); else if (sheet) closeSheet();
+  toast('Won’t suggest '+(RXM[id] ? RXM[id].name : 'that')+' again.'+(swapped ? ' Swapped it out of this week.' : ''));
+}
+function mineAct(act, a){
+  const keepY = fn => { const y = window.scrollY; fn(); window.scrollTo(0, y); };
+  switch (act){
+    case 'prot': { const P = S.prefs.prot = S.prefs.prot || {}, id = a.dataset.v, k = a.dataset.k; P[id] = P[id] === k ? 'ok' : k; save(); keepY(render); return true; }
+    case 'fav': { const id = baseId(a.dataset.rid), F = mp().fav; if (F[id]) delete F[id]; else { F[id] = 'some'; delete mp().no[id]; } save(); keepY(render); if (sheet) renderSheet(); if (!sheet || sheet.kind !== 'browse') toast(F[id] ? 'Added to favorites. Update your plan to see it more.' : 'Removed from favorites.'); return true; }
+    case 'favfreq': { const F = mp().fav, id = a.dataset.rid; F[id] = F[id] === 'often' ? 'some' : 'often'; save(); keepY(render); return true; }
+    case 'nope': nopeMeal(a.dataset.rid, +a.dataset.d, a.dataset.sl); return true;
+    case 'unno': delete mp().no[a.dataset.rid]; save(); keepY(render); if (sheet) renderSheet(); return true;
+    case 'browse': openSheet({kind:'browse', f:'main'}); return true;
+    case 'br-f': sheet.f = a.dataset.v; renderSheet(); return true;
+    case 'mm-add': openMyMeal(null); return true;
+    case 'mm-edit': openMyMeal(a.dataset.id); return true;
+    case 'mm-slot': { const v = a.dataset.v, s = sheet.slots; const i = s.indexOf(v); if (i >= 0){ if (s.length > 1) s.splice(i, 1); } else s.push(v); renderSheet(); return true; }
+    case 'mm-freq': sheet.freq = a.dataset.v; renderSheet(); return true;
+    case 'mm-work': workOutMeal(); return true;
+    case 'mm-save': saveMyMeal(); return true;
+    case 'mm-del': if (!sheet.confirmDel){ sheet.confirmDel = true; renderSheet(); return true; } S.myMeals = (S.myMeals || []).filter(x => x.id !== sheet.id); myRecipes(); save(); closeSheet(); render(); toast('Deleted.'); return true;
+  }
+  return false;
+}
+
 /* ---------- render + events ---------- */
 function render(){
   if (['plan','shop'].includes(S.tab)){ S.weekView = S.tab === 'shop' ? 'shop' : 'plan'; S.tab = 'week'; }
@@ -4063,6 +4361,7 @@ function setPath(path, val){ const ks = path.split('.'); let o = S; for (let i=0
 document.addEventListener('input', e => {
   const el = e.target;
   if (sheet && el.id === 'lg-text'){ sheet.text = el.value; return; }
+  if (sheet && sheet.kind === 'mymeal' && /^mm-(name|ing|how)$/.test(el.id)){ sheet[el.id.slice(3)] = el.value; return; }
   if (sheet && el.id === 'lg-q'){ sheet.q = el.value; const box = document.querySelector('.srch'); if (box) box.innerHTML = searchFoods(sheet.q).map((f,i) => '<button class="srow" data-act="log-addsearch" data-i="'+i+'"><span>'+esc(f.name)+'<small> · '+esc(f.qty)+'</small></span><span class="num small muted">'+n0(f.base[0])+' kcal · '+n0(f.base[1])+' g</span></button>').join(''); return; }
   if (el.dataset.cd && sheet && sheet.kind === 'changeday'){ L(dayInfo(sheet.d).key)[el.dataset.cd] = el.value; save(); return; }
   if (!el.dataset.bind) return;
@@ -4201,6 +4500,7 @@ document.addEventListener('click', e => {
     case 'stoptimer': stopTimer(); break;
     case 'opentimer': if (timer && timer.ref){ sheet = {kind:'cook', d:timer.ref.d, sl:timer.ref.sl, step:0}; renderSheet(); } break;
     case 'finishcook': { const key = ymd(dayDate(S.plan, sheet.d)), lg = L(key), o = dayMeals(sheet.d).meals.find(x => x.slot === sheet.sl); lg.eaten = lg.eaten || {}; lg.eaten[sheet.sl] = {s:o.sEff, n:o.r.n.map(x => x*o.sEff), name:o.r.name}; save(); closeSheet(); render(); toast('Nice work. Logged as eaten.'); break; }
+    default: if (typeof mineAct === 'function') mineAct(act, a);
   }
 });
 
