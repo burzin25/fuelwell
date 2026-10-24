@@ -1254,6 +1254,24 @@ pre.code{background:var(--soft);border-radius:10px;padding:10px;font-family:var(
 .npill.mid{background:var(--citrus-soft)}
 .npill.low{background:var(--tomato-soft)}.npill.low b{color:var(--tomato)}
 .favm{color:var(--tomato);font-size:.9em}
+
+/* simpler log food */
+.lgbox{display:flex;gap:10px;align-items:stretch;margin-top:10px}
+.lgbox .ta{flex:1;min-height:76px;margin:0}
+.lgbox .vmic{align-self:center;width:56px;height:56px}
+.lgbox.on .ta{border-color:var(--tomato);background:var(--tomato-soft)}
+.vstat{display:flex;flex-direction:column;gap:4px;margin:8px 2px 0}
+.vstat b{font-size:15px}
+.lgalt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 2px}
+.lgback{margin:8px 0 4px}
+.prow2{display:grid;gap:6px;border-top:1px solid var(--soft);padding-top:10px}
+.prow2.busy{opacity:.6}
+.pr-top,.pr-bot{display:flex;align-items:center;gap:8px}
+.iname,.iqty{flex:1;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 10px;font:inherit}
+.iname{font-weight:700}
+.iqty{font-size:14px}
+.iname:focus,.iqty:focus{outline:2px solid var(--basil);border-color:transparent}
+.btn[hidden]{display:none}
 </style>
 </head><body>
 <main class="wrap" id="view"></main>
@@ -3475,13 +3493,13 @@ function searchFoods(q){
 function logSheetHTML(){
   const sh = sheet, plan = S.plan, lg = S.log[todayKey()] || {};
   let h = '<div class="eyebrow">Log food</div><h2 class="h1">What did you eat?</h2>';
-  h += '<div class="seg big four" role="tablist">'+[['type','Type or say'],['search','Search'],['scan','Scan'],['recent','Recent']].map(([k,n]) => '<button role="tab" aria-selected="'+(sh.mode === k)+'" aria-pressed="'+(sh.mode === k)+'" data-act="log-mode" data-v="'+k+'">'+n+'</button>').join('')+'</div>';
+  if (sh.mode !== 'type') h += '<button class="chip sm lgback" data-act="log-mode" data-v="type">‹ Type or say it</button>';
   if (sh.mode === 'type'){
-    h += voiceBoxHTML();
-    if (sh.heard) h += '<p class="small" style="margin:0"><span class="muted">I heard:</span> “'+esc(sh.heard)+'”</p>';
-    h += '<div class="field"><label for="lg-text" class="lbl">Or type it</label><textarea id="lg-text" class="ta" rows="2" placeholder="e.g. 2 rotis, a bowl of dal and some raita">'+esc(sh.text||'')+'</textarea></div>';
-    h += '<button class="btn primary" data-act="log-parse"'+(sh.busy ? ' disabled' : '')+'>'+(sh.busy ? 'Working it out…' : 'Estimate')+'</button>';
-    if (!aiAvailable()) h += '<p class="xs muted" style="margin:0">No AI key yet, so FuelWell matches against its own food list. For free-form logging, add a free Gemini key in Me → Food logging and voice.</p>';
+    const on = voiceOn(), eng = voiceEngine(), txt = (sh.text || '').trim(), stale = txt && txt !== sh.parsedText;
+    h += '<div class="lgbox'+(on ? ' on' : '')+'"><textarea id="lg-text" class="ta" rows="2" aria-label="What you ate" placeholder="'+(on ? 'Listening…' : 'Type what you ate, or tap the mic')+'"'+(on && eng === 'phone' ? ' readonly' : '')+'>'+esc(sh.text||'')+'</textarea>'+micButtonHTML()+'</div>';
+    h += voiceStatusHTML();
+    h += '<button class="btn primary" id="lg-go" data-act="log-parse"'+(stale && !on && !sh.busy ? '' : ' hidden')+'>'+(sh.items.some(i => i.from === 'text') ? 'Update the list' : 'Continue')+'</button>';
+    h += '<div class="lgalt"><span class="xs muted">Or</span><button class="chip sm" data-act="log-mode" data-v="search">Search</button><button class="chip sm" data-act="log-mode" data-v="scan">Scan a barcode</button><button class="chip sm" data-act="log-mode" data-v="recent">Recent</button></div>';
   } else if (sh.mode === 'search'){
     h += '<div class="field"><label for="lg-q" class="lbl">Search foods</label><input id="lg-q" type="text" placeholder="e.g. roti, salmon, yogurt" value="'+esc(sh.q||'')+'" autocomplete="off"></div><div class="srch">';
     searchFoods(sh.q || '').forEach((f,i) => { h += '<button class="srow" data-act="log-addsearch" data-i="'+i+'"><span>'+esc(f.name)+'<small> · '+esc(f.qty)+'</small></span><span class="num small muted">'+n0(f.base[0])+' kcal · '+n0(f.base[1])+' g</span></button>'; });
@@ -3495,14 +3513,30 @@ function logSheetHTML(){
   }
   if (sh.msg) h += '<div class="note small'+(sh.msg.err ? ' err' : '')+'">'+esc(sh.msg.t)+'</div>';
   if (sh.items.length){
-    const tot = sh.items.reduce((a,it) => a.map((x,i) => x + it.base[i]*it.mult), Z());
-    h += '<div class="card pad pend"><div class="sect-h"><b>Check before saving</b><span class="small muted num">'+n0(tot[0])+' kcal · '+n0(tot[1])+' g protein</span></div>';
-    sh.items.forEach((it,i) => { h += '<div class="prow"><div class="pn"><b>'+esc(it.name)+'</b><span class="xs muted">'+esc(it.qty || '')+(it.src === 'ai' ? ' · AI estimate' : it.src === 'barcode' ? ' · from barcode' : it.src === 'ifct' ? ' · IFCT raw' : '')+(it.check ? ' · <b class="warnc">check amount</b>' : '')+'</span></div><div class="pm"><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="-0.5" aria-label="Less">−</button><span class="num">×'+(Math.round(it.mult*100)/100)+'</span><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="0.5" aria-label="More">+</button><button class="iconbtn" data-act="log-del" data-i="'+i+'" aria-label="Remove">'+ICON.close+'</button></div><span class="xs muted num pk">'+n0(it.base[0]*it.mult)+' kcal · '+n0(it.base[1]*it.mult)+' g</span></div>'; });
+    const tot = sh.items.reduce((a,it) => a.map((x,i) => x + it.base[i]*it.mult), Z()), busyN = sh.items.some(it => it.busy);
+    h += '<div class="card pad pend"><div class="sect-h"><b>Check and edit</b><span class="small muted num">'+n0(tot[0])+' kcal · '+n0(tot[1])+' g protein</span></div>';
+    sh.items.forEach((it,i) => { h += '<div class="prow2'+(it.busy ? ' busy' : '')+'"><div class="pr-top"><input class="iname" data-i="'+i+'" type="text" value="'+esc(it.name)+'" aria-label="Food" autocomplete="off"><button class="iconbtn" data-act="log-del" data-i="'+i+'" aria-label="Remove '+esc(it.name)+'">'+ICON.close+'</button></div>'
+      +'<div class="pr-bot"><input class="iqty" data-i="'+i+'" type="text" value="'+esc(it.qty || '')+'" placeholder="Amount" aria-label="Amount" autocomplete="off"><div class="pm"><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="-0.5" aria-label="Less">−</button><span class="num">×'+(Math.round(it.mult*100)/100)+'</span><button class="iconbtn" data-act="log-mult" data-i="'+i+'" data-v="0.5" aria-label="More">+</button></div></div>'
+      +'<span class="xs muted num pk">'+(it.busy ? 'Working out the numbers…' : n0(it.base[0]*it.mult)+' kcal · '+n0(it.base[1]*it.mult)+' g protein'+(it.src === 'ai' ? ' · estimate' : it.src === 'barcode' ? ' · from barcode' : it.src === 'ifct' ? ' · IFCT raw' : '')+(it.check ? ' · <b class="warnc">check amount</b>' : ''))+'</span></div>'; });
     const opts = (plan && planIndexOf(todayKey()) >= 0 ? plan.slots : []).filter(sl => !(lg.eaten || {})[sl]);
     h += '<div class="field"><span class="lbl">This was</span><div class="chips">'+opts.map(sl => '<button class="chip sm" data-act="log-slot" data-v="'+sl+'" aria-pressed="'+(sh.slot === sl)+'">My '+SLOTNAME[sl].toLowerCase()+'</button>').join('')+'<button class="chip sm" data-act="log-slot" data-v="extra" aria-pressed="'+(sh.slot === 'extra')+'">Something extra</button></div><span class="hint">'+(sh.slot !== 'extra' ? 'It replaces your planned '+SLOTNAME[sh.slot].toLowerCase()+', and the rest of the day re-balances.' : 'Added on top of your plan; later meals shrink a little to make room.')+'</span></div>';
-    h += '<button class="btn primary big" data-act="log-save">Save to today</button></div>';
+    h += '<button class="btn primary big" data-act="log-save"'+(busyN || sh.busy ? ' disabled' : '')+'>Log it</button></div>';
   }
   return h;
+}
+/* edit a food name or amount: work out the numbers for that row again */
+async function reItem(i){
+  const it = sheet && sheet.items[i]; if (!it) return;
+  const txt = ((it.qty || '').replace(/^×[\d.]+\s*/, '')+' '+it.name).trim(); if (!txt) return;
+  it.busy = true; renderSheet();
+  let out = [], pid = logPid();
+  if (pid){ try { out = normItems(await llmFood(pid, foodPrompt(txt))); } catch(e){ out = []; } }
+  if (!out.length){ try { out = localParse(txt); } catch(e){ out = []; } }
+  if (!sheet || sheet.kind !== 'log') return;
+  const idx = sheet.items.indexOf(it); if (idx < 0) return;
+  if (out.length){ out.forEach(o => { o.from = it.from; }); sheet.items.splice(idx, 1, ...out); sheet.msg = null; }
+  else { it.busy = false; sheet.msg = {err:true, t:'Couldn’t work out “'+txt+'”. I kept the old numbers; try a simpler name or use Search.'}; }
+  renderSheet();
 }
 function saveLog(){
   const sh = sheet, key = todayKey(), lg = L(key), items = sh.items.map(it => ({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:it.name, qty:(it.mult !== 1 ? '×'+(Math.round(it.mult*10)/10)+' ' : '')+(it.qty||''), n:scaleN(it.base, it.mult).map(x => Math.round(x*10)/10), t:nowMin(), src:it.src}));
@@ -3955,27 +3989,27 @@ async function llmFood(pid, prompt, opts){
 }
 
 /* ---- estimate: AI when available, else offline; AI failure falls back to offline ---- */
-function localEstimate(txt, voice){
+function textItems(its){ its.forEach(i => { i.from = 'text'; }); sheet.items = sheet.items.filter(i => i.from !== 'text').concat(its); }
+function localEstimate(txt){
   const its = localParse(txt), miss = localParse.miss || [];
-  if (voice) sheet.heard = txt;
-  if (its.length){ sheet.items = sheet.items.concat(its); sheet.text = miss.length ? miss.join(', ') : '';
-    sheet.msg = {t:'Matched '+its.length+' from FuelWell’s food list. Check the amounts.'+(miss.length ? ' Not sure about: “'+miss.join('”, “')+'” (still in the box; try Search).' : '')}; }
+  if (its.length){ textItems(its); sheet.parsedText = txt;
+    sheet.msg = {t:'Matched '+its.length+' from FuelWell’s food list. Check the amounts.'+(miss.length ? ' Not sure about: “'+miss.join('”, “')+'”. Add it with Search.' : '')}; }
   else sheet.msg = {err:true, t:'Couldn’t match that to FuelWell’s food list. Try Search, or add a free Gemini key in Me → Food logging and voice.'};
 }
 async function logEstimate(opt){
   opt = opt || {}; if (!sheet || sheet.kind !== 'log') return;
   const txt = (sheet.text || '').trim(); if (!txt){ sheet.msg = {err:true, t:'Type or say what you ate first.'}; renderSheet(); return; }
   const pid = logPid();
-  if (!pid){ localEstimate(txt, opt.voice); renderSheet(); return; }
+  if (!pid){ localEstimate(txt); renderSheet(); return; }
   sheet.busy = true; sheet.msg = {t:PROVIDERS[pid].name+' is working it out…'}; renderSheet();
-  try { const j = await llmFood(pid, foodPrompt(txt)); if (!sheet || sheet.kind !== 'log') return; if (opt.voice) sheet.heard = txt; applyAI(j); }
-  catch(e){ if (!sheet || sheet.kind !== 'log') return; sheet.busy = false; localEstimate(txt, opt.voice); if (sheet.items.length) sheet.msg = {err:true, t:'The AI didn’t answer ('+e.message+') so I matched from FuelWell’s food list. Check the amounts.'}; else sheet.msg = {err:true, t:e.message}; renderSheet(); }
+  try { const j = await llmFood(pid, foodPrompt(txt)); if (!sheet || sheet.kind !== 'log') return; applyAI(j, false, txt); }
+  catch(e){ if (!sheet || sheet.kind !== 'log') return; sheet.busy = false; localEstimate(txt); if (sheet.items.length) sheet.msg = {err:true, t:'The AI didn’t answer ('+e.message+') so I matched from FuelWell’s food list. Check the amounts.'}; else sheet.msg = {err:true, t:e.message}; renderSheet(); }
 }
-function applyAI(j, fromAudio){
+function applyAI(j, fromAudio, txt){
   const its = normItems(j); sheet.busy = false;
-  if (fromAudio && j.heard) sheet.heard = String(j.heard).slice(0, 300);
-  if (its.length){ sheet.items = sheet.items.concat(its); sheet.text = '';
-    sheet.msg = {t:'Here’s my estimate. Fix anything that’s off, then save.'+(j.unclear && String(j.unclear).trim() ? ' Not sure about: '+String(j.unclear).slice(0, 120) : '')}; }
+  if (fromAudio && j.heard){ sheet.text = String(j.heard).slice(0, 400); }
+  if (its.length){ textItems(its); sheet.parsedText = (sheet.text || '').trim();
+    sheet.msg = {t:'Fix anything that’s off, then tap Log it.'+(j.unclear && String(j.unclear).trim() ? ' Not sure about: '+String(j.unclear).slice(0, 120) : '')}; }
   else sheet.msg = {err:true, t:'I couldn’t find any foods in that. Try again or type it.'};
   renderSheet();
 }
@@ -3993,26 +4027,33 @@ function voiceEngine(){
 }
 const VOICE_NOTE = {gemini:'Gemini listens to your recording, so food names like roti, dal and paneer come through right.', groq:'Whisper (on Groq) writes down your words, then the AI estimates them.', phone:'Uses iPhone speech recognition. For much better accuracy, add a free Gemini key in Me → Food logging and voice.', none:'Voice isn’t available here. Tap the box and use the 🎤 on your keyboard.'};
 let REC = null, phoneRec = null;
-function voiceBoxHTML(){
-  const eng = voiceEngine(), on = !!(REC || phoneRec), mic = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>', stop = '<svg viewBox="0 0 24 24" width="22" height="22"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor"/></svg>';
+let phoneWant = false;
+const voiceOn = () => !!(REC || phoneRec || phoneWant);
+function micButtonHTML(){
+  const eng = voiceEngine(), on = voiceOn();
+  if (eng === 'none') return '';
+  const mic = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>', stop = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor"/></svg>';
+  return '<button class="vmic'+(on ? ' on' : '')+'" data-act="log-voice" aria-pressed="'+on+'" aria-label="'+(on ? 'Stop listening' : 'Start listening')+'"'+(sheet.busy ? ' disabled' : '')+'>'+(on ? stop : mic)+'</button>';
+}
+function voiceStatusHTML(){
+  const eng = voiceEngine(), on = voiceOn();
+  if (on) return '<div class="vstat"><b>Listening… <span class="num" id="vtime">0:00</span></b><div class="vlevel"><i id="vlevel"></i></div><span class="xs muted">Say everything you ate. Tap the mic again when you’re done.</span></div>';
+  if (sheet.busy) return '';
   if (eng === 'none') return '<p class="xs muted" style="margin:0">'+VOICE_NOTE.none+'</p>';
-  let h = '<div class="vbox'+(on ? ' on' : '')+'"><button class="vmic'+(on ? ' on' : '')+'" data-act="log-voice" aria-label="'+(on ? 'Stop recording' : 'Record what you ate')+'"'+(sheet.busy ? ' disabled' : '')+'>'+(on ? stop : mic)+'</button><div class="vmeta">';
-  if (on) h += '<b>Listening… <span class="num" id="vtime">0:00</span></b><div class="vlevel"><i id="vlevel"></i></div><span class="xs muted">Stops by itself when you pause. Tap ■ when you’re done.</span>';
-  else h += '<b>Tap and say what you ate</b><span class="xs muted">“Two rotis, a bowl of dal and a glass of lassi”</span>';
-  h += '</div></div><p class="xs muted" style="margin:0">'+VOICE_NOTE[eng]+'</p>';
-  return h;
+  if (!aiAvailable() && !sheet.items.length) return '<p class="xs muted" style="margin:0">'+(eng === 'phone' ? 'Voice uses iPhone speech. ' : '')+'FuelWell matches what you say against its own food list. A free Gemini key (Me → Food logging and voice) understands anything and hears Indian food names much better.</p>';
+  return '';
 }
 function voiceToggle(){
   if (REC){ recStop(true); return; }
-  if (phoneRec){ try { phoneRec.stop(); } catch(e){} return; }
+  if (phoneRec || phoneWant){ phoneWant = false; if (phoneRec){ try { phoneRec.stop(); } catch(e){} } else if (sheet && sheet.kind === 'log'){ renderSheet(); if ((sheet.text || '').trim()) logEstimate({voice:true}); } return; }
   const eng = voiceEngine();
   if (eng === 'gemini' || eng === 'groq') recStart(eng); else if (eng === 'phone') phoneStart();
 }
-function voiceAbort(){ if (REC) recStop(false); if (phoneRec){ phoneRec.onend = null; try { phoneRec.abort(); } catch(e){} phoneRec = null; } }
+function voiceAbort(){ phoneWant = false; if (REC) recStop(false); if (phoneRec){ phoneRec.onend = null; try { phoneRec.abort(); } catch(e){} phoneRec = null; } }
 
 async function recStart(eng){
   const AC = window.AudioContext || window.webkitAudioContext, ac = new AC(); // made inside the tap so iPhone lets it run
-  sheet.msg = null; sheet.heard = '';
+  sheet.msg = null;
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}}); }
   catch(e){ try { ac.close(); } catch(x){} sheet.msg = {err:true, t:e && e.name === 'NotAllowedError' ? 'Microphone access is off. Allow it in iPhone Settings → Safari → Microphone (or tap aA → Website Settings), then try again.' : 'Couldn’t start the microphone. Type it instead.'}; renderSheet(); return; }
@@ -4032,9 +4073,7 @@ async function recStart(eng){
     if (rms > thr){ REC.spoke = true; REC.lastLoud = now; } else REC.noise = REC.noise*0.97 + rms*0.03;
     const lv = document.getElementById('vlevel'); if (lv) lv.style.width = Math.min(100, Math.round(rms / 0.12 * 100))+'%';
     const tm = document.getElementById('vtime'); if (tm){ const s = Math.floor(el / 1000); tm.textContent = Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
-    if (REC.spoke && now - REC.lastLoud > 2200) return recStop(true);
-    if (!REC.spoke && el > 9000){ recStop(false); if (sheet){ sheet.msg = {err:true, t:'I didn’t hear anything. Tap the mic and try again, closer to the phone.'}; renderSheet(); } return; }
-    if (el > 60000) return recStop(true);
+    if (el > 120000) return recStop(true);
     REC.raf = requestAnimationFrame(tick);
   };
   REC.raf = requestAnimationFrame(tick);
@@ -4086,24 +4125,26 @@ async function handleRecording(blob, eng){
       const text = await whisper(wav || blob);
       if (!sheet || sheet.kind !== 'log') return;
       if (!text){ sheet.busy = false; sheet.msg = {err:true, t:'I didn’t catch any words. Try again.'}; renderSheet(); return; }
-      sheet.busy = false; sheet.text = text; await logEstimate({voice:true});
+      sheet.busy = false; sheet.text = text; renderSheet(); await logEstimate({voice:true});
     }
   } catch(e){ if (!sheet || sheet.kind !== 'log') return; sheet.busy = false; sheet.msg = {err:true, t:e.message+' Your words weren’t lost: tap the mic to try again, or type it.'}; renderSheet(); }
 }
-/* iPhone speech recognition (no key needed): keeps listening through short pauses, cleans up repeats, estimates when you stop */
-function phoneStart(){
-  let r; try { r = new SR(); } catch(e){ sheet.msg = {err:true, t:'Voice input isn’t available here. Use the 🎤 on your keyboard.'}; renderSheet(); return; }
+/* iPhone speech recognition (no key needed): stays on until you tap the mic again, writes your words into the box as you speak, then works them out */
+function phoneStart(){ phoneWant = true; sheet.msg = null; phoneRun(true); }
+function phoneRun(first){
+  let r; try { r = new SR(); } catch(e){ phoneWant = false; sheet.msg = {err:true, t:'Voice input isn’t available here. Use the 🎤 on your keyboard.'}; renderSheet(); return; }
   phoneRec = r; r.lang = S.ai.voiceLang || 'en-IN'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
-  const start = sheet.text ? sheet.text.trim()+' ' : ''; let said = '', timer = null, failed = false;
-  const arm = () => { clearTimeout(timer); timer = setTimeout(() => { try { r.stop(); } catch(e){} }, 2500); };
+  const start = sheet.text ? sheet.text.trim()+' ' : ''; let said = '';
   r.onresult = ev => {
     const segs = []; for (let i = 0; i < ev.results.length; i++){ const s = ev.results[i][0].transcript.trim(); if (!s) continue; const p = segs[segs.length-1];
       if (p && s.toLowerCase().startsWith(p.toLowerCase())) segs[segs.length-1] = s; else if (!(p && p.toLowerCase().endsWith(s.toLowerCase()))) segs.push(s); }
-    said = segs.join(' '); sheet.text = start + said; const ta = $('#lg-text'); if (ta) ta.value = sheet.text; arm();
+    said = segs.join(' '); sheet.text = start + said; const ta = $('#lg-text'); if (ta){ ta.value = sheet.text; ta.scrollTop = ta.scrollHeight; }
   };
-  r.onerror = ev => { failed = ev.error !== 'no-speech' && ev.error !== 'aborted'; if (sheet) sheet.msg = {err:true, t:ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? 'Microphone or Siri dictation is off. Turn on Settings → General → Keyboard → Enable Dictation, and allow the microphone for Safari.' : ev.error === 'no-speech' ? 'I didn’t hear anything. Try again.' : 'Didn’t catch that. Try again or type it.'}; };
-  r.onend = () => { clearTimeout(timer); phoneRec = null; if (!sheet || sheet.kind !== 'log') return; renderSheet(); if (said.trim() && !failed) logEstimate({voice:true}); };
-  try { r.start(); arm(); sheet.msg = null; sheet.heard = ''; renderSheet(); } catch(e){ phoneRec = null; sheet.msg = {err:true, t:'Couldn’t start voice input. Type it instead.'}; renderSheet(); }
+  r.onerror = ev => { if (ev.error === 'no-speech' || ev.error === 'aborted') return; phoneWant = false; if (sheet) sheet.msg = {err:true, t:ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? 'Microphone or Siri dictation is off. Turn on Settings → General → Keyboard → Enable Dictation, and allow the microphone for Safari.' : 'Didn’t catch that. Try again or type it.'}; };
+  r.onend = () => { phoneRec = null; if (!sheet || sheet.kind !== 'log') return;
+    if (phoneWant){ setTimeout(() => { if (phoneWant && !phoneRec && sheet && sheet.kind === 'log') phoneRun(false); }, 120); return; }
+    renderSheet(); if ((sheet.text || '').trim() && !sheet.msg) logEstimate({voice:true}); };
+  try { r.start(); if (first) renderSheet(); } catch(e){ phoneRec = null; phoneWant = false; sheet.msg = {err:true, t:'Couldn’t start voice input. Type it instead.'}; renderSheet(); }
 }
 
 /* ---- settings: Food logging and voice ---- */
@@ -4503,7 +4544,7 @@ function render(){
 function setPath(path, val){ const ks = path.split('.'); let o = S; for (let i=0;i<ks.length-1;i++){ o[ks[i]] = o[ks[i]] || {}; o = o[ks[i]]; } o[ks[ks.length-1]] = val; }
 document.addEventListener('input', e => {
   const el = e.target;
-  if (sheet && el.id === 'lg-text'){ sheet.text = el.value; return; }
+  if (sheet && el.id === 'lg-text'){ sheet.text = el.value; const go = document.getElementById('lg-go'); if (go) go.hidden = !(el.value.trim() && el.value.trim() !== sheet.parsedText); return; }
   if (sheet && sheet.kind === 'mymeal' && /^mm-(name|ing|how)$/.test(el.id)){ sheet[el.id.slice(3)] = el.value; return; }
   if (sheet && el.id === 'lg-q'){ sheet.q = el.value; const box = document.querySelector('.srch'); if (box) box.innerHTML = searchFoods(sheet.q).map((f,i) => '<button class="srow" data-act="log-addsearch" data-i="'+i+'"><span>'+esc(f.name)+'<small> · '+esc(f.qty)+'</small></span><span class="num small muted">'+n0(f.base[0])+' kcal · '+n0(f.base[1])+' g</span></button>').join(''); return; }
   if (el.dataset.cd && sheet && sheet.kind === 'changeday'){ L(dayInfo(sheet.d).key)[el.dataset.cd] = el.value; save(); return; }
@@ -4517,6 +4558,7 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const el = e.target;
+  if (sheet && sheet.kind === 'log' && el.classList && (el.classList.contains('iname') || el.classList.contains('iqty'))){ const it = sheet.items[+el.dataset.i]; if (!it) return; const v = el.value.trim(); if (el.classList.contains('iname')){ if (!v || v === it.name) return; it.name = v; } else { if (v === (it.qty || '')) return; it.qty = v; } it.mult = 1; reItem(+el.dataset.i); return; }
   if (sheet && el.id === 'mv-min'){ sheet.mins = +el.value || 0; renderSheet(); return; }
   if (el.dataset.act === 'prov'){ S.ai.provider = el.value; lastError = ''; save(); render(); return; }
   if (el.dataset.cd && sheet){ save(); render(); renderSheet(); return; }
@@ -4525,7 +4567,7 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('toggle', e => { const d = e.target; if (d && d.matches && d.matches('details[data-acc]')) setAcc(d.getAttribute('data-acc'), d.open); }, true);
 document.addEventListener('submit', e => { if (e.target.matches('.chatin')){ e.preventDefault(); const i = $('#chat-in'); if (i && i.value.trim() && !(sheet && sheet.busy)){ const v = i.value.trim(); i.value = ''; sendChat(v); } } });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheet) closeSheet(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheet) closeSheet(); if (e.key === 'Enter' && !e.shiftKey && sheet && sheet.kind === 'log' && e.target.id === 'lg-text'){ e.preventDefault(); logEstimate(); } });
 // chart tooltips
 const tipEl = () => $('#ctip');
 document.addEventListener('pointerover', e => { const t = e.target.closest && e.target.closest('[data-tip]'); if (!t) return; const el = tipEl(); el.textContent = t.getAttribute('data-tip'); el.hidden = false; });
